@@ -3,6 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
+<<<<<<< HEAD
   res.render('layout',
     {
       title: 'E-E: Todo para su hogar o negocio',
@@ -54,6 +55,9 @@ router.get('/productDetail', function (req, res, next) {
       currentPage: 'product',
       body: 'pages/productDetail'
     });
+=======
+  res.render('index', { title: 'E E', subtitle: 'Encargos y Encargados para tu negocio y hogar.' });
+>>>>>>> 1dcd78f1de31899591519b65fac45500d0cf92a8
 });
 
 module.exports = router;

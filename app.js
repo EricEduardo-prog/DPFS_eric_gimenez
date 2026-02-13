@@ -13,6 +13,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
+<<<<<<< HEAD
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -22,6 +23,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Ruta principal
+=======
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+>>>>>>> 1dcd78f1de31899591519b65fac45500d0cf92a8
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
