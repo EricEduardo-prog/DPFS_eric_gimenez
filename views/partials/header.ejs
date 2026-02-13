@@ -1,0 +1,43 @@
+<header class="cabecera">
+
+    <div class="cabecera-contenido">
+        <div class="cabecera-izquierda">
+
+                <button onclick="window.history.back()" class="boton-icono" aria-label="Volver atrás"
+                    title="Volver a la página anterior">
+                    <span class="icono-cabecera">←</span>
+                </button>
+                        <button class="selector-ubicacion" aria-label="Cambiar ubicación de entrega">
+                            <span class="icono-ubicacion">📍</span>
+                            <div class="info-ubicacion">
+                                <span class="etiqueta-ubicacion">Enviar a</span>
+                                <span class="direccion-ubicacion">Av. Colón 1234, Mar del Plata</span>
+                            </div>
+                            <span class="icono-desplegable">▼</span>
+                        </button>
+
+
+                                <!-- Logo cuando no hay título específico -->
+                                <a href="/" class="logo-cabecera" aria-label="E-E - Inicio">
+                                    <span class="texto-logo-cabecera">E-E</span>
+                                    <span class="subtitulo-logo-cabecera">Todo para tu hogar o negocio</span>
+                                </a>
+
+        </div>
+               
+                    <!-- Botón de perfil -->
+                    <a href="/" class="boton-icono" aria-label="Mi perfil" title="Acceder a mi cuenta">
+                        <span class="icono-perfil">👤</span>
+                    </a>
+
+                    <!-- Botón de tema claro/oscuro (opcional) -->
+                    <button class="boton-icono boton-tema" aria-label="Cambiar tema"
+                        title="Alternar entre tema claro y oscuro" onclick="window.temaManager?.alternarTema()">
+                        <span class="icono-tema">🌙</span>
+                    </button>
+        </div>
+    </div>
+
+
+
+</header>

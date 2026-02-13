@@ -1,0 +1,175 @@
+
+    <div class="pagina-autenticacion">
+        <div class="contenedor">
+            <div class="contenedor-autenticacion">
+                <!-- Logo -->
+                <div class="logo-autenticacion">
+                    <h1 class="texto-logo">E-E</h1>
+                    <p class="subtitulo-logo">Crea tu cuenta</p>
+                </div>
+
+                <!-- Formulario -->
+                <form class="formulario-autenticacion" novalidate>
+                    <h2 class="titulo-formulario">Regístrate</h2>
+
+                    <!-- Campo Nombre -->
+                    <div class="campo-formulario">
+                        <label for="nombre" class="etiqueta-campo">
+                            Nombre completo
+                            <span class="texto-requerido">*</span>
+                        </label>
+                        <div class="contenedor-entrada">
+                            <input 
+                                id="nombre" 
+                                type="text" 
+                                class="entrada" 
+                                placeholder="Tu nombre"
+                                value=""
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Campo Email -->
+                    <div class="campo-formulario">
+                        <label for="email" class="etiqueta-campo">
+                            Email
+                            <span class="texto-requerido">*</span>
+                        </label>
+                        <div class="contenedor-entrada">
+                            <input 
+                                id="email" 
+                                type="email" 
+                                class="entrada entrada-error" 
+                                placeholder="tu@email.com"
+                                value=""
+                                aria-invalid="true"
+                                aria-describedby="email-error"
+                            >
+                            <div class="icono-error">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                </svg>
+                            </div>
+                        </div>
+                        <div id="email-error" class="mensaje-error mensaje-error" role="alert" aria-live="polite">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                            <span>Debe ser un email válido</span>
+                        </div>
+                    </div>
+
+                    <!-- Campo Contraseña -->
+                    <div class="campo-formulario">
+                        <label for="password" class="etiqueta-campo">
+                            Contraseña
+                            <span class="texto-requerido">*</span>
+                        </label>
+                        <div class="contenedor-entrada">
+                            <input 
+                                id="password" 
+                                type="password" 
+                                class="entrada entrada-contrasena" 
+                                placeholder="••••••••"
+                                value="Test1"
+                            >
+                            <button type="button" class="boton-visibilidad" aria-label="Mostrar contraseña">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Requisitos de contraseña -->
+                    <div class="requisitos-contrasena">
+                        <p class="titulo-requisitos">La contraseña debe tener:</p>
+                        <ul class="lista-requisitos">
+                            <li class="cumplido">✓ Mínimo 6 caracteres</li>
+                            <li class="cumplido">✓ Al menos una mayúscula</li>
+                            <li class="cumplido">✓ Al menos un número</li>
+                        </ul>
+                    </div>
+
+                    <!-- Campo Confirmar Contraseña -->
+                    <div class="campo-formulario">
+                        <label for="confirmarPassword" class="etiqueta-campo">
+                            Confirmar contraseña
+                            <span class="texto-requerido">*</span>
+                        </label>
+                        <div class="contenedor-entrada">
+                            <input 
+                                id="confirmarPassword" 
+                                type="password" 
+                                class="entrada entrada-contrasena entrada-error" 
+                                placeholder="••••••••"
+                                value="Test2"
+                                aria-invalid="true"
+                                aria-describedby="confirmarPassword-error"
+                            >
+                            <button type="button" class="boton-visibilidad" aria-label="Mostrar contraseña">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                            <div class="icono-error">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                </svg>
+                            </div>
+                        </div>
+                        <div id="confirmarPassword-error" class="mensaje-error mensaje-error" role="alert" aria-live="polite">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                            <span>Las contraseñas no coinciden</span>
+                        </div>
+                    </div>
+
+                    <!-- Campo Términos -->
+                    <div class="campo-terminos">
+                        <label class="checkbox-terminos">
+                            <input type="checkbox">
+                            <span class="texto-terminos">
+                                Acepto los 
+                                <a href="#" class="enlace-terminos">Términos y Condiciones</a> 
+                                y la 
+                                <a href="#" class="enlace-terminos">Política de Privacidad</a>
+                            </span>
+                        </label>
+                        <div class="mensaje-error mensaje-error" role="alert" aria-live="polite">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                            <span>Debes aceptar los términos</span>
+                        </div>
+                    </div>
+
+                    <!-- Botón Submit -->
+                    <button type="submit" class="boton boton-primario boton-medio ancho-completo">
+                        <span>Crear Cuenta</span>
+                    </button>
+                </form>
+
+                <!-- Enlaces adicionales -->
+                <div class="enlaces-adicionales">
+                    <p class="texto-alternativo">
+                        ¿Ya tienes cuenta? 
+                        <a href="/login" class="enlace-registro">Inicia sesión aquí</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,129 @@
+
+  
+
+    <div class="contenedor">
+      <!-- Buscador Principal -->
+      <div class="buscador-principal">
+        <div class="contenedor-buscador">
+          <span class="icono-busqueda">🔍</span>
+          <input
+          type="search"
+          name="busqueda"
+          placeholder="¿Qué necesitas hoy? (Ej: Taladro, plomero...)"
+          class="input-busqueda"
+          aria-label="Buscar productos o servicios"
+          readonly
+          title="Búsqueda disponible próximamente"
+          />
+          <button class="boton-filtros" aria-label="Filtrar búsqueda" disabled>
+            <span class="icono-filtros">⚙️</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Sección de Categorías -->
+      <section class="seccion-categorias" aria-labelledby="titulo-categorias">
+        <div class="encabezado-seccion">
+          <h2 id="titulo-categorias" class="titulo-seccion">
+            Explorar Categorías
+          </h2>
+          <a href="/category" class="enlace-ver-todo">
+            Ver todas
+          </a>
+        </div>
+        
+        <div class="grid-categorias">
+          
+          <div class="sin-categorias">
+            <p>No hay categorías disponibles.</p>
+          </div>
+          
+        </div>
+      </section>
+      
+      <!-- Ofertas Relámpago -->
+      <section class="seccion-ofertas" aria-labelledby="titulo-ofertas">
+        <div class="encabezado-seccion">
+          <div class="titulo-con-icono">
+            <span class="icono-ofertas">✨</span>
+            <h2 id="titulo-ofertas" class="titulo-seccion">
+              Ofertas Relámpago
+            </h2>
+          </div>
+          <div class="contador-oferta">
+            <span class="etiqueta-contador">Termina en:</span>
+            <span class="valor-contador">23:59:45</span>
+          </div>
+        </div>
+        
+        <div class="tarjeta-oferta">
+          
+          <div class="sin-ofertas">
+            <p>No hay ofertas disponibles en este momento.</p>
+          </div>
+          
+        </div>
+      </section>
+      
+      <!-- Productos Recomendados -->
+      <section class="seccion-recomendados" aria-labelledby="titulo-recomendados">
+        <div class="encabezado-seccion">
+          <div class="titulo-con-icono">
+            <span class="icono-trending">📈</span>
+            <h2 id="titulo-recomendados" class="titulo-seccion">
+              Recomendados para ti
+            </h2>
+          </div>
+          <a href="/product" class="enlace-ver-todo">
+            Ver todos
+          </a>
+        </div>
+        
+        <div class="grid-productos">
+          
+          <div class="sin-productos">
+            <p>No hay productos recomendados en este momento.</p>
+          </div>
+          
+        </div>
+      </section>
+      
+      <!-- Sección de Servicios -->
+      <section class="seccion-servicios" aria-labelledby="titulo-servicios">
+        <div class="encabezado-seccion">
+          <h2 id="titulo-servicios" class="titulo-seccion">
+            Servicios Profesionales
+          </h2>
+          <p class="subtitulo-seccion">
+            Instalación y mantenimiento certificado
+          </p>
+        </div>
+        
+        <div class="grid-servicios">
+          <div class="tarjeta-servicio">
+            <div class="icono-servicio">🔧</div>
+            <h3 class="titulo-servicio">Instalación</h3>
+            <p class="descripcion-servicio">
+              Instalación profesional de productos con garantía
+            </p>
+          </div>
+          
+          <div class="tarjeta-servicio">
+            <div class="icono-servicio">🛠️</div>
+            <h3 class="titulo-servicio">Mantenimiento</h3>
+            <p class="descripcion-servicio">
+              Servicio técnico especializado
+            </p>
+          </div>
+          
+          <div class="tarjeta-servicio">
+            <div class="icono-servicio">🚚</div>
+            <h3 class="titulo-servicio">Entrega</h3>
+            <p class="descripcion-servicio">
+              Entrega a domicilio en 24-48 horas
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+

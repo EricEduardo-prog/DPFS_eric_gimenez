@@ -1,0 +1,240 @@
+/* Variables CSS */
+
+:root {
+  /* Colores principales */
+  --color-primario: #000000;
+  --color-secundario: #0077B6;
+  --color-exito: #2E7D32;
+  --color-error: #D32F2F;
+  --color-advertencia: #FF9800;
+  --color-primario-hover: #333333;
+  --color-error-suave: #FFEBEE;
+  --color-borde-suave: #E0E0E0;
+  --color-fondo-acento: #F8F9FA;
+
+  /* Escala de grises */
+  --color-fondo: #FFFFFF;
+  --color-fondo-secundario: #F5F5F5;
+  --color-borde: #E0E0E0;
+  --color-texto: #000000;
+  --color-texto-secundario: #666666;
+  --color-texto-terciario: #999999;
+
+  /* Sombras */
+  --sombra-suave: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --sombra-media: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --sombra-fuerte: 0 8px 24px rgba(0, 0, 0, 0.15);
+
+  /* Bordes redondeados */
+  --radio-borde-pequeno: 8px;
+  --radio-borde-mediano: 12px;
+  --radio-borde-grande: 16px;
+  --radio-borde-completo: 9999px;
+  --radio-borde: 8px; 
+
+  /* Espaciado */
+  --espacio-xs: 4px;
+  --espacio-sm: 8px;
+  --espacio-md: 16px;
+  --espacio-lg: 24px;
+  --espacio-xl: 32px;
+  --espacio-xxl: 48px;
+
+  /* Tipografía */
+  --fuente-familia: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --fuente-tamano-xs: 12px;
+  --fuente-tamano-sm: 14px;
+  --fuente-tamano-base: 16px;
+  --fuente-tamano-lg: 18px;
+  --fuente-tamano-xl: 20px;
+  --fuente-tamano-xxl: 24px;
+  --fuente-tamano-xxxl: 32px;
+
+  /* Transiciones */
+  --transicion-rapida: 150ms ease;
+  --transicion-base: 250ms ease;
+  --transicion-lenta: 350ms ease;
+
+  /* Z-index */
+  --z-index-navegacion: 100;
+  --z-index-modal: 1000;
+  --z-index-notificacion: 2000;
+
+  /*Barra de Navegacion*/
+  --altura-barra-navegacion: 80px;
+}
+
+/* Reset y estilos base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--fuente-familia);
+  font-size: var(--fuente-tamano-base);
+  line-height: 1.5;
+  color: var(--color-texto);
+  background-color: var(--color-fondo);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.contenedor-principal{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* Espacio para la navbar fija */
+    padding-bottom: calc(var(--altura-barra-navegacion) + var(--espacio-lg));;
+}
+/* Tipografía */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: var(--fuente-tamano-xxxl);
+}
+
+h2 {
+  font-size: var(--fuente-tamano-xxl);
+}
+
+h3 {
+  font-size: var(--fuente-tamano-xl);
+}
+
+h4 {
+  font-size: var(--fuente-tamano-lg);
+}
+
+h5 {
+  font-size: var(--fuente-tamano-base);
+}
+
+h6 {
+  font-size: var(--fuente-tamano-sm);
+}
+
+p {
+  margin-bottom: var(--espacio-md);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--transicion-rapida);
+}
+
+a:hover {
+  color: var(--color-secundario);
+}
+
+/* Utilidades */
+.oculto {
+  display: none !important;
+}
+
+.texto-centrado {
+  text-align: center;
+}
+
+.texto-derecha {
+  text-align: right;
+}
+
+.mt-auto {
+  margin-top: auto;
+}
+
+.mb-auto {
+  margin-bottom: auto;
+}
+
+.contenedor {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--espacio-md);
+}
+
+
+/* Focus visible para accesibilidad */
+:focus-visible {
+  outline: 2px solid var(--color-primario);
+  outline-offset: 2px;
+}
+
+/* Animaciones */
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes deslizarDerecha {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes latido {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.animacion-aparecer {
+  animation: aparecer var(--transicion-base);
+}
+
+.animacion-deslizar {
+  animation: deslizarDerecha var(--transicion-base);
+}
+
+.animacion-latido {
+  animation: latido 2s infinite;
+}
+
+
+@media (min-width: 1361px) {
+  :root{
+    --altura-barra-navegacion:70px;
+  }
+}
