@@ -107,7 +107,7 @@
 
  .entrada-error {
      border-color: var(--color-error);
-     background-color: var(--color-error);
+     background-color: var(--color-error-suave);
  }
 
  .entrada-error:focus {
@@ -161,7 +161,7 @@
 
  /* Error general */
  .error-general {
-     background-color: rgba(211, 47, 47, 0.1);
+     background-color: var(--color-error-suave);
      border: 1px solid var(--color-error);
      border-radius: var(--radio-borde-mediano);
      padding: var(--espacio-md);

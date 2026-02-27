@@ -19,7 +19,7 @@ router.get('/login', function (req, res, next) {
       title: 'Login - E-E',
       pageCss: 'login_register',
       currentPage: 'login',
-      body: 'pages/login'
+      body: 'pages/users/login'
     });
 });
 
@@ -30,7 +30,7 @@ router.get('/register', function (req, res, next) {
       title: 'Registrate - E-E',
       pageCss: 'login_register',
       currentPage: 'register',
-      body: 'pages/register'
+      body: 'pages/users/register'
     });
 });
 
@@ -41,7 +41,7 @@ router.get('/cart', function (req, res, next) {
       title: 'Carrito - E-E',
       pageCss: 'cart',
       currentPage: 'cart',
-      body: 'pages/cart'
+      body: 'pages/products/cart'
     });
 });
 
@@ -52,7 +52,7 @@ router.get('/productDetail', function (req, res, next) {
       title: 'Detalle de producto - E-E',
       pageCss: 'product',
       currentPage: 'product',
-      body: 'pages/productDetail'
+      body: 'pages/products/productDetail'
     });
 });
 
