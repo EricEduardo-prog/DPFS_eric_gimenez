@@ -1,0 +1,49 @@
+<nav class="barra-navegacion" aria-label="Navegación principal">
+    <!-- Enlace Inicio -->
+    <a href="/" class="enlace-navegacion <%= currentPage === 'index' ? 'activo' : '' %>" title="Ir al inicio">
+        <div class="contenedor-icono">
+            <span class="icono-nav">🏠</span>
+            <% if (currentPage==='index' ) { %>
+                <span class="indicador-activo"></span>
+                <% } %>
+        </div>
+        <span class="texto-enlace">Inicio</span>
+    </a>
+    <!-- Enlace Buscar -->
+    <a href="/search" class="enlace-navegacion <%= currentPage === 'search' ? 'activo' : '' %>"
+        title="Buscar productos">
+        <div class="contenedor-icono">
+            <span class="icono-nav">🔍</span>
+            <% if (currentPage==='search' ) { %>
+                <span class="indicador-activo"></span>
+                <% } %>
+        </div>
+        <span class="texto-enlace">Buscar</span>
+    </a>
+
+    <!-- Enlace Carrito -->
+    <a href="/cart" class="enlace-navegacion <%= currentPage === 'cart' ? 'activo' : '' %>"
+        title="Ver carrito de compras">
+        <div class="contenedor-icono">
+            <span class="icono-nav">🛒</span>
+
+            <span class="contador-notificacion">
+                +9 <!-- hardcodeado-->
+            </span>
+            <% if (currentPage==='cart' ) { %>
+                <span class="indicador-activo"></span>
+                <% } %>
+        </div>
+        <span class="texto-enlace">Carrito</span>
+    </a>
+    <!-- Enlace Perfil/Login -->
+    <a href="/login" class="enlace-navegacion <%= currentPage === 'login' ? 'activo' : '' %>" title="Iniciar sesión">
+        <div class="contenedor-icono">
+            <span class="icono-nav">🔐</span>
+            <% if (currentPage==='login' ) { %>
+                <span class="indicador-activo"></span>
+                <% } %>
+        </div>
+        <span class="texto-enlace">Ingresar</span>
+    </a>
+</nav>

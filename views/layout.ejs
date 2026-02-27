@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title || 'E-E - Todo para tu hogar' %>
+    </title>
+
+    <!-- CSS Global -->
+    <link rel="stylesheet" href="css/global.css">
+
+    <!-- CSS de componentes -->
+    <link rel="stylesheet" href="css/components/header.css">
+    <link rel="stylesheet" href="css/components/navbar.css">
+    
+    <!-- CSS de página específica -->
+    <% if (pageCss) { %>
+        <link rel="stylesheet" href="css/pages/<%= pageCss %>.css">
+        <% } %>
+
+            <!-- Meta tags SEO -->
+            <meta name="description"
+                content="E-E - Todo lo que necesitas para tu hogar y negocio. Productos de ferretería, climatización, herramientas y más. Servicios de instalación y colocación de artefactos, servicios de mantenimiento en general.">
+            <meta name="keywords"
+                content="ferretería, herramientas, climatización, hogar, construcción, instalación, servicios">
+            <meta name="author" content="E-E">
+
+</head>
+
+<body>
+    <!-- Cabecera -->
+    <%- include('./partials/header') %>
+
+        <!--Barra de Navegación-->
+        <%- include('./partials/navbar')%>
+
+            <!-- Contenido Principal -->
+            <main class="contenedor-principal">
+                      <%- include(body) %>
+            </main>
+
+</body>
+
+</html>

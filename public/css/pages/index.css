@@ -1,0 +1,243 @@
+
+.contenido-principal {
+    flex: 1;
+}
+
+.contenedor {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/*Buscador*/
+.buscador-principal {
+    padding: 1.5rem 0;
+}
+
+.contenedor-buscador {
+    display: flex;
+    align-items: center;
+    background: var(--color-fondo);
+    border: 2px solid var(--color-borde);
+    border-radius: var(--radio-borde-grande);
+    padding: 0.75rem 1rem;
+    transition: border-color 0.2s;
+}
+
+.contenedor-buscador:focus-within {
+    border-color: var(--color-primario);
+}
+
+.icono-busqueda {
+    font-size: 1.25rem;
+    margin-right: 0.75rem;
+    color: var(--color-texto-secundario);
+}
+
+.input-busqueda {
+    flex: 1;
+    border: none;
+    background: none;
+    font-size: 1rem;
+    color: var(--color-texto);
+    outline: none;
+}
+
+.input-busqueda::placeholder {
+    color: var(--color-texto-terciario);
+}
+
+.boton-filtros {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    border-radius: var(--radio-borde);
+    cursor: not-allowed;
+    color: var(--color-texto-terciario);
+    opacity: 0.7;
+}
+
+/* Secciones comunes */
+
+.seccion-categorias,
+.seccion-ofertas,
+.seccion-recomendados,
+.seccion-servicios {
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--color-borde-suave);
+}
+.encabezado-seccion {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.titulo-seccion {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-texto);
+    margin: 0;
+}
+
+.titulo-con-icono {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.icono-ofertas,
+.icono-trending {
+    font-size: 1.25rem;
+}
+
+.enlace-ver-todo {
+    color: var(--color-primario);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.enlace-ver-todo:hover {
+    color: var(--color-primario-hover);
+    text-decoration: underline;
+}
+
+/* Contador de ofertas */
+.contador-oferta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--color-error-suave);
+    border-radius: var(--radio-borde);
+    color: var(--color-error);
+    font-weight: 500;
+}
+
+.etiqueta-contador {
+    font-size: 0.875rem;
+}
+
+.valor-contador {
+    font-family: monospace;
+    font-weight: 700;
+}
+
+/* Grids */
+.grid-categorias {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.grid-productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.tarjeta-oferta {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    background: var(--color-fondo-acento);
+    padding: 1.5rem;
+    border-radius: var(--radio-borde-grande);
+}
+
+.grid-servicios {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.tarjeta-servicio {
+    text-align: center;
+    padding: 1.5rem;
+    background: var(--color-fondo);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-borde-grande);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.tarjeta-servicio:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-suave);
+}
+
+.icono-servicio {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.titulo-servicio {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--color-texto);
+}
+
+.descripcion-servicio {
+    font-size: 0.875rem;
+    color: var(--color-texto-secundario);
+    line-height: 1.4;
+}
+
+/* Estados vacíos */
+.sin-ofertas,
+.sin-productos {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--color-texto-secundario);
+    background: var(--color-fondo);
+    border-radius: var(--radio-borde);
+    border: 2px dashed var(--color-borde);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .grid-categorias {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 0.75rem;
+    }
+
+    .grid-productos {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .tarjeta-oferta {
+        grid-template-columns: 1fr;
+    }
+
+    .encabezado-seccion {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .enlace-ver-todo {
+        align-self: flex-end;
+    }
+}
+
+@media (max-width: 480px) {
+    .grid-categorias {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-productos {
+        grid-template-columns: 1fr;
+    }
+
+    .grid-servicios {
+        grid-template-columns: 1fr;
+    }
+
+    .contenedor-buscador {
+        padding: 0.5rem 0.75rem;
+    }
+}

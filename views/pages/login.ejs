@@ -1,0 +1,128 @@
+<div class="pagina-autenticacion">
+    <div class="contenedor">
+        <div class="contenedor-autenticacion">
+            <!-- Logo -->
+            <div class="logo-autenticacion">
+                <h1 class="texto-logo">E-E</h1>
+                <p class="subtitulo-logo">Todo para tu hogar y/o negocio</p>
+            </div>
+
+            <!-- Formulario -->
+            <form class="formulario-autenticacion" novalidate>
+                <h2 class="titulo-formulario">Iniciar Sesión</h2>
+
+                <!-- Error general (ejemplo) -->
+                <div class="error-general mensaje-error mensaje-error" role="alert" aria-live="polite">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <span>Credenciales incorrectas. Usa demo@ee.com / Demo123</span>
+                </div>
+
+                <!-- Campo Email -->
+                <div class="campo-formulario">
+                    <label for="email" id="email" class="etiqueta-campo">
+                        Email
+                        <span class="texto-requerido">*</span>
+                    </label>
+
+                    <div class="contenedor-entrada">
+                        <input id="email" type="email" class="entrada entrada-error" placeholder="tu@email.com" value=""
+                            aria-invalid="true" aria-describedby="email-error">
+                        <div class="icono-error">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div id="email-error" class="mensaje-error mensaje-error" role="alert" aria-live="polite">
+
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <span>El email es requerido</span>
+
+                    </div>
+                </div>
+                <!-- Campo Contraseña -->
+                <div class="campo-formulario">
+                    <label for="password" id="password" class="etiqueta-campo">
+                        Contraseña
+                        <span class="texto-requerido">*</span>
+                    </label>
+                    <div class="contenedor-entrada">
+                        <input id="password" type="password" class="entrada entrada-contrasena" placeholder="••••••••"
+                            value="">
+                        <button type="button" class="boton-visibilidad" aria-label="Mostrar contraseña">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Opciones -->
+                <div class="opciones-formulario">
+                    <label id="checkbox-recordar" class="checkbox-recordar">
+                        <input type="checkbox">
+                        <span>Recordarme</span>
+                    </label>
+                    <a href="#" class="enlace-olvidado">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <!-- Botón Submit -->
+                <button type="submit" class="boton boton-primario boton-medio ancho-completo">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                        <polyline points="10 17 15 12 10 7"></polyline>
+                        <line x1="15" y1="12" x2="3" y2="12"></line>
+                    </svg>
+                    <span>Iniciar Sesión</span>
+                </button>
+            </form>
+            <!-- Enlaces adicionales -->
+            <div class="enlaces-adicionales">
+                <p class="texto-alternativo">
+                    ¿No tienes cuenta?
+                    <a href="/register" class="enlace-registro">Regístrate aquí</a>
+                </p>
+
+                <div class="separador">
+                    <span>o continúa con</span>
+                </div>
+
+                <div class="botones-sociales">
+                    <button type="button" class="boton-social google">
+                        <span class="icono-social">G</span>
+                        <span>Google</span>
+                    </button>
+                    <button type="button" class="boton-social apple">
+                        <span class="icono-social">󰀵</span>
+                        <span>Apple</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Términos -->
+            <div class="terminos-autenticacion">
+                <p>
+                    Al continuar, aceptas nuestros
+                    <a href="#" class="enlace-terminos">Términos de Servicio</a>
+                    y
+                    <a href="#" class="enlace-terminos">Política de Privacidad</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

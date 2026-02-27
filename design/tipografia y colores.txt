@@ -1,0 +1,5 @@
+Estilo: Minimalista y moderno, inspirado en Uber/Shop.app
+
+Paleta Principal: Negro (#000000) para elementos clave, fondo blanco (#FFFFFF), gris muy claro (#F5F5F5)
+
+Tipografía: Inter (Sans Serif moderna)
