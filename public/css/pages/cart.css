@@ -2,7 +2,7 @@
 .contenedor {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 1rem;
+    padding: 0 var(--espacio-md);
 }
 .contenido-carrito {
     padding: var(--espacio-xxl) 0;
@@ -59,7 +59,7 @@
 }
 
 .placeholder-imagen {
-    font-size: 48px;
+    font-size: var(--fuente-tamano-xxxxl);
 }
 
 
@@ -87,7 +87,7 @@
     align-items: center;
     gap: var(--espacio-sm);
     padding: var(--espacio-sm) var(--espacio-md);
-    background-color: rgba(46, 125, 50, 0.1);
+    background-color: var(--color-inclusion);
     border-radius: var(--radio-borde-pequeno);
     color: var(--color-exito);
     font-size: var(--fuente-tamano-sm);
@@ -132,7 +132,7 @@
     border-right: 1px solid var(--color-borde);
     text-align: center;
     font-size: var(--fuente-tamano-base);
-    font-weight: 600;
+    font-weight: var(--fuente-altura);
     padding: var(--espacio-sm);
 }
 
@@ -149,7 +149,7 @@
 }
 
 .boton-eliminar:hover {
-    background-color: rgba(211, 47, 47, 0.1);
+    background-color: var(--color-eliminar-hover);
 }
 
 
@@ -169,7 +169,7 @@
 
 .precio-total {
     font-size: var(--fuente-tamano-xl);
-    font-weight: 700;
+    font-weight: var(--fuente-altura-l);
     color: var(--color-texto);
 }
 
@@ -191,7 +191,7 @@
 
 .titulo-resumen {
     font-size: var(--fuente-tamano-xl);
-    font-weight: 600;
+    font-weight: var(--fuente-altura);
     margin-bottom: var(--espacio-lg);
 }
 
@@ -210,7 +210,7 @@
 }
 
 .linea-resumen .monto {
-    font-weight: 600;
+    font-weight: var(--fuente-altura);
     color: var(--color-texto);
 }
 
@@ -224,7 +224,7 @@
 
 .monto.gratis {
     color: var(--color-gratis);
-    font-weight: 700;
+    font-weight: var(--fuente-altura-l);
 }
 
 .separador {
@@ -238,7 +238,7 @@
     justify-content: space-between;
     align-items: center;
     font-size: var(--fuente-tamano-lg);
-    font-weight: 700;
+    font-weight: var(--fuente-altura-l);
     padding-top: var(--espacio-sm);
 }
 
@@ -272,12 +272,12 @@
 .boton-finalizar {
     width: 100%;
     background-color: var(--color-primario);
-    color: white;
+    color: var(--color-fondo);
     border: none;
     border-radius: var(--radio-borde-mediano);
     padding: var(--espacio-lg);
     font-size: var(--fuente-tamano-base);
-    font-weight: 600;
+    font-weight: var(--fuente-altura);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -287,7 +287,7 @@
 }
 
 .boton-finalizar:hover {
-    background-color: #333333;
+    background-color: var(--color-primario-hover);
     transform: translateY(-2px);
     box-shadow: var(--sombra-media);
 }
@@ -346,16 +346,16 @@
 .boton-volver-comprar {
     display: inline-block;
     background-color: var(--color-primario);
-    color: white;
+    color: var(--color-fondo);
     padding: var(--espacio-md) var(--espacio-xxl);
     border-radius: var(--radio-borde-mediano);
     text-decoration: none;
-    font-weight: 600;
+    font-weight: var(--fuente-altura);
     transition: all var(--transicion-base);
 }
 
 .boton-volver-comprar:hover {
-    background-color: #333333;
+    background-color: var(--color-primario-hover);
     transform: translateY(-2px);
 }
 
@@ -373,7 +373,7 @@
     }
 
     .placeholder-imagen {
-        font-size: 32px;
+        font-size: var(--fuente-tamano-xxxl);
     }
 
     .precio-item {

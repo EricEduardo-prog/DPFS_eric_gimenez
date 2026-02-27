@@ -6,7 +6,12 @@
   --color-secundario: #0077B6;
   --color-exito: #2E7D32;
   --color-error: #D32F2F;
+  --color-inclusion: #2E7D321A;
+  --color-eliminar-hover: #d32f2f1a;
   --color-advertencia: #FF9800;
+  --color-estrella: #FFD700;
+  --color-descuento: #FF6B6B;
+  --color-opcion-activa: #0077B60D;
   --color-primario-hover: #333333;
   --color-error-suave: #FFEBEE;
   --color-borde-suave: #E0E0E0;
@@ -35,9 +40,11 @@
   /* Espaciado */
   --espacio-xs: 4px;
   --espacio-sm: 8px;
+  --espacio-ms: 12px;
   --espacio-md: 16px;
   --espacio-lg: 24px;
   --espacio-xl: 32px;
+  --espacio-xx: 40px;
   --espacio-xxl: 48px;
 
   /* Tipografía */
@@ -49,9 +56,18 @@
   --fuente-tamano-xl: 20px;
   --fuente-tamano-xxl: 24px;
   --fuente-tamano-xxxl: 32px;
+  --fuente-tamano-xxxxs: 40px;
+  --fuente-tamano-xxxxl: 48px;
+  --fuente-tamano-super: 120px;
+
+  /*Altura de fuentes*/
+  --fuente-altura-s: 500;
+  --fuente-altura: 600;
+  --fuente-altura-l: 700;
 
   /* Transiciones */
   --transicion-rapida: 150ms ease;
+  --transicion-intermedia: 200ms ease;
   --transicion-base: 250ms ease;
   --transicion-lenta: 350ms ease;
 

@@ -1,5 +1,12 @@
 Estilo: Minimalista y moderno, inspirado en Uber/Shop.app
 
-Paleta Principal: Negro (#000000) para elementos clave, fondo blanco (#FFFFFF), gris muy claro (#F5F5F5)
+Paleta Principal:
+- **Primario**: `#000000` (negro).
+- **Secundario**: `#0077B6` (azul).  
+- **Fondo principal**: `#FFFFFF` (blanco).  
+- **Fondo secundario**: `#F5F5F5` (gris claro).  
 
-Tipografía: Inter (Sans Serif moderna)
+Tipografía: 
+- Familia: `'Inter', -apple-system, BlinkMacSystemFont, sans-serif`.
+- Escala de tamaños disponible en las variables (`--fuente-tamano-sm`, etc.).
+- Los encabezados (`h1`–`h6`) están tipificados en `global.css`.

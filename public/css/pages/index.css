@@ -6,12 +6,12 @@
 .contenedor {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 1rem;
+    padding: 0 var(--espacio-md);
 }
 
 /*Buscador*/
 .buscador-principal {
-    padding: 1.5rem 0;
+    padding: var(--espacio-lg) 0;
 }
 
 .contenedor-buscador {
@@ -20,8 +20,8 @@
     background: var(--color-fondo);
     border: 2px solid var(--color-borde);
     border-radius: var(--radio-borde-grande);
-    padding: 0.75rem 1rem;
-    transition: border-color 0.2s;
+    padding: var(--espacio-ms) var(--espacio-md);
+    transition: border-color var(--transicion-intermedia);
 }
 
 .contenedor-buscador:focus-within {
@@ -29,8 +29,8 @@
 }
 
 .icono-busqueda {
-    font-size: 1.25rem;
-    margin-right: 0.75rem;
+    font-size: var(--fuente-tamaño-xl);
+    margin-right: var(--espacio-ms);
     color: var(--color-texto-secundario);
 }
 
@@ -38,7 +38,7 @@
     flex: 1;
     border: none;
     background: none;
-    font-size: 1rem;
+    font-size: var(--fuente-tamano-base);
     color: var(--color-texto);
     outline: none;
 }
@@ -50,7 +50,7 @@
 .boton-filtros {
     background: none;
     border: none;
-    padding: 0.5rem;
+    padding: var(--espacio-sm);
     border-radius: var(--radio-borde);
     cursor: not-allowed;
     color: var(--color-texto-terciario);
@@ -63,19 +63,19 @@
 .seccion-ofertas,
 .seccion-recomendados,
 .seccion-servicios {
-    padding: 2rem 0;
+    padding: var(--espacio-xl) 0;
     border-bottom: 1px solid var(--color-borde-suave);
 }
 .encabezado-seccion {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--espacio-lg);
 }
 
 .titulo-seccion {
-    font-size: 1.5rem;
-    font-weight: 600;
+    font-size: var(--fuente-tamano-xxl);
+    font-weight: var(--fuente-altura);
     color: var(--color-texto);
     margin: 0;
 }
@@ -83,19 +83,19 @@
 .titulo-con-icono {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--espacio-sm);
 }
 
 .icono-ofertas,
 .icono-trending {
-    font-size: 1.25rem;
+    font-size: var(--fuente-tamaño-xl);
 }
 
 .enlace-ver-todo {
     color: var(--color-primario);
     text-decoration: none;
-    font-weight: 500;
-    transition: color 0.2s;
+    font-weight: var(--fuente-altura-s);
+    transition: color var(--transicion-intermedia);
 }
 
 .enlace-ver-todo:hover {
@@ -107,59 +107,59 @@
 .contador-oferta {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
+    gap: var(--espacio-sm);
+    padding: var(--espacio-sm) var(--espacio-md);
     background: var(--color-error-suave);
     border-radius: var(--radio-borde);
     color: var(--color-error);
-    font-weight: 500;
+    font-weight: var(--fuente-altura-s);
 }
 
 .etiqueta-contador {
-    font-size: 0.875rem;
+    font-size: var(--fuente-tamano-sm);
 }
 
 .valor-contador {
     font-family: monospace;
-    font-weight: 700;
+    font-weight: var(--fuente-altura-l);
 }
 
 /* Grids */
 .grid-categorias {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 1rem;
+    gap: var(--espacio-md);
 }
 
 .grid-productos {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1.5rem;
+    gap: var(--espacio-lg);
 }
 
 .tarjeta-oferta {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
+    gap: var(--espacio-lg);
     background: var(--color-fondo-acento);
-    padding: 1.5rem;
+    padding: var(--espacio-lg);
     border-radius: var(--radio-borde-grande);
 }
 
 .grid-servicios {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1rem;
+    gap: var(--espacio-lg);
+    margin-top: var(--espacio-md)
 }
 
 .tarjeta-servicio {
     text-align: center;
-    padding: 1.5rem;
+    padding: var(--espacio-lg);
     background: var(--color-fondo);
     border: 1px solid var(--color-borde);
     border-radius: var(--radio-borde-grande);
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform var(--transicion-intermedia), box-shadow var(--transicion-intermedia);
 }
 
 .tarjeta-servicio:hover {
@@ -168,19 +168,19 @@
 }
 
 .icono-servicio {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
+    font-size: var(--fuente-tamano-xxxxs);
+    margin-bottom: var(--espacio-md);
 }
 
 .titulo-servicio {
-    font-size: 1.125rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
+    font-size: var(--fuente-tamano-lg);
+    font-weight: var(--fuente-altura);
+    margin-bottom: var(--espacio-sm);
     color: var(--color-texto);
 }
 
 .descripcion-servicio {
-    font-size: 0.875rem;
+    font-size: var(--fuente-tamano-sm);
     color: var(--color-texto-secundario);
     line-height: 1.4;
 }
@@ -190,7 +190,7 @@
 .sin-productos {
     grid-column: 1 / -1;
     text-align: center;
-    padding: 3rem 1rem;
+    padding: var(--espacio-xxl) var(--espacio-md);
     color: var(--color-texto-secundario);
     background: var(--color-fondo);
     border-radius: var(--radio-borde);
@@ -201,12 +201,12 @@
 @media (max-width: 768px) {
     .grid-categorias {
         grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        gap: 0.75rem;
+        gap: var(--espacio-ms);
     }
 
     .grid-productos {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 1rem;
+        gap: var(--espacio-md);
     }
 
     .tarjeta-oferta {
@@ -216,7 +216,7 @@
     .encabezado-seccion {
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.75rem;
+        gap: var(--espacio-ms);
     }
 
     .enlace-ver-todo {
@@ -238,6 +238,6 @@
     }
 
     .contenedor-buscador {
-        padding: 0.5rem 0.75rem;
+        padding: var(--espacio-sm) var(--espacio-ms);
     }
 }
