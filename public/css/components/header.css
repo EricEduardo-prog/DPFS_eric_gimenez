@@ -1,151 +1,168 @@
-/*CABECERAS*/
+
 .cabecera {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background-color: var(--color-fondo);
-    border-bottom: 1px solid var(--color-borde);
-    padding: 0.75rem 0;
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-navegacion);
+  background-color: var(--color-fondo);
+  border-bottom: 1px solid var(--color-borde);
+  padding: var(--espacio-ms) 0;
 }
 
 .cabecera-contenido {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
+  max-width: var(--ancho-contenedor);
+  margin: 0 auto;
+  padding: 0 var(--espacio-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--espacio-md);
 }
 
 .cabecera-izquierda,
 .cabecera-derecha {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-md);
 }
 
-/*UBICACION*/
+
+/* ----------------------
+   Botón icono genérico
+   ----------------------*/
 
 .boton-icono {
-    background: none;
-    border: none;
-    padding: 0.5rem;
-    border-radius: 50%;
-    cursor: pointer;
-    color: var(--color-texto);
-    transition: background-color 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  background: none;
+  border: none;
+  padding: var(--espacio-sm);
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--color-texto);
+  transition: background-color var(--transicion-intermedia);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .boton-icono:hover {
-    background-color: var(--color-fondo-hover);
+  background-color: var(--color-fondo-hover);
 }
 
 .boton-icono:active {
-    transform: scale(0.95);
+  transform: scale(0.95);
 }
 
+
+/* -----------------------
+   -----------------------*/
+
 .selector-ubicacion {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    background: var(--color-fondo);
-    border: 1px solid var(--color-borde);
-    border-radius: var(--radio-borde);
-    cursor: pointer;
-    transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-sm);
+  padding: var(--espacio-sm) var(--espacio-ms);
+  background: var(--color-fondo);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-borde);
+  cursor: pointer;
+  transition: all var(--transicion-intermedia);
 }
 
 .selector-ubicacion:hover {
-    background: var(--color-fondo-hover);
-    border-color: var(--color-primario);
+  background: var(--color-fondo-hover);
+  border-color: var(--color-primario);
 }
 
 .info-ubicacion {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.125rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--espacio-xs);
 }
 
 .etiqueta-ubicacion {
-    font-size: 0.75rem;
-    color: var(--color-texto-secundario);
+  font-size: var(--fuente-tamano-xs);
+  color: var(--color-texto-secundario);
 }
 
 .direccion-ubicacion {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--color-texto);
+  font-size: var(--fuente-tamano-sm);
+  font-weight: var(--fuente-altura-s);
+  color: var(--color-texto);
 }
 
-/*TITULO Y LOGO*/
+
+/* -------------------
+   Logo y título
+   ------------------*/
+
 .titulo-cabecera {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--color-texto);
-    margin: 0;
+  font-size: var(--fuente-tamano-xl);
+  font-weight: var(--fuente-altura);
+  color: var(--color-texto);
+  margin: 0;
 }
 
 .logo-cabecera {
-    display: flex;
-    flex-direction: column;
-    text-decoration: none;
-    color: inherit;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
 }
 
 .texto-logo-cabecera {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--color-primario);
-    letter-spacing: -0.5px;
+  font-size: var(--fuente-tamano-xxl);
+  font-weight: var(--fuente-altura-l);
+  color: var(--color-primario);
+  letter-spacing: -0.5px; /* Intencional: compresión visual del logotipo */
 }
 
 .subtitulo-logo-cabecera {
-    font-size: 0.75rem;
-    color: var(--color-texto-secundario);
-    font-weight: 400;
+  font-size: var(--fuente-tamano-xs);
+  color: var(--color-texto-secundario);
+  font-weight: var(--fuente-altura-xs);
 }
 
-/*ICONOS*/
+
+/* ------------------
+Cabecera   
+-----------------*/
 
 .icono-cabecera,
 .icono-ubicacion,
 .icono-perfil,
 .icono-tema {
-    font-size: 1.25rem;
-    line-height: 1;
+  font-size: var(--fuente-tamano-xl);
+  line-height: 1;
 }
 
 .icono-desplegable {
-    font-size: 0.75rem;
-    opacity: 0.7;
+  font-size: var(--fuente-tamano-xs);
+  opacity: 0.7;
 }
 
 .acciones-cabecera {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-sm);
 }
 
-/*RESPONSIVE*/
+
+/*  ---------------------
+   Responsive
+  ---------------------*/
 
 @media (max-width: 768px) {
   .cabecera-contenido {
-    padding: 0 0.75rem;
+    padding: 0 var(--espacio-ms);
   }
-  
+
   .direccion-ubicacion {
     max-width: 150px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  
+
   .etiqueta-ubicacion,
   .subtitulo-logo-cabecera {
     display: none;
@@ -155,10 +172,10 @@
 @media (max-width: 480px) {
   .cabecera-izquierda,
   .cabecera-derecha {
-    gap: 0.5rem;
+    gap: var(--espacio-sm);
   }
-  
+
   .selector-ubicacion {
-    padding: 0.375rem 0.5rem;
+    padding: var(--espacio-xs) var(--espacio-sm);
   }
 }

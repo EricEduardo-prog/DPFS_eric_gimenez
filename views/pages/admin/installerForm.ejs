@@ -1,0 +1,435 @@
+<%# Vista: pages/admin/installerUsers.ejs %>
+<%# Requiere: pageCss: 'admin_forms', currentPage: 'admin' %>
+<%# Variables EJS esperadas: instalador (objeto, opcional para edición) %>
+
+<% const esEdicion = typeof instalador !== 'undefined' && instalador !== null; %>
+<% const titulo = esEdicion ? 'Editar Instalador' : 'Nuevo Instalador'; %>
+
+<% 
+const diasSemana = [
+  { id: 'lunes',     nombre: 'Lun' },
+  { id: 'martes',    nombre: 'Mar' },
+  { id: 'miercoles', nombre: 'Mié' },
+  { id: 'jueves',    nombre: 'Jue' },
+  { id: 'viernes',   nombre: 'Vie' }
+];
+const turnos = [
+  { id: 'manana', nombre: 'Mañana', horario: '08:00 – 13:00' },
+  { id: 'tarde',  nombre: 'Tarde',  horario: '13:00 – 18:00' }
+];
+const profesiones = [
+  'Electricista',
+  'Plomero / Gasista',
+  'Técnico en climatización',
+  'Técnico en refrigeración',
+  'Técnico electromecánico',
+  'Albañil / Constructor',
+  'Herrero / Soldador',
+  'Pintor',
+  'Carpintero',
+  'Otro'
+];
+%>
+
+<section class="admin-formulario">
+
+  <!-- Encabezado de sección -->
+  <div class="admin-formulario__encabezado">
+    <a href="/admin/instaladores" class="admin-formulario__volver">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      Volver al listado
+    </a>
+    <div class="admin-formulario__titulo-bloque">
+      <h1 class="admin-formulario__titulo"><%= titulo %></h1>
+      <% if (esEdicion) { %>
+        <span class="admin-formulario__badge admin-formulario__badge--edicion">Editando #<%= instalador.id %></span>
+      <% } else { %>
+        <span class="admin-formulario__badge admin-formulario__badge--nuevo">Nuevo</span>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Formulario -->
+  <form
+    action="<%= esEdicion ? `/admin/instaladores/${instalador.id}?_method=PUT` : '/admin/instaladores' %>"
+    method="POST"
+    class="admin-formulario__form"
+    id="formInstalador"
+    novalidate
+  >
+    <% if (esEdicion) { %>
+      <input type="hidden" name="_method" value="PUT">
+      <input type="hidden" name="id" value="<%= instalador.id %>">
+    <% } %>
+
+    <!-- Layout: columna principal + lateral -->
+    <div class="admin-formulario__layout">
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- COLUMNA PRINCIPAL                       -->
+      <!-- ═══════════════════════════════════════ -->
+      <div class="admin-formulario__columna-principal">
+
+        <!-- ─── Sección: Datos personales ─── -->
+        <div class="admin-formulario__seccion">
+          <h2 class="admin-formulario__seccion-titulo">
+            <span class="admin-formulario__seccion-icono">01</span>
+            Datos del instalador
+          </h2>
+
+          <div class="campo-formulario">
+            <label class="etiqueta-campo" for="nombre">
+              Nombre completo <span class="campo-requerido">*</span>
+            </label>
+            <input
+              type="text"
+              id="nombre"
+              name="nombre"
+              class="entrada"
+              placeholder="Ej: Juan Carlos Rodríguez"
+              value="<%= esEdicion ? instalador.nombre : '' %>"
+              required
+            >
+            <span class="mensaje-error" id="error-nombre"></span>
+          </div>
+
+          <div class="admin-formulario__fila-doble">
+            <div class="campo-formulario">
+              <label class="etiqueta-campo" for="matricula">
+                Matrícula certificada <span class="campo-requerido">*</span>
+              </label>
+              <input
+                type="text"
+                id="matricula"
+                name="matricula"
+                class="entrada entrada--codigo"
+                placeholder="Ej: MP-04578 / MN-12345"
+                value="<%= esEdicion ? instalador.matricula : '' %>"
+                required
+              >
+              <span class="mensaje-error" id="error-matricula"></span>
+              <p class="campo-formulario__ayuda">Matrícula Provincial (MP) o Nacional (MN).</p>
+            </div>
+
+            <div class="campo-formulario">
+              <label class="etiqueta-campo" for="profesion">
+                Profesión <span class="campo-requerido">*</span>
+              </label>
+              <select id="profesion" name="profesion" class="entrada entrada--select" required>
+                <option value="" disabled <%= !esEdicion ? 'selected' : '' %>>Seleccionar profesión</option>
+                <% profesiones.forEach(function(prof) { %>
+                  <option value="<%= prof %>" <%= (esEdicion && instalador.profesion === prof) ? 'selected' : '' %>>
+                    <%= prof %>
+                  </option>
+                <% }); %>
+              </select>
+              <span class="mensaje-error" id="error-profesion"></span>
+            </div>
+          </div>
+
+          <div class="campo-formulario">
+            <label class="etiqueta-campo" for="email">
+              Email de contacto <span class="campo-requerido">*</span>
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="entrada"
+              placeholder="instalador@ejemplo.com"
+              value="<%= esEdicion ? instalador.email : '' %>"
+              required
+            >
+            <span class="mensaje-error" id="error-email"></span>
+          </div>
+
+          <div class="campo-formulario">
+            <label class="etiqueta-campo" for="telefono">
+              Teléfono / WhatsApp <span class="etiqueta-opcional">(opcional)</span>
+            </label>
+            <input
+              type="tel"
+              id="telefono"
+              name="telefono"
+              class="entrada"
+              placeholder="Ej: +54 9 223 456-7890"
+              value="<%= esEdicion && instalador.telefono ? instalador.telefono : '' %>"
+            >
+          </div>
+        </div>
+
+        <!-- ─── Sección: Disponibilidad ─── -->
+        <div class="admin-formulario__seccion">
+          <h2 class="admin-formulario__seccion-titulo">
+            <span class="admin-formulario__seccion-icono">02</span>
+            Disponibilidad semanal
+          </h2>
+
+          <!-- Acciones rápidas -->
+          <div class="disponibilidad-acciones">
+            <button type="button" class="boton-rapido" id="btnTodos">Marcar todos</button>
+            <button type="button" class="boton-rapido" id="btnNinguno">Limpiar todos</button>
+            <button type="button" class="boton-rapido" id="btnSoloManana">Solo mañana</button>
+            <button type="button" class="boton-rapido" id="btnSoloTarde">Solo tarde</button>
+          </div>
+
+          <!-- Grilla de disponibilidad -->
+          <div class="disponibilidad-grilla" role="group" aria-label="Disponibilidad por día y turno">
+
+            <!-- Encabezado de columnas: días -->
+            <div class="disponibilidad-grilla__cabecera">
+              <div class="disponibilidad-grilla__etiqueta-turno"></div>
+              <% diasSemana.forEach(function(dia) { %>
+                <div class="disponibilidad-grilla__dia"><%= dia.nombre %></div>
+              <% }); %>
+            </div>
+
+            <!-- Filas: turnos -->
+            <% turnos.forEach(function(turno) { %>
+              <div class="disponibilidad-grilla__fila">
+                <div class="disponibilidad-grilla__turno-info">
+                  <span class="disponibilidad-grilla__turno-nombre"><%= turno.nombre %></span>
+                  <span class="disponibilidad-grilla__turno-horario"><%= turno.horario %></span>
+                </div>
+                <% diasSemana.forEach(function(dia) { %>
+                  <% 
+                    const nombreCampo = `disponibilidad_${dia.id}_${turno.id}`;
+                    const estaSeleccionado = esEdicion && 
+                      instalador.disponibilidad && 
+                      instalador.disponibilidad[dia.id] && 
+                      instalador.disponibilidad[dia.id][turno.id];
+                  %>
+                  <div class="disponibilidad-celda">
+                    <label class="disponibilidad-celda__label" title="<%= dia.nombre %> - <%= turno.nombre %>">
+                      <input
+                        type="checkbox"
+                        name="<%= nombreCampo %>"
+                        value="true"
+                        class="disponibilidad-checkbox"
+                        data-dia="<%= dia.id %>"
+                        data-turno="<%= turno.id %>"
+                        <%= estaSeleccionado ? 'checked' : '' %>
+                      >
+                      <span class="disponibilidad-celda__visual">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                      </span>
+                    </label>
+                  </div>
+                <% }); %>
+              </div>
+            <% }); %>
+
+          </div>
+          <p class="campo-formulario__ayuda" style="margin-top: var(--espaciado-sm);">
+            Seleccioná los días y turnos en los que el instalador está disponible.
+          </p>
+        </div>
+
+      </div>
+      <!-- FIN COLUMNA PRINCIPAL -->
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- COLUMNA LATERAL                         -->
+      <!-- ═══════════════════════════════════════ -->
+      <aside class="admin-formulario__lateral">
+
+        <!-- ─── Card: Estado (Alta/Baja lógica) ─── -->
+        <div class="admin-lateral__card">
+          <h3 class="admin-lateral__card-titulo">Estado del registro</h3>
+
+          <div class="campo-formulario">
+            <div class="toggle-fila">
+              <div class="toggle-fila__info">
+                <label class="etiqueta-campo" for="activo">Instalador activo</label>
+                <p class="campo-formulario__ayuda">Baja lógica: el registro se conserva pero no aparece en el sistema.</p>
+              </div>
+              <label class="toggle-switch">
+                <input
+                  type="checkbox"
+                  id="activo"
+                  name="activo"
+                  value="true"
+                  <%= (!esEdicion || (esEdicion && instalador.activo)) ? 'checked' : '' %>
+                >
+                <span class="toggle-switch__slider"></span>
+              </label>
+            </div>
+            <div class="estado-indicator" id="estadoIndicator">
+              <span class="estado-indicator__dot <%= (!esEdicion || (esEdicion && instalador.activo)) ? 'estado-indicator__dot--activo' : 'estado-indicator__dot--inactivo' %>"></span>
+              <span class="estado-indicator__texto" id="estadoTexto">
+                <%= (!esEdicion || (esEdicion && instalador.activo)) ? 'Alta — operativo en el sistema' : 'Baja — no asignable' %>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── Card: Valoración (solo lectura) ─── -->
+        <div class="admin-lateral__card">
+          <h3 class="admin-lateral__card-titulo">Valoración</h3>
+          <% if (esEdicion && instalador.valoracion !== undefined) { %>
+            <div class="valoracion-bloque">
+              <div class="valoracion-estrellas" id="valoracionEstrellas" aria-label="Valoración: <%= instalador.valoracion %> de 5">
+                <% for (let i = 1; i <= 5; i++) { %>
+                  <svg class="estrella <%= i <= Math.round(instalador.valoracion) ? 'estrella--llena' : 'estrella--vacia' %>"
+                    width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                <% } %>
+              </div>
+              <div class="valoracion-datos">
+                <span class="valoracion-numero"><%= instalador.valoracion.toFixed(1) %></span>
+                <span class="valoracion-total">/ 5</span>
+                <% if (instalador.cantidadValoraciones) { %>
+                  <span class="valoracion-cantidad">(<%= instalador.cantidadValoraciones %> valoraciones)</span>
+                <% } %>
+              </div>
+              <p class="campo-formulario__ayuda">La valoración es calculada automáticamente a partir de los trabajos completados. No es editable.</p>
+            </div>
+          <% } else { %>
+            <div class="valoracion-sin-datos">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <p>Sin valoraciones aún. Se actualizará automáticamente después de completar trabajos.</p>
+            </div>
+          <% } %>
+        </div>
+
+        <!-- ─── Card: Metadata (solo en edición) ─── -->
+        <% if (esEdicion) { %>
+        <div class="admin-lateral__card admin-lateral__card--metadata">
+          <h3 class="admin-lateral__card-titulo">Información del registro</h3>
+          <ul class="metadata-lista">
+            <li class="metadata-item">
+              <span class="metadata-item__clave">ID</span>
+              <span class="metadata-item__valor metadata-item__valor--codigo">#<%= instalador.id %></span>
+            </li>
+            <% if (instalador.fechaAlta) { %>
+            <li class="metadata-item">
+              <span class="metadata-item__clave">Alta</span>
+              <span class="metadata-item__valor"><%= new Date(instalador.fechaAlta).toLocaleDateString('es-AR') %></span>
+            </li>
+            <% } %>
+            <% if (instalador.fechaModificacion) { %>
+            <li class="metadata-item">
+              <span class="metadata-item__clave">Última modificación</span>
+              <span class="metadata-item__valor"><%= new Date(instalador.fechaModificacion).toLocaleDateString('es-AR') %></span>
+            </li>
+            <% } %>
+            <% if (instalador.trabajosCompletados !== undefined) { %>
+            <li class="metadata-item">
+              <span class="metadata-item__clave">Trabajos completados</span>
+              <span class="metadata-item__valor"><%= instalador.trabajosCompletados %></span>
+            </li>
+            <% } %>
+          </ul>
+        </div>
+        <% } %>
+
+      </aside>
+      <!-- FIN COLUMNA LATERAL -->
+
+    </div>
+    <!-- FIN LAYOUT -->
+
+    <!-- Barra de acciones fija -->
+    <div class="admin-formulario__acciones">
+      <a href="/admin/instaladores" class="boton boton--secundario">Cancelar</a>
+      <button type="submit" class="boton boton--primario" id="btnGuardar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+          <polyline points="17 21 17 13 7 13 7 21"></polyline>
+          <polyline points="7 3 7 8 15 8"></polyline>
+        </svg>
+        <%= esEdicion ? 'Guardar cambios' : 'Registrar instalador' %>
+      </button>
+    </div>
+
+  </form>
+</section>
+
+<script>
+(function () {
+  'use strict';
+
+  // ─── Toggle estado activo ─────────────────────────────────────────────────
+  const toggleActivo = document.getElementById('activo');
+  const estadoDot = document.querySelector('.estado-indicator__dot');
+  const estadoTexto = document.getElementById('estadoTexto');
+  if (toggleActivo && estadoDot && estadoTexto) {
+    toggleActivo.addEventListener('change', function () {
+      if (this.checked) {
+        estadoDot.className = 'estado-indicator__dot estado-indicator__dot--activo';
+        estadoTexto.textContent = 'Alta — operativo en el sistema';
+      } else {
+        estadoDot.className = 'estado-indicator__dot estado-indicator__dot--inactivo';
+        estadoTexto.textContent = 'Baja — no asignable';
+      }
+    });
+  }
+
+  // ─── Acciones rápidas de disponibilidad ─────────────────────────────────
+  const checkboxes = document.querySelectorAll('.disponibilidad-checkbox');
+
+  document.getElementById('btnTodos') && document.getElementById('btnTodos').addEventListener('click', function () {
+    checkboxes.forEach(function (cb) { cb.checked = true; });
+  });
+  document.getElementById('btnNinguno') && document.getElementById('btnNinguno').addEventListener('click', function () {
+    checkboxes.forEach(function (cb) { cb.checked = false; });
+  });
+  document.getElementById('btnSoloManana') && document.getElementById('btnSoloManana').addEventListener('click', function () {
+    checkboxes.forEach(function (cb) {
+      cb.checked = cb.dataset.turno === 'manana';
+    });
+  });
+  document.getElementById('btnSoloTarde') && document.getElementById('btnSoloTarde').addEventListener('click', function () {
+    checkboxes.forEach(function (cb) {
+      cb.checked = cb.dataset.turno === 'tarde';
+    });
+  });
+
+  // ─── Validación básica del form ──────────────────────────────────────────
+  const form = document.getElementById('formInstalador');
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      let valido = true;
+
+      function mostrarError(id, msg) {
+        const el = document.getElementById(id);
+        if (el) { el.textContent = msg; valido = false; }
+        const inputId = id.replace('error-', '');
+        const input = document.getElementById(inputId);
+        if (input) input.classList.add('entrada-error');
+      }
+
+      function limpiarError(id) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '';
+        const input = document.getElementById(id.replace('error-', ''));
+        if (input) input.classList.remove('entrada-error');
+      }
+
+      ['nombre', 'matricula', 'profesion', 'email'].forEach(function (campo) {
+        limpiarError('error-' + campo);
+      });
+
+      if (!document.getElementById('nombre').value.trim()) mostrarError('error-nombre', 'El nombre es obligatorio.');
+      if (!document.getElementById('matricula').value.trim()) mostrarError('error-matricula', 'La matrícula es obligatoria.');
+      if (!document.getElementById('profesion').value) mostrarError('error-profesion', 'Seleccioná una profesión.');
+      const emailVal = document.getElementById('email').value.trim();
+      if (!emailVal) {
+        mostrarError('error-email', 'El email es obligatorio.');
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+        mostrarError('error-email', 'Ingresá un email válido.');
+      }
+
+      if (!valido) e.preventDefault();
+    });
+  }
+
+})();
+</script>

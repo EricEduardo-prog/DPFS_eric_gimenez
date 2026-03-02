@@ -1,88 +1,171 @@
 /* Variables CSS */
 
 :root {
-  /* Colores principales */
-  --color-primario: #000000;
-  --color-secundario: #0077B6;
-  --color-exito: #2E7D32;
-  --color-error: #D32F2F;
-  --color-error-suave: #d32f2f1a;
-  --color-inclusion: #2E7D321A;
-  --color-eliminar-hover: #d32f2f1a;
-  --color-advertencia: #FF9800;
-  --color-estrella: #FFD700;
-  --color-descuento: #FF6B6B;
-  --color-opcion-activa: #0077B60D;
-  --color-primario-hover: #333333;
-  --color-error-suave: #FFEBEE;
-  --color-borde-suave: #E0E0E0;
-  --color-fondo-acento: #F8F9FA;
 
-  /* Escala de grises */
-  --color-fondo: #FFFFFF;
-  --color-fondo-secundario: #F5F5F5;
-  --color-borde: #E0E0E0;
-  --color-texto: #000000;
-  --color-texto-secundario: #666666;
-  --color-texto-terciario: #999999;
+  /*-------------------
+   Paleta de colores 
+   -------------------*/
+ 
+  /* Primarios */
+  --color-primario:             #000000;
+  --color-primario-hover:       #333333;
+  --color-secundario:           #0077B6;
 
-  /* Sombras */
-  --sombra-suave: 0 2px 4px rgba(0, 0, 0, 0.1);
-  --sombra-media: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --sombra-fuerte: 0 8px 24px rgba(0, 0, 0, 0.15);
+  /* Semánticos */
+  --color-exito:                #2E7D32;
+  --color-error:                #D32F2F;
+  --color-advertencia:          #FF9800;
+  --color-info:                 #0077B6; /* Alias de --color-secundario */
 
-  /* Bordes redondeados */
-  --radio-borde-pequeno: 8px;
-  --radio-borde-mediano: 12px;
-  --radio-borde-grande: 16px;
-  --radio-borde-completo: 9999px;
-  --radio-borde: 8px; 
+  /* Superficies semánticas */
+  --color-inclusion:            rgba(46, 125, 50, 0.1);   /* Fondo verde suave */
+  --color-error-suave:          rgba(211, 47, 47, 0.1);   /* Fondo rojo suave  */
+  --color-eliminar-hover:       rgba(211, 47, 47, 0.1);
+  --color-opcion-activa:        rgba(0, 119, 182, 0.05);
 
-  /* Espaciado */
-  --espacio-xs: 4px;
-  --espacio-sm: 8px;
-  --espacio-ms: 12px;
-  --espacio-md: 16px;
-  --espacio-lg: 24px;
-  --espacio-xl: 32px;
-  --espacio-xx: 40px;
-  --espacio-xxl: 48px;
+  /* Acento / UI */
+  --color-estrella:             #FFD700;
+  --color-descuento:            #FF6B6B;
 
-  /* Tipografía */
-  --fuente-familia: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --fuente-tamano-xs: 12px;
-  --fuente-tamano-sm: 14px;
-  --fuente-tamano-base: 16px;
-  --fuente-tamano-lg: 18px;
-  --fuente-tamano-xl: 20px;
-  --fuente-tamano-xxl: 24px;
-  --fuente-tamano-xxxl: 32px;
-  --fuente-tamano-xxxxs: 40px;
-  --fuente-tamano-xxxxl: 48px;
-  --fuente-tamano-super: 120px;
+  /*-------------------
+   Escala de grises / Neutros
+   -------------------*/
+   
+  --color-fondo:                #FFFFFF;
+  --color-fondo-secundario:     #F5F5F5;
+  --color-fondo-acento:         #F8F9FA;
+  --color-fondo-hover:          #F0F0F0;   /* Para hover en superficies neutras */
 
-  /*Altura de fuentes*/
-  --fuente-altura-s: 500;
-  --fuente-altura: 600;
-  --fuente-altura-l: 700;
+  --color-borde:                #E0E0E0;
+  --color-borde-suave:          #E0E0E0;   /* Alias semántico */
 
-  /* Transiciones */
-  --transicion-rapida: 150ms ease;
-  --transicion-intermedia: 200ms ease;
-  --transicion-base: 250ms ease;
-  --transicion-lenta: 350ms ease;
+  --color-texto:                #000000;
+  --color-texto-secundario:     #666666;
+  --color-texto-terciario:      #999999;
+
+/*-------------------
+   Navegacion: Propios de NavBar 
+   definidos aqui para que cualquier archivo pueda consumirlos
+   sin depender del orden de carga de navbar
+   -------------------*/
+
+  --color-fondo-navegacion:         var(--color-fondo);
+  --color-borde-navegacion:         var(--color-borde);
+  --color-texto-navegacion:         var(--color-texto-secundario);
+  --color-texto-navegacion-activo:  var(--color-primario);
+  --color-fondo-navegacion-hover:   var(--color-fondo-secundario);
+  --sombra-navegacion:              0 -2px 10px rgba(0, 0, 0, 0.05);
+
+
+  /* -------------
+  Sombras 
+  ----------------*/
+
+  --sombra-suave:               0 2px 4px rgba(0, 0, 0, 0.08);
+  --sombra-media:               0 4px 12px rgba(0, 0, 0, 0.1);
+  --sombra-fuerte:              0 8px 24px rgba(0, 0, 0, 0.15);
+
+
+  /*------------- 
+   Bordes redondeados
+   ----------------*/
+
+
+  --radio-borde-xxs:            4px;
+  --radio-borde-xs:             6px;
+  --radio-borde-pequeno:        8px;
+  --radio-borde-mediano:        12px;
+  --radio-borde-grande:         16px;
+  --radio-borde-completo:       9999px;
+  --radio-borde:                8px;   /* genérico */
+
+
+  /* --------------
+  Espaciado - escala 4px
+   --------------- */
+
+
+  --espacio-xs:                 4px;
+  --espacio-sm:                 8px;
+  --espacio-ms:                 12px;
+  --espacio-md:                 16px;
+  --espacio-ml:                 20px;
+  --espacio-lg:                 24px;
+  --espacio-xl:                 32px;
+  --espacio-xx:                 40px;
+  --espacio-xxl:                48px;
+
+
+  /*------------- 
+  Tipografía 
+  -------------*/
+  
+  /* Familia */
+  --fuente-familia:             'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Tamaños */
+  --fuente-tamano-xs:           12px;
+  --fuente-tamano-sm:           14px;
+  --fuente-tamano-base:         16px;
+  --fuente-tamano-lg:           18px;
+  --fuente-tamano-xl:           20px;
+  --fuente-tamano-xxl:          24px;
+  --fuente-tamano-xxxl:         32px;
+  --fuente-tamano-xxxxs:        40px;
+  --fuente-tamano-xxxxl:        48px;
+  --fuente-tamano-super:        120px;
+
+  /* Alturas */
+  --fuente-altura-xs:           400;
+  --fuente-altura-s:            500;
+  --fuente-altura:              600;
+  --fuente-altura-l:            700;
+  --fuente-altura-xl:           800;
+
+
+  /* --------------
+  Transiciones 
+  ----------------*/
+
+  --transicion-rapida:          150ms ease;
+  --transicion-intermedia:      200ms ease;
+  --transicion-base:            250ms ease;
+  --transicion-lenta:           350ms ease;
+
+  /*-------------------
+  Capas
+  ---------------------*/
 
   /* Z-index */
-  --z-index-navegacion: 100;
-  --z-index-modal: 1000;
-  --z-index-notificacion: 2000;
+ --z-index-base:               0;
+  --z-index-elevado:            10;
+  --z-index-navegacion:         100;
+  --z-index-modal:              1000;
+  --z-index-notificacion:       2000;
 
-  /*Barra de Navegacion*/
-  --altura-barra-navegacion: 80px;
+  /*------------------
+  Layout
+  --------------------*/
+
+  --altura-barra-navegacion:    80px;
+  --ancho-contenedor:           1200px;
 }
 
-/* Reset y estilos base */
-* {
+/* + de 1361px: navbar más compacta en desktop */
+
+@media (min-width: 1361px) {
+  :root {
+    --altura-barra-navegacion:  70px;
+  }
+}
+
+/* ---------------------
+Reset y estilos base 
+-------------------------*/
+
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -91,16 +174,18 @@
 html {
   font-size: 16px;
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  font-family: var(--fuente-familia);
-  font-size: var(--fuente-tamano-base);
-  line-height: 1.5;
-  color: var(--color-texto);
-  background-color: var(--color-fondo);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family:              var(--fuente-familia);
+  font-size:                var(--fuente-tamano-base);
+  font-weight:              var(--fuente-altura-xs);
+  line-height:              1.5;
+  color:                    var(--color-texto);
+  background-color:         var(--color-fondo);
+  -webkit-font-smoothing:   antialiased;
+  -moz-osx-font-smoothing:  grayscale;
 }
 
 #root {
@@ -109,47 +194,21 @@ body {
   flex-direction: column;
 }
 
-.contenedor-principal{
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    /* Espacio para la navbar fija */
-    padding-bottom: calc(var(--altura-barra-navegacion) + var(--espacio-lg));;
-}
-/* Tipografía */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-weight: 600;
+/*-----------------------
+Tipografia base
+-------------------------*/
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--fuente-altura);
   line-height: 1.2;
 }
 
-h1 {
-  font-size: var(--fuente-tamano-xxxl);
-}
-
-h2 {
-  font-size: var(--fuente-tamano-xxl);
-}
-
-h3 {
-  font-size: var(--fuente-tamano-xl);
-}
-
-h4 {
-  font-size: var(--fuente-tamano-lg);
-}
-
-h5 {
-  font-size: var(--fuente-tamano-base);
-}
-
-h6 {
-  font-size: var(--fuente-tamano-sm);
-}
+h1 { font-size: var(--fuente-tamano-xxxl); }
+h2 { font-size: var(--fuente-tamano-xxl);  }
+h3 { font-size: var(--fuente-tamano-xl);   }
+h4 { font-size: var(--fuente-tamano-lg);   }
+h5 { font-size: var(--fuente-tamano-base); }
+h6 { font-size: var(--fuente-tamano-sm);   }
 
 p {
   margin-bottom: var(--espacio-md);
@@ -165,48 +224,104 @@ a:hover {
   color: var(--color-secundario);
 }
 
-/* Utilidades */
-.oculto {
-  display: none !important;
+img,
+svg {
+  display: block;
+  max-width: 100%;
 }
 
-.texto-centrado {
-  text-align: center;
+button {
+  font-family: inherit;
 }
 
-.texto-derecha {
-  text-align: right;
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
 }
 
-.mt-auto {
-  margin-top: auto;
-}
-
-.mb-auto {
-  margin-bottom: auto;
-}
+/*------------------------------
+Clases de utilidad layout general
+------------------------------*/
 
 .contenedor {
   width: 100%;
-  max-width: 1200px;
+  max-width: var(--ancho-contenedor);
   margin: 0 auto;
   padding: 0 var(--espacio-md);
 }
 
+.contenedor-principal {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* Espacio para la navbar fija inferior */
+  padding-bottom: calc(var(--altura-barra-navegacion) + var(--espacio-lg));
+}
 
-/* Focus visible para accesibilidad */
+.contenido-principal {
+  flex: 1;
+}
+
+
+/* -----------------
+Utilidades 
+--------------------*/
+
+/* Visibilidad */
+.oculto           { display: none !important; }
+.visible          { display: block !important; }
+.invisible        { visibility: hidden; }
+
+/* Texto */
+.texto-centrado   { text-align: center; }
+.texto-derecha    { text-align: right; }
+.texto-izquierda  { text-align: left; }
+
+/* Espaciado */
+.mt-auto          { margin-top: auto; }
+.mb-auto          { margin-bottom: auto; }
+.mx-auto          { margin-left: auto; margin-right: auto; }
+
+/* Truncar texto largo */
+.truncar {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/*----------------
+Accesibilidad 
+-------------------*/
+
 :focus-visible {
   outline: 2px solid var(--color-primario);
   outline-offset: 2px;
 }
 
-/* Animaciones */
+/* Ocultar visualmente pero mantener accesible para lectores de pantalla */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/*----------------
+Animaciones
+------------------*/
+
 @keyframes aparecer {
   from {
     opacity: 0;
     transform: translateY(10px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -218,7 +333,6 @@ a:hover {
     opacity: 0;
     transform: translateX(20px);
   }
-
   to {
     opacity: 1;
     transform: translateX(0);
@@ -226,32 +340,28 @@ a:hover {
 }
 
 @keyframes latido {
-
-  0%,
-  100% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.05);
-  }
+  0%, 100% { transform: scale(1);    }
+  50%       { transform: scale(1.05); }
 }
 
-.animacion-aparecer {
-  animation: aparecer var(--transicion-base);
+@keyframes girar {
+  from { transform: rotate(0deg);   }
+  to   { transform: rotate(360deg); }
 }
 
-.animacion-deslizar {
-  animation: deslizarDerecha var(--transicion-base);
-}
+/* Clases de animación */
+.animacion-aparecer  { animation: aparecer       var(--transicion-base); }
+.animacion-deslizar  { animation: deslizarDerecha var(--transicion-base); }
+.animacion-latido    { animation: latido          2s infinite; }
+.animacion-girar     { animation: girar           1s linear infinite; }
 
-.animacion-latido {
-  animation: latido 2s infinite;
-}
-
-
-@media (min-width: 1361px) {
-  :root{
-    --altura-barra-navegacion:70px;
+/* Respetar preferencias de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

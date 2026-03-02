@@ -1,0 +1,594 @@
+<%# Vista: pages/admin/productForm.ejs %>
+<%# Requiere: pageCss: 'admin_forms', currentPage: 'admin' %>
+<%# Variables EJS esperadas: producto (objeto, opcional para edición), categorias (array) %>
+
+<% const esEdicion = typeof producto !== 'undefined' && producto !== null; %>
+<% const titulo = esEdicion ? 'Editar Producto' : 'Nuevo Producto'; %>
+
+<section class="admin-formulario">
+
+  <!-- Encabezado de sección -->
+  <div class="admin-formulario__encabezado">
+    <a href="/admin/productos" class="admin-formulario__volver">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      Volver al listado
+    </a>
+    <div class="admin-formulario__titulo-bloque">
+      <h1 class="admin-formulario__titulo"><%= titulo %></h1>
+      <% if (esEdicion) { %>
+        <span class="admin-formulario__badge admin-formulario__badge--edicion">Editando #<%= producto.id %></span>
+      <% } else { %>
+        <span class="admin-formulario__badge admin-formulario__badge--nuevo">Nuevo</span>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Formulario -->
+  <form
+    action="<%= esEdicion ? `/admin/productos/${producto.id}?_method=PUT` : '/admin/productos' %>"
+    method="POST"
+    class="admin-formulario__form"
+    id="formProducto"
+    novalidate
+  >
+    <% if (esEdicion) { %>
+      <input type="hidden" name="_method" value="PUT">
+      <input type="hidden" name="id" value="<%= producto.id %>">
+    <% } %>
+
+    <!-- Layout: columna principal + lateral -->
+    <div class="admin-formulario__layout">
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- COLUMNA PRINCIPAL                       -->
+      <!-- ═══════════════════════════════════════ -->
+      <div class="admin-formulario__columna-principal">
+
+        <!-- ─── Sección: Información básica ─── -->
+        <div class="admin-formulario__seccion">
+          <h2 class="admin-formulario__seccion-titulo">
+            <span class="admin-formulario__seccion-icono">01</span>
+            Información básica
+          </h2>
+
+          <div class="campo-formulario">
+            <label class="etiqueta-campo" for="nombre">
+              Nombre del producto <span class="campo-requerido">*</span>
+            </label>
+            <input
+              type="text"
+              id="nombre"
+              name="nombre"
+              class="entrada"
+              placeholder="Ej: Aire acondicionado split 3000 frigorías"
+              value="<%= esEdicion ? producto.nombre : '' %>"
+              maxlength="120"
+              required
+            >
+            <span class="mensaje-error" id="error-nombre"></span>
+          </div>
+
+          <div class="admin-formulario__fila-doble">
+            <div class="campo-formulario">
+              <label class="etiqueta-campo" for="sku">
+                SKU / Código interno <span class="campo-requerido">*</span>
+              </label>
+              <input
+                type="text"
+                id="sku"
+                name="sku"
+                class="entrada entrada--codigo"
+                placeholder="Ej: AC-3000-SP"
+                value="<%= esEdicion ? producto.sku : '' %>"
+                required
+              >
+              <span class="mensaje-error" id="error-sku"></span>
+            </div>
+
+            <div class="campo-formulario">
+              <label class="etiqueta-campo" for="categoria">
+                Categoría <span class="campo-requerido">*</span>
+              </label>
+              <select id="categoria" name="categoria" class="entrada entrada--select" required>
+                <option value="" disabled <%= !esEdicion ? 'selected' : '' %>>Seleccionar categoría</option>
+                <% const categoriasList = typeof categorias !== 'undefined' && categorias ? categorias : [
+                  { id: 'climatizacion', nombre: 'Climatización' },
+                  { id: 'herramientas', nombre: 'Herramientas' },
+                  { id: 'ferreteria', nombre: 'Ferretería' },
+                  { id: 'iluminacion', nombre: 'Iluminación' },
+                  { id: 'plomeria', nombre: 'Plomería' },
+                  { id: 'electricidad', nombre: 'Electricidad' },
+                  { id: 'pinturas', nombre: 'Pinturas' },
+                  { id: 'construccion', nombre: 'Construcción' }
+                ]; %>
+                <% categoriasList.forEach(function(cat) { %>
+                  <option value="<%= cat.id %>" <%= (esEdicion && producto.categoria === cat.id) ? 'selected' : '' %>>
+                    <%= cat.nombre %>
+                  </option>
+                <% }); %>
+              </select>
+              <span class="mensaje-error" id="error-categoria"></span>
+            </div>
+          </div>
+
+          <div class="campo-formulario">
+            <label class="etiqueta-campo" for="descripcion">
+              Descripción <span class="campo-requerido">*</span>
+            </label>
+            <textarea
+              id="descripcion"
+              name="descripcion"
+              class="entrada entrada--textarea"
+              placeholder="Describí el producto: características, materiales, aplicaciones..."
+              maxlength="600"
+              rows="4"
+              required
+            ><%= esEdicion ? producto.descripcion : '' %></textarea>
+            <div class="campo-formulario__pie">
+              <span class="mensaje-error" id="error-descripcion"></span>
+              <span class="contador-caracteres" id="contador-descripcion">0 / 600</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── Sección: Imagen ─── -->
+        <div class="admin-formulario__seccion">
+          <h2 class="admin-formulario__seccion-titulo">
+            <span class="admin-formulario__seccion-icono">02</span>
+            Imagen del producto
+          </h2>
+
+          <div class="campo-formulario">
+            <label class="etiqueta-campo" for="imagen">
+              URL de imagen <span class="campo-requerido">*</span>
+            </label>
+            <div class="imagen-preview-bloque">
+              <input
+                type="url"
+                id="imagen"
+                name="imagen"
+                class="entrada"
+                placeholder="https://ejemplo.com/imagen-producto.jpg"
+                value="<%= esEdicion ? producto.imagen : '' %>"
+                required
+              >
+              <div class="imagen-preview" id="imagenPreview">
+                <% if (esEdicion && producto.imagen) { %>
+                  <img src="<%= producto.imagen %>" alt="Preview" class="imagen-preview__img" id="imgPreviewEl">
+                <% } else { %>
+                  <div class="imagen-preview__placeholder" id="imgPlaceholder">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                      <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                    <p>La preview aparece aquí</p>
+                  </div>
+                  <img src="" alt="Preview" class="imagen-preview__img oculto" id="imgPreviewEl">
+                <% } %>
+              </div>
+            </div>
+            <span class="mensaje-error" id="error-imagen"></span>
+          </div>
+        </div>
+
+        <!-- ─── Sección: Variantes ─── -->
+        <div class="admin-formulario__seccion">
+          <h2 class="admin-formulario__seccion-titulo">
+            <span class="admin-formulario__seccion-icono">03</span>
+            Variantes y atributos
+          </h2>
+
+          <!-- Colores -->
+          <div class="campo-formulario">
+            <label class="etiqueta-campo">Colores disponibles</label>
+            <div class="chips-contenedor" id="contenedorColores">
+              <% if (esEdicion && producto.colores && producto.colores.length > 0) { %>
+                <% producto.colores.forEach(function(color) { %>
+                  <span class="chip" data-valor="<%= color %>">
+                    <%= color %>
+                    <button type="button" class="chip__eliminar" aria-label="Eliminar <%= color %>">×</button>
+                  </span>
+                <% }); %>
+              <% } %>
+              <input
+                type="text"
+                class="chips-input"
+                id="inputColor"
+                placeholder="Escribí un color y presioná Enter"
+                autocomplete="off"
+              >
+            </div>
+            <input type="hidden" name="colores" id="coloresHidden" value="<%= esEdicion && producto.colores ? producto.colores.join(',') : '' %>">
+            <p class="campo-formulario__ayuda">Presioná <kbd>Enter</kbd> o <kbd>,</kbd> para agregar. Ej: Blanco, Negro, Gris</p>
+          </div>
+
+          <!-- Talles -->
+          <div class="campo-formulario">
+            <label class="etiqueta-campo">Talles / Tamaños disponibles</label>
+            <div class="chips-contenedor" id="contenedorTalles">
+              <% if (esEdicion && producto.talles && producto.talles.length > 0) { %>
+                <% producto.talles.forEach(function(talle) { %>
+                  <span class="chip" data-valor="<%= talle %>">
+                    <%= talle %>
+                    <button type="button" class="chip__eliminar" aria-label="Eliminar <%= talle %>">×</button>
+                  </span>
+                <% }); %>
+              <% } %>
+              <input
+                type="text"
+                class="chips-input"
+                id="inputTalle"
+                placeholder="Ej: S, M, L, XL o 3000 BTU, 5000 BTU"
+                autocomplete="off"
+              >
+            </div>
+            <input type="hidden" name="talles" id="tallesHidden" value="<%= esEdicion && producto.talles ? producto.talles.join(',') : '' %>">
+            <p class="campo-formulario__ayuda">Presioná <kbd>Enter</kbd> o <kbd>,</kbd> para agregar.</p>
+          </div>
+        </div>
+
+      </div>
+      <!-- FIN COLUMNA PRINCIPAL -->
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- COLUMNA LATERAL                         -->
+      <!-- ═══════════════════════════════════════ -->
+      <aside class="admin-formulario__lateral">
+
+        <!-- ─── Card: Precio ─── -->
+        <div class="admin-lateral__card">
+          <h3 class="admin-lateral__card-titulo">Precios</h3>
+
+          <div class="campo-formulario">
+            <label class="etiqueta-campo" for="precio">
+              Precio de venta <span class="campo-requerido">*</span>
+            </label>
+            <div class="entrada-con-prefijo">
+              <span class="entrada-prefijo">$</span>
+              <input
+                type="number"
+                id="precio"
+                name="precio"
+                class="entrada entrada--numero"
+                placeholder="0.00"
+                min="0"
+                step="0.01"
+                value="<%= esEdicion ? producto.precio : '' %>"
+                required
+              >
+            </div>
+            <span class="mensaje-error" id="error-precio"></span>
+          </div>
+
+          <div class="campo-formulario">
+            <label class="etiqueta-campo" for="precioOriginal">
+              Precio original <span class="etiqueta-opcional">(opcional)</span>
+            </label>
+            <div class="entrada-con-prefijo">
+              <span class="entrada-prefijo">$</span>
+              <input
+                type="number"
+                id="precioOriginal"
+                name="precioOriginal"
+                class="entrada entrada--numero"
+                placeholder="0.00"
+                min="0"
+                step="0.01"
+                value="<%= esEdicion && producto.precioOriginal ? producto.precioOriginal : '' %>"
+              >
+            </div>
+            <p class="campo-formulario__ayuda">Si hay descuento, cargá el precio tachado.</p>
+            <div class="descuento-preview" id="descuentoPreview" style="display:none;">
+              <span class="descuento-preview__badge" id="descuentoBadge"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── Card: Instalación ─── -->
+        <div class="admin-lateral__card">
+          <h3 class="admin-lateral__card-titulo">Instalación</h3>
+
+          <div class="campo-formulario">
+            <div class="toggle-fila">
+              <div class="toggle-fila__info">
+                <label class="etiqueta-campo" for="instalacionDisponible">Ofrece instalación</label>
+                <p class="campo-formulario__ayuda">¿Este producto tiene servicio de instalación?</p>
+              </div>
+              <label class="toggle-switch">
+                <input
+                  type="checkbox"
+                  id="instalacionDisponible"
+                  name="instalacionDisponible"
+                  value="true"
+                >
+                <span class="toggle-switch__slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="instalacion-panel" id="instalacionPanel" >
+            <div class="campo-formulario">
+              <label class="etiqueta-campo" for="precioInstalacion">
+                Precio de instalación
+              </label>
+              <div class="entrada-con-prefijo">
+                <span class="entrada-prefijo">$</span>
+                <input
+                  type="number"
+                  id="precioInstalacion"
+                  name="precioInstalacion"
+                  class="entrada entrada--numero"
+                  placeholder="0.00"
+                  min="0"
+                  step="0.01"
+                  value="<%= esEdicion && producto.precioInstalacion ? producto.precioInstalacion : '' %>"
+                >
+              </div>
+            </div>
+
+            <div class="campo-formulario">
+              <div class="toggle-fila">
+                <div class="toggle-fila__info">
+                  <label class="etiqueta-campo" for="profesionalesDisponibles">Profesionales activos</label>
+                  <p class="campo-formulario__ayuda">¿Hay instaladores asignados y disponibles?</p>
+                </div>
+                <label class="toggle-switch">
+                  <input
+                    type="checkbox"
+                    id="profesionalesDisponibles"
+                    name="profesionalesDisponibles"
+                    value="true"
+                    <%= (esEdicion && producto.profesionalesDisponibles) ? 'checked' : '' %>
+                  >
+                  <span class="toggle-switch__slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── Card: Estado del producto ─── -->
+        <div class="admin-lateral__card">
+          <h3 class="admin-lateral__card-titulo">Estado</h3>
+          <div class="campo-formulario">
+            <div class="toggle-fila">
+              <div class="toggle-fila__info">
+                <label class="etiqueta-campo" for="activo">Producto activo</label>
+                <p class="campo-formulario__ayuda">Los productos inactivos no aparecen en el sitio.</p>
+              </div>
+              <label class="toggle-switch">
+                <input
+                  type="checkbox"
+                  id="activo"
+                  name="activo"
+                  value="true"
+                  <%= (!esEdicion || (esEdicion && producto.activo)) ? 'checked' : '' %>
+                >
+                <span class="toggle-switch__slider"></span>
+              </label>
+            </div>
+            <div class="estado-indicator" id="estadoIndicator">
+              <span class="estado-indicator__dot <%= (!esEdicion || (esEdicion && producto.activo)) ? 'estado-indicator__dot--activo' : 'estado-indicator__dot--inactivo' %>"></span>
+              <span class="estado-indicator__texto" id="estadoTexto">
+                <%= (!esEdicion || (esEdicion && producto.activo)) ? 'Visible en el sitio' : 'Oculto del sitio' %>
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+      <!-- FIN COLUMNA LATERAL -->
+
+    </div>
+    <!-- FIN LAYOUT -->
+
+    <!-- Barra de acciones fija (mismo patrón que navbar) -->
+    <div class="admin-formulario__acciones">
+      <a href="/admin/productos" class="boton boton--secundario">Cancelar</a>
+      <button type="submit" class="boton boton--primario" id="btnGuardar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+          <polyline points="17 21 17 13 7 13 7 21"></polyline>
+          <polyline points="7 3 7 8 15 8"></polyline>
+        </svg>
+        <%= esEdicion ? 'Guardar cambios' : 'Crear producto' %>
+      </button>
+    </div>
+
+  </form>
+</section>
+
+<script>
+(function () {
+  'use strict';
+
+  // ─── Preview de imagen ───────────────────────────────────────────────────
+  const inputImagen = document.getElementById('imagen');
+  const imgEl = document.getElementById('imgPreviewEl');
+  const placeholder = document.getElementById('imgPlaceholder');
+
+  if (inputImagen && imgEl) {
+    inputImagen.addEventListener('input', function () {
+      const url = this.value.trim();
+      if (url) {
+        imgEl.src = url;
+        imgEl.onload = function () {
+          imgEl.classList.remove('oculto');
+          if (placeholder) placeholder.classList.add('oculto');
+        };
+        imgEl.onerror = function () {
+          imgEl.classList.add('oculto');
+          if (placeholder) placeholder.classList.remove('oculto');
+        };
+      } else {
+        imgEl.classList.add('oculto');
+        if (placeholder) placeholder.classList.remove('oculto');
+      }
+    });
+  }
+
+  // ─── Contador de caracteres descripción ─────────────────────────────────
+  const textarea = document.getElementById('descripcion');
+  const contador = document.getElementById('contador-descripcion');
+  if (textarea && contador) {
+    function actualizarContador() {
+      const len = textarea.value.length;
+      const max = textarea.maxLength;
+      contador.textContent = `${len} / ${max}`;
+      contador.classList.toggle('contador-limite', len >= max * 0.9);
+    }
+    textarea.addEventListener('input', actualizarContador);
+    actualizarContador();
+  }
+
+  // ─── Sistema de chips ────────────────────────────────────────────────────
+  function inicializarChips(contenedorId, inputId, hiddenId) {
+    const contenedor = document.getElementById(contenedorId);
+    const inputChip = document.getElementById(inputId);
+    const hidden = document.getElementById(hiddenId);
+    if (!contenedor || !inputChip || !hidden) return;
+
+    function obtenerValores() {
+      return Array.from(contenedor.querySelectorAll('.chip')).map(c => c.dataset.valor);
+    }
+
+    function actualizarHidden() {
+      hidden.value = obtenerValores().join(',');
+    }
+
+    function agregarChip(valor) {
+      valor = valor.trim();
+      if (!valor) return;
+      const valores = obtenerValores();
+      if (valores.includes(valor)) return;
+
+      const chip = document.createElement('span');
+      chip.className = 'chip';
+      chip.dataset.valor = valor;
+      chip.innerHTML = `${valor}<button type="button" class="chip__eliminar" aria-label="Eliminar ${valor}">×</button>`;
+      chip.querySelector('.chip__eliminar').addEventListener('click', function () {
+        chip.remove();
+        actualizarHidden();
+      });
+      contenedor.insertBefore(chip, inputChip);
+      actualizarHidden();
+    }
+
+    // Eliminar chips existentes
+    contenedor.querySelectorAll('.chip__eliminar').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        btn.closest('.chip').remove();
+        actualizarHidden();
+      });
+    });
+
+    inputChip.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault();
+        agregarChip(this.value.replace(',', ''));
+        this.value = '';
+      } else if (e.key === 'Backspace' && this.value === '') {
+        const chips = contenedor.querySelectorAll('.chip');
+        if (chips.length > 0) chips[chips.length - 1].remove();
+        actualizarHidden();
+      }
+    });
+
+    inputChip.addEventListener('blur', function () {
+      if (this.value.trim()) {
+        agregarChip(this.value);
+        this.value = '';
+      }
+    });
+  }
+
+  inicializarChips('contenedorColores', 'inputColor', 'coloresHidden');
+  inicializarChips('contenedorTalles', 'inputTalle', 'tallesHidden');
+
+  // ─── Toggle instalación ──────────────────────────────────────────────────
+  const toggleInstalacion = document.getElementById('instalacionDisponible');
+  const panelInstalacion = document.getElementById('instalacionPanel');
+  if (toggleInstalacion && panelInstalacion) {
+    toggleInstalacion.addEventListener('change', function () {
+      panelInstalacion.style.display = this.checked ? '' : 'none';
+    });
+  }
+
+  // ─── Preview descuento ───────────────────────────────────────────────────
+  const inputPrecio = document.getElementById('precio');
+  const inputOriginal = document.getElementById('precioOriginal');
+  const descuentoPreview = document.getElementById('descuentoPreview');
+  const descuentoBadge = document.getElementById('descuentoBadge');
+
+  function calcularDescuento() {
+    const precio = parseFloat(inputPrecio ? inputPrecio.value : 0);
+    const original = parseFloat(inputOriginal ? inputOriginal.value : 0);
+    if (precio > 0 && original > precio) {
+      const pct = Math.round(((original - precio) / original) * 100);
+      descuentoBadge.textContent = `${pct}% de descuento`;
+      descuentoPreview.style.display = '';
+    } else {
+      descuentoPreview.style.display = 'none';
+    }
+  }
+
+  if (inputPrecio) inputPrecio.addEventListener('input', calcularDescuento);
+  if (inputOriginal) inputOriginal.addEventListener('input', calcularDescuento);
+  calcularDescuento();
+
+  // ─── Indicador de estado activo ─────────────────────────────────────────
+  const toggleActivo = document.getElementById('activo');
+  const estadoDot = document.querySelector('.estado-indicator__dot');
+  const estadoTexto = document.getElementById('estadoTexto');
+  if (toggleActivo && estadoDot && estadoTexto) {
+    toggleActivo.addEventListener('change', function () {
+      if (this.checked) {
+        estadoDot.className = 'estado-indicator__dot estado-indicator__dot--activo';
+        estadoTexto.textContent = 'Visible en el sitio';
+      } else {
+        estadoDot.className = 'estado-indicator__dot estado-indicator__dot--inactivo';
+        estadoTexto.textContent = 'Oculto del sitio';
+      }
+    });
+  }
+
+  // ─── Validación básica del form ──────────────────────────────────────────
+  const form = document.getElementById('formProducto');
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      let valido = true;
+
+      function mostrarError(id, msg) {
+        const el = document.getElementById(id);
+        if (el) { el.textContent = msg; valido = false; }
+        const input = document.getElementById(id.replace('error-', ''));
+        if (input) input.classList.add('entrada-error');
+      }
+
+      function limpiarError(id) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '';
+        const input = document.getElementById(id.replace('error-', ''));
+        if (input) input.classList.remove('entrada-error');
+      }
+
+      ['nombre', 'sku', 'categoria', 'descripcion', 'imagen', 'precio'].forEach(function (campo) {
+        limpiarError('error-' + campo);
+      });
+
+      if (!document.getElementById('nombre').value.trim()) mostrarError('error-nombre', 'El nombre es obligatorio.');
+      if (!document.getElementById('sku').value.trim()) mostrarError('error-sku', 'El SKU es obligatorio.');
+      if (!document.getElementById('categoria').value) mostrarError('error-categoria', 'Seleccioná una categoría.');
+      if (!document.getElementById('descripcion').value.trim()) mostrarError('error-descripcion', 'La descripción es obligatoria.');
+      if (!document.getElementById('imagen').value.trim()) mostrarError('error-imagen', 'La URL de imagen es obligatoria.');
+      if (!document.getElementById('precio').value || parseFloat(document.getElementById('precio').value) <= 0) mostrarError('error-precio', 'Ingresá un precio válido.');
+
+      if (!valido) e.preventDefault();
+    });
+  }
+
+})();
+</script>

@@ -1,243 +1,260 @@
+/*  ------------------
+   Buscador principal
+  ------------------ */
 
-.contenido-principal {
-    flex: 1;
-}
-
-.contenedor {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 var(--espacio-md);
-}
-
-/*Buscador*/
 .buscador-principal {
-    padding: var(--espacio-lg) 0;
+  padding: var(--espacio-lg) 0;
 }
 
 .contenedor-buscador {
-    display: flex;
-    align-items: center;
-    background: var(--color-fondo);
-    border: 2px solid var(--color-borde);
-    border-radius: var(--radio-borde-grande);
-    padding: var(--espacio-ms) var(--espacio-md);
-    transition: border-color var(--transicion-intermedia);
+  display: flex;
+  align-items: center;
+  background: var(--color-fondo);
+  border: 2px solid var(--color-borde);
+  border-radius: var(--radio-borde-grande);
+  padding: var(--espacio-ms) var(--espacio-md);
+  transition: border-color var(--transicion-intermedia);
 }
 
 .contenedor-buscador:focus-within {
-    border-color: var(--color-primario);
+  border-color: var(--color-primario);
 }
 
 .icono-busqueda {
-    font-size: var(--fuente-tamaño-xl);
-    margin-right: var(--espacio-ms);
-    color: var(--color-texto-secundario);
+  font-size: var(--fuente-tamano-xl); 
+  margin-right: var(--espacio-ms);
+  color: var(--color-texto-secundario);
 }
 
 .input-busqueda {
-    flex: 1;
-    border: none;
-    background: none;
-    font-size: var(--fuente-tamano-base);
-    color: var(--color-texto);
-    outline: none;
+  flex: 1;
+  border: none;
+  background: none;
+  font-size: var(--fuente-tamano-base);
+  color: var(--color-texto);
+  outline: none;
 }
 
 .input-busqueda::placeholder {
-    color: var(--color-texto-terciario);
+  color: var(--color-texto-terciario);
 }
 
 .boton-filtros {
-    background: none;
-    border: none;
-    padding: var(--espacio-sm);
-    border-radius: var(--radio-borde);
-    cursor: not-allowed;
-    color: var(--color-texto-terciario);
-    opacity: 0.7;
+  background: none;
+  border: none;
+  padding: var(--espacio-sm);
+  border-radius: var(--radio-borde);
+  cursor: not-allowed;
+  color: var(--color-texto-terciario);
+  opacity: 0.7;
 }
 
-/* Secciones comunes */
+
+/*  ------------------
+   Secciones comunes
+ ------------------*/
 
 .seccion-categorias,
 .seccion-ofertas,
 .seccion-recomendados,
 .seccion-servicios {
-    padding: var(--espacio-xl) 0;
-    border-bottom: 1px solid var(--color-borde-suave);
+  padding: var(--espacio-xl) 0;
+  border-bottom: 1px solid var(--color-borde-suave);
 }
+
 .encabezado-seccion {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--espacio-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--espacio-lg);
 }
 
 .titulo-seccion {
-    font-size: var(--fuente-tamano-xxl);
-    font-weight: var(--fuente-altura);
-    color: var(--color-texto);
-    margin: 0;
+  font-size: var(--fuente-tamano-xxl);
+  font-weight: var(--fuente-altura);
+  color: var(--color-texto);
+  margin: 0;
 }
 
 .titulo-con-icono {
-    display: flex;
-    align-items: center;
-    gap: var(--espacio-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-sm);
 }
 
 .icono-ofertas,
 .icono-trending {
-    font-size: var(--fuente-tamaño-xl);
+  font-size: var(--fuente-tamano-xl); 
 }
 
 .enlace-ver-todo {
-    color: var(--color-primario);
-    text-decoration: none;
-    font-weight: var(--fuente-altura-s);
-    transition: color var(--transicion-intermedia);
+  color: var(--color-primario);
+  text-decoration: none;
+  font-weight: var(--fuente-altura-s);
+  transition: color var(--transicion-intermedia);
 }
 
 .enlace-ver-todo:hover {
-    color: var(--color-primario-hover);
-    text-decoration: underline;
+  color: var(--color-primario-hover);
+  text-decoration: underline;
 }
 
-/* Contador de ofertas */
+
+/*  ------------------
+   Contador de ofertas
+  ------------------*/
+
 .contador-oferta {
-    display: flex;
-    align-items: center;
-    gap: var(--espacio-sm);
-    padding: var(--espacio-sm) var(--espacio-md);
-    background: var(--color-error-suave);
-    border-radius: var(--radio-borde);
-    color: var(--color-error);
-    font-weight: var(--fuente-altura-s);
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-sm);
+  padding: var(--espacio-sm) var(--espacio-md);
+  background: var(--color-error-suave);
+  border-radius: var(--radio-borde);
+  color: var(--color-error);
+  font-weight: var(--fuente-altura-s);
 }
 
 .etiqueta-contador {
-    font-size: var(--fuente-tamano-sm);
+  font-size: var(--fuente-tamano-sm);
 }
 
 .valor-contador {
-    font-family: monospace;
-    font-weight: var(--fuente-altura-l);
+  font-family: monospace;
+  font-weight: var(--fuente-altura-l);
 }
 
-/* Grids */
+
+/* ------------------
+   Grids de contenido
+   ------------------*/
+
 .grid-categorias {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: var(--espacio-md);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--espacio-md);
 }
 
 .grid-productos {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: var(--espacio-lg);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--espacio-lg);
 }
 
 .tarjeta-oferta {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--espacio-lg);
-    background: var(--color-fondo-acento);
-    padding: var(--espacio-lg);
-    border-radius: var(--radio-borde-grande);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--espacio-lg);
+  background: var(--color-fondo-acento);
+  padding: var(--espacio-lg);
+  border-radius: var(--radio-borde-grande);
 }
 
 .grid-servicios {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: var(--espacio-lg);
-    margin-top: var(--espacio-md)
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--espacio-lg);
+  margin-top: var(--espacio-md);
 }
 
+
+/* ------------------
+   Tarjeta de servicio
+  ------------------*/
+
 .tarjeta-servicio {
-    text-align: center;
-    padding: var(--espacio-lg);
-    background: var(--color-fondo);
-    border: 1px solid var(--color-borde);
-    border-radius: var(--radio-borde-grande);
-    transition: transform var(--transicion-intermedia), box-shadow var(--transicion-intermedia);
+  text-align: center;
+  padding: var(--espacio-lg);
+  background: var(--color-fondo);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-borde-grande);
+  transition: transform var(--transicion-intermedia), box-shadow var(--transicion-intermedia);
 }
 
 .tarjeta-servicio:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--sombra-suave);
+  transform: translateY(-2px);
+  box-shadow: var(--sombra-suave);
 }
 
 .icono-servicio {
-    font-size: var(--fuente-tamano-xxxxs);
-    margin-bottom: var(--espacio-md);
+  font-size: var(--fuente-tamano-xxxxs);
+  margin-bottom: var(--espacio-md);
 }
 
 .titulo-servicio {
-    font-size: var(--fuente-tamano-lg);
-    font-weight: var(--fuente-altura);
-    margin-bottom: var(--espacio-sm);
-    color: var(--color-texto);
+  font-size: var(--fuente-tamano-lg);
+  font-weight: var(--fuente-altura);
+  margin-bottom: var(--espacio-sm);
+  color: var(--color-texto);
 }
 
 .descripcion-servicio {
-    font-size: var(--fuente-tamano-sm);
-    color: var(--color-texto-secundario);
-    line-height: 1.4;
+  font-size: var(--fuente-tamano-sm);
+  color: var(--color-texto-secundario);
+  line-height: 1.4;
 }
 
-/* Estados vacíos */
+
+/* ------------------
+   Estados vacíos
+  ------------------*/
+
 .sin-ofertas,
 .sin-productos {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: var(--espacio-xxl) var(--espacio-md);
-    color: var(--color-texto-secundario);
-    background: var(--color-fondo);
-    border-radius: var(--radio-borde);
-    border: 2px dashed var(--color-borde);
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--espacio-xxl) var(--espacio-md);
+  color: var(--color-texto-secundario);
+  background: var(--color-fondo);
+  border-radius: var(--radio-borde);
+  border: 2px dashed var(--color-borde);
 }
 
-/* Responsive */
+
+/*  ------------------
+   Responsive
+ ------------------*/
+
 @media (max-width: 768px) {
-    .grid-categorias {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        gap: var(--espacio-ms);
-    }
+  .grid-categorias {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: var(--espacio-ms);
+  }
 
-    .grid-productos {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: var(--espacio-md);
-    }
+  .grid-productos {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--espacio-md);
+  }
 
-    .tarjeta-oferta {
-        grid-template-columns: 1fr;
-    }
+  .tarjeta-oferta {
+    grid-template-columns: 1fr;
+  }
 
-    .encabezado-seccion {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--espacio-ms);
-    }
+  .encabezado-seccion {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--espacio-ms);
+  }
 
-    .enlace-ver-todo {
-        align-self: flex-end;
-    }
+  .enlace-ver-todo {
+    align-self: flex-end;
+  }
 }
 
 @media (max-width: 480px) {
-    .grid-categorias {
-        grid-template-columns: repeat(2, 1fr);
-    }
+  .grid-categorias {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
-    .grid-productos {
-        grid-template-columns: 1fr;
-    }
+  .grid-productos {
+    grid-template-columns: 1fr;
+  }
 
-    .grid-servicios {
-        grid-template-columns: 1fr;
-    }
+  .grid-servicios {
+    grid-template-columns: 1fr;
+  }
 
-    .contenedor-buscador {
-        padding: var(--espacio-sm) var(--espacio-ms);
-    }
+  .contenedor-buscador {
+    padding: var(--espacio-sm) var(--espacio-ms);
+  }
 }

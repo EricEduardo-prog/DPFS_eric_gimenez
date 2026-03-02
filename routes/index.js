@@ -56,4 +56,46 @@ router.get('/productDetail', function (req, res, next) {
     });
 });
 
+// Formulario de nuevo producto
+router.get('/productForm', function (req, res, next) {
+  res.render('layout', {
+    title: 'Nuevo Producto - E-E',
+    pageCss: 'admin_forms',
+    currentPage: 'admin',
+    body: 'pages/admin/productForm'
+  });
+});
+
+// Editar producto
+router.get('/productForm/:id', function (req, res, next) {
+  res.render('layout', {
+    title: 'Editar Producto - E-E',
+    pageCss: 'admin_forms',
+    currentPage: 'admin',
+    body: 'pages/admin/productForm',
+    product: productoDesdeDB   // objeto con los campos
+  });
+});
+
+// Formulario de nuevo instalador
+router.get('/installerForm', function (req, res, next) {
+  res.render('layout', {
+    title: 'Nuevo Instalador - E-E',
+    pageCss: 'admin_forms',
+    currentPage: 'admin',
+    body: 'pages/admin/installerForm'
+  });
+});
+
+// Editar instaladores
+router.get('/installerForm/:id', function (req, res, next) {
+  res.render('layout', {
+    title: 'Editar Instalador - E-E',
+    pageCss: 'admin_forms',
+    currentPage: 'admin',
+    body: 'pages/admin/installerForm',
+    installer: instaladoresDesdeDB   // objeto con los campos
+  });
+});
+
 module.exports = router;
