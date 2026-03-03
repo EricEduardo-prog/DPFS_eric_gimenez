@@ -806,6 +806,8 @@ kbd {
   bottom: var(--altura-barra-navegacion);
   left: 0;
   right: 0;
+  background-color: var(--color-fondo-navegacion);
+  border-top: var(--admin-borde);
   z-index: var(--z-index-navegacion);
   display: flex;
   align-items: center;
@@ -813,11 +815,9 @@ kbd {
   gap: var(--espacio-ms);
   padding: 0 var(--espacio-lg);
   height: var(--admin-alto-acciones);
-  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border-top: var(--admin-borde);
-  box-shadow: var(--sombra-media);
+  box-shadow: var(--sombra-navegacion);
 }
 
 /* Botones */

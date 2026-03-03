@@ -1,5 +1,3 @@
-<%# Vista: pages/admin/installerUsers.ejs %>
-<%# Requiere: pageCss: 'admin_forms', currentPage: 'admin' %>
 <%# Variables EJS esperadas: instalador (objeto, opcional para edición) %>
 
 <% const esEdicion = typeof instalador !== 'undefined' && instalador !== null; %>
@@ -67,12 +65,12 @@ const profesiones = [
     <!-- Layout: columna principal + lateral -->
     <div class="admin-formulario__layout">
 
-      <!-- ═══════════════════════════════════════ -->
-      <!-- COLUMNA PRINCIPAL                       -->
-      <!-- ═══════════════════════════════════════ -->
+      <!-- -------------------- -->
+      <!-- COLUMNA PRINCIPAL    -->
+      <!-- -------------------- -->
       <div class="admin-formulario__columna-principal">
 
-        <!-- ─── Sección: Datos personales ─── -->
+        <!-- Sección: Datos personales  -->
         <div class="admin-formulario__seccion">
           <h2 class="admin-formulario__seccion-titulo">
             <span class="admin-formulario__seccion-icono">01</span>
@@ -160,7 +158,7 @@ const profesiones = [
           </div>
         </div>
 
-        <!-- ─── Sección: Disponibilidad ─── -->
+        <!-- Sección: Disponibilidad  -->
         <div class="admin-formulario__seccion">
           <h2 class="admin-formulario__seccion-titulo">
             <span class="admin-formulario__seccion-icono">02</span>
@@ -232,12 +230,12 @@ const profesiones = [
       </div>
       <!-- FIN COLUMNA PRINCIPAL -->
 
-      <!-- ═══════════════════════════════════════ -->
-      <!-- COLUMNA LATERAL                         -->
-      <!-- ═══════════════════════════════════════ -->
+      <!-- ------------------------ -->
+      <!-- COLUMNA LATERAL          -->
+      <!-- ------------------------ -->
       <aside class="admin-formulario__lateral">
 
-        <!-- ─── Card: Estado (Alta/Baja lógica) ─── -->
+        <!--  Card: Estado (Alta/Baja lógica)  -->
         <div class="admin-lateral__card">
           <h3 class="admin-lateral__card-titulo">Estado del registro</h3>
 
@@ -267,7 +265,7 @@ const profesiones = [
           </div>
         </div>
 
-        <!-- ─── Card: Valoración (solo lectura) ─── -->
+        <!--  Card: Valoración (solo lectura) -->
         <div class="admin-lateral__card">
           <h3 class="admin-lateral__card-titulo">Valoración</h3>
           <% if (esEdicion && instalador.valoracion !== undefined) { %>
@@ -299,7 +297,7 @@ const profesiones = [
           <% } %>
         </div>
 
-        <!-- ─── Card: Metadata (solo en edición) ─── -->
+        <!--  Card: Metadata (solo en edición) -->
         <% if (esEdicion) { %>
         <div class="admin-lateral__card admin-lateral__card--metadata">
           <h3 class="admin-lateral__card-titulo">Información del registro</h3>
@@ -356,7 +354,7 @@ const profesiones = [
 (function () {
   'use strict';
 
-  // ─── Toggle estado activo ─────────────────────────────────────────────────
+  // ---- Toggle estado activo -------------
   const toggleActivo = document.getElementById('activo');
   const estadoDot = document.querySelector('.estado-indicator__dot');
   const estadoTexto = document.getElementById('estadoTexto');
@@ -372,7 +370,7 @@ const profesiones = [
     });
   }
 
-  // ─── Acciones rápidas de disponibilidad ─────────────────────────────────
+  //----- Acciones rápidas de disponibilidad -------------------------
   const checkboxes = document.querySelectorAll('.disponibilidad-checkbox');
 
   document.getElementById('btnTodos') && document.getElementById('btnTodos').addEventListener('click', function () {
@@ -392,7 +390,7 @@ const profesiones = [
     });
   });
 
-  // ─── Validación básica del form ──────────────────────────────────────────
+  // --- Validación básica del form --------------------------
   const form = document.getElementById('formInstalador');
   if (form) {
     form.addEventListener('submit', function (e) {

@@ -1,5 +1,3 @@
-<%# Vista: pages/admin/productForm.ejs %>
-<%# Requiere: pageCss: 'admin_forms', currentPage: 'admin' %>
 <%# Variables EJS esperadas: producto (objeto, opcional para edición), categorias (array) %>
 
 <% const esEdicion = typeof producto !== 'undefined' && producto !== null; %>
@@ -41,12 +39,12 @@
     <!-- Layout: columna principal + lateral -->
     <div class="admin-formulario__layout">
 
-      <!-- ═══════════════════════════════════════ -->
+      <!-- --------------------------------------- -->
       <!-- COLUMNA PRINCIPAL                       -->
-      <!-- ═══════════════════════════════════════ -->
+      <!-- --------------------------------------- -->
       <div class="admin-formulario__columna-principal">
 
-        <!-- ─── Sección: Información básica ─── -->
+        <!-- Sección: Información básica  -->
         <div class="admin-formulario__seccion">
           <h2 class="admin-formulario__seccion-titulo">
             <span class="admin-formulario__seccion-icono">01</span>
@@ -133,7 +131,7 @@
           </div>
         </div>
 
-        <!-- ─── Sección: Imagen ─── -->
+        <!--  Sección: Imagen  -->
         <div class="admin-formulario__seccion">
           <h2 class="admin-formulario__seccion-titulo">
             <span class="admin-formulario__seccion-icono">02</span>
@@ -174,7 +172,7 @@
           </div>
         </div>
 
-        <!-- ─── Sección: Variantes ─── -->
+        <!-- Sección: Variantes  -->
         <div class="admin-formulario__seccion">
           <h2 class="admin-formulario__seccion-titulo">
             <span class="admin-formulario__seccion-icono">03</span>
@@ -233,12 +231,12 @@
       </div>
       <!-- FIN COLUMNA PRINCIPAL -->
 
-      <!-- ═══════════════════════════════════════ -->
+      <!-- --------------------------------------- -->
       <!-- COLUMNA LATERAL                         -->
-      <!-- ═══════════════════════════════════════ -->
+      <!-- --------------------------------------- -->
       <aside class="admin-formulario__lateral">
 
-        <!-- ─── Card: Precio ─── -->
+        <!--  Card: Precio  -->
         <div class="admin-lateral__card">
           <h3 class="admin-lateral__card-titulo">Precios</h3>
 
@@ -287,7 +285,7 @@
           </div>
         </div>
 
-        <!-- ─── Card: Instalación ─── -->
+        <!--  Card: Instalación  -->
         <div class="admin-lateral__card">
           <h3 class="admin-lateral__card-titulo">Instalación</h3>
 
@@ -350,7 +348,7 @@
           </div>
         </div>
 
-        <!-- ─── Card: Estado del producto ─── -->
+        <!--  Card: Estado del producto  -->
         <div class="admin-lateral__card">
           <h3 class="admin-lateral__card-titulo">Estado</h3>
           <div class="campo-formulario">
@@ -405,7 +403,7 @@
 (function () {
   'use strict';
 
-  // ─── Preview de imagen ───────────────────────────────────────────────────
+  // ---- Preview de imagen -----------------------------------
   const inputImagen = document.getElementById('imagen');
   const imgEl = document.getElementById('imgPreviewEl');
   const placeholder = document.getElementById('imgPlaceholder');
@@ -430,7 +428,7 @@
     });
   }
 
-  // ─── Contador de caracteres descripción ─────────────────────────────────
+  // --- Contador de caracteres descripción ------------------------------
   const textarea = document.getElementById('descripcion');
   const contador = document.getElementById('contador-descripcion');
   if (textarea && contador) {
@@ -444,7 +442,7 @@
     actualizarContador();
   }
 
-  // ─── Sistema de chips ────────────────────────────────────────────────────
+  // --- Sistema de chips ------------------------------------
   function inicializarChips(contenedorId, inputId, hiddenId) {
     const contenedor = document.getElementById(contenedorId);
     const inputChip = document.getElementById(inputId);
@@ -508,7 +506,8 @@
   inicializarChips('contenedorColores', 'inputColor', 'coloresHidden');
   inicializarChips('contenedorTalles', 'inputTalle', 'tallesHidden');
 
-  // ─── Toggle instalación ──────────────────────────────────────────────────
+  // --- Toggle instalación ---------------------------------------
+
   const toggleInstalacion = document.getElementById('instalacionDisponible');
   const panelInstalacion = document.getElementById('instalacionPanel');
   if (toggleInstalacion && panelInstalacion) {
@@ -517,7 +516,7 @@
     });
   }
 
-  // ─── Preview descuento ───────────────────────────────────────────────────
+  //--- Preview descuento ------------------------------
   const inputPrecio = document.getElementById('precio');
   const inputOriginal = document.getElementById('precioOriginal');
   const descuentoPreview = document.getElementById('descuentoPreview');
@@ -539,7 +538,7 @@
   if (inputOriginal) inputOriginal.addEventListener('input', calcularDescuento);
   calcularDescuento();
 
-  // ─── Indicador de estado activo ─────────────────────────────────────────
+  // --- Indicador de estado activo ---------------------------
   const toggleActivo = document.getElementById('activo');
   const estadoDot = document.querySelector('.estado-indicator__dot');
   const estadoTexto = document.getElementById('estadoTexto');
@@ -555,7 +554,7 @@
     });
   }
 
-  // ─── Validación básica del form ──────────────────────────────────────────
+  // --- Validación básica del form ------------------------------------
   const form = document.getElementById('formProducto');
   if (form) {
     form.addEventListener('submit', function (e) {

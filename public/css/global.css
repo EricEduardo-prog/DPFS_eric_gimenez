@@ -5,65 +5,70 @@
   /*-------------------
    Paleta de colores 
    -------------------*/
- 
+
   /* Primarios */
-  --color-primario:             #000000;
-  --color-primario-hover:       #333333;
-  --color-secundario:           #0077B6;
+  --color-primario: #000000;
+  --color-primario-hover: #333333;
+  --color-secundario: #0077B6;
 
   /* Semánticos */
-  --color-exito:                #2E7D32;
-  --color-error:                #D32F2F;
-  --color-advertencia:          #FF9800;
-  --color-info:                 #0077B6; /* Alias de --color-secundario */
+  --color-exito: #2E7D32;
+  --color-error: #D32F2F;
+  --color-advertencia: #FF9800;
+  --color-info: #0077B6;
+  /* Alias de --color-secundario */
 
   /* Superficies semánticas */
-  --color-inclusion:            rgba(46, 125, 50, 0.1);   /* Fondo verde suave */
-  --color-error-suave:          rgba(211, 47, 47, 0.1);   /* Fondo rojo suave  */
-  --color-eliminar-hover:       rgba(211, 47, 47, 0.1);
-  --color-opcion-activa:        rgba(0, 119, 182, 0.05);
+  --color-inclusion: rgba(46, 125, 50, 0.1);
+  /* Fondo verde suave */
+  --color-error-suave: rgba(211, 47, 47, 0.1);
+  /* Fondo rojo suave  */
+  --color-eliminar-hover: rgba(211, 47, 47, 0.1);
+  --color-opcion-activa: rgba(0, 119, 182, 0.05);
 
   /* Acento / UI */
-  --color-estrella:             #FFD700;
-  --color-descuento:            #FF6B6B;
+  --color-estrella: #FFD700;
+  --color-descuento: #FF6B6B;
 
   /*-------------------
    Escala de grises / Neutros
    -------------------*/
-   
-  --color-fondo:                #FFFFFF;
-  --color-fondo-secundario:     #F5F5F5;
-  --color-fondo-acento:         #F8F9FA;
-  --color-fondo-hover:          #F0F0F0;   /* Para hover en superficies neutras */
 
-  --color-borde:                #E0E0E0;
-  --color-borde-suave:          #E0E0E0;   /* Alias semántico */
+  --color-fondo: #FFFFFF;
+  --color-fondo-secundario: #F5F5F5;
+  --color-fondo-acento: #F8F9FA;
+  --color-fondo-hover: #F0F0F0;
+  /* Para hover en superficies neutras */
 
-  --color-texto:                #000000;
-  --color-texto-secundario:     #666666;
-  --color-texto-terciario:      #999999;
+  --color-borde: #E0E0E0;
+  --color-borde-suave: #E0E0E0;
+  /* Alias semántico */
 
-/*-------------------
+  --color-texto: #000000;
+  --color-texto-secundario: #666666;
+  --color-texto-terciario: #999999;
+
+  /*-------------------
    Navegacion: Propios de NavBar 
    definidos aqui para que cualquier archivo pueda consumirlos
    sin depender del orden de carga de navbar
    -------------------*/
 
-  --color-fondo-navegacion:         var(--color-fondo);
-  --color-borde-navegacion:         var(--color-borde);
-  --color-texto-navegacion:         var(--color-texto-secundario);
-  --color-texto-navegacion-activo:  var(--color-primario);
-  --color-fondo-navegacion-hover:   var(--color-fondo-secundario);
-  --sombra-navegacion:              0 -2px 10px rgba(0, 0, 0, 0.05);
+  --color-fondo-navegacion: var(--color-fondo);
+  --color-borde-navegacion: var(--color-borde);
+  --color-texto-navegacion: var(--color-texto-secundario);
+  --color-texto-navegacion-activo: var(--color-primario);
+  --color-fondo-navegacion-hover: var(--color-fondo-secundario);
+  --sombra-navegacion: 0 -2px 10px rgba(0, 0, 0, 0.05);
 
 
   /* -------------
   Sombras 
   ----------------*/
 
-  --sombra-suave:               0 2px 4px rgba(0, 0, 0, 0.08);
-  --sombra-media:               0 4px 12px rgba(0, 0, 0, 0.1);
-  --sombra-fuerte:              0 8px 24px rgba(0, 0, 0, 0.15);
+  --sombra-suave: 0 2px 4px rgba(0, 0, 0, 0.08);
+  --sombra-media: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --sombra-fuerte: 0 8px 24px rgba(0, 0, 0, 0.15);
 
 
   /*------------- 
@@ -71,13 +76,14 @@
    ----------------*/
 
 
-  --radio-borde-xxs:            4px;
-  --radio-borde-xs:             6px;
-  --radio-borde-pequeno:        8px;
-  --radio-borde-mediano:        12px;
-  --radio-borde-grande:         16px;
-  --radio-borde-completo:       9999px;
-  --radio-borde:                8px;   /* genérico */
+  --radio-borde-xxs: 4px;
+  --radio-borde-xs: 6px;
+  --radio-borde-pequeno: 8px;
+  --radio-borde-mediano: 12px;
+  --radio-borde-grande: 16px;
+  --radio-borde-completo: 9999px;
+  --radio-borde: 8px;
+  /* genérico */
 
 
   /* --------------
@@ -85,78 +91,110 @@
    --------------- */
 
 
-  --espacio-xs:                 4px;
-  --espacio-sm:                 8px;
-  --espacio-ms:                 12px;
-  --espacio-md:                 16px;
-  --espacio-ml:                 20px;
-  --espacio-lg:                 24px;
-  --espacio-xl:                 32px;
-  --espacio-xx:                 40px;
-  --espacio-xxl:                48px;
+  --espacio-xs: 4px;
+  --espacio-sm: 8px;
+  --espacio-ms: 12px;
+  --espacio-md: 16px;
+  --espacio-ml: 20px;
+  --espacio-lg: 24px;
+  --espacio-xl: 32px;
+  --espacio-xx: 40px;
+  --espacio-xxl: 48px;
 
 
   /*------------- 
   Tipografía 
   -------------*/
-  
+
   /* Familia */
-  --fuente-familia:             'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --fuente-familia: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Tamaños */
-  --fuente-tamano-xs:           12px;
-  --fuente-tamano-sm:           14px;
-  --fuente-tamano-base:         16px;
-  --fuente-tamano-lg:           18px;
-  --fuente-tamano-xl:           20px;
-  --fuente-tamano-xxl:          24px;
-  --fuente-tamano-xxxl:         32px;
-  --fuente-tamano-xxxxs:        40px;
-  --fuente-tamano-xxxxl:        48px;
-  --fuente-tamano-super:        120px;
+  --fuente-tamano-xs: 12px;
+  --fuente-tamano-sm: 14px;
+  --fuente-tamano-base: 16px;
+  --fuente-tamano-lg: 18px;
+  --fuente-tamano-xl: 20px;
+  --fuente-tamano-xxl: 24px;
+  --fuente-tamano-xxxl: 32px;
+  --fuente-tamano-xxxxs: 40px;
+  --fuente-tamano-xxxxl: 48px;
+  --fuente-tamano-super: 120px;
 
   /* Alturas */
-  --fuente-altura-xs:           400;
-  --fuente-altura-s:            500;
-  --fuente-altura:              600;
-  --fuente-altura-l:            700;
-  --fuente-altura-xl:           800;
+  --fuente-altura-xs: 400;
+  --fuente-altura-s: 500;
+  --fuente-altura: 600;
+  --fuente-altura-l: 700;
+  --fuente-altura-xl: 800;
 
 
   /* --------------
   Transiciones 
   ----------------*/
 
-  --transicion-rapida:          150ms ease;
-  --transicion-intermedia:      200ms ease;
-  --transicion-base:            250ms ease;
-  --transicion-lenta:           350ms ease;
+  --transicion-rapida: 150ms ease;
+  --transicion-intermedia: 200ms ease;
+  --transicion-base: 250ms ease;
+  --transicion-lenta: 350ms ease;
 
   /*-------------------
   Capas
   ---------------------*/
 
   /* Z-index */
- --z-index-base:               0;
-  --z-index-elevado:            10;
-  --z-index-navegacion:         100;
-  --z-index-modal:              1000;
-  --z-index-notificacion:       2000;
+  --z-index-base: 0;
+  --z-index-elevado: 10;
+  --z-index-navegacion: 100;
+  --z-index-modal: 1000;
+  --z-index-notificacion: 2000;
 
   /*------------------
   Layout
   --------------------*/
 
-  --altura-barra-navegacion:    80px;
-  --ancho-contenedor:           1200px;
+  --altura-barra-navegacion: 80px;
+  --ancho-contenedor: 1200px;
 }
 
 /* + de 1361px: navbar más compacta en desktop */
 
 @media (min-width: 1361px) {
   :root {
-    --altura-barra-navegacion:  70px;
+    --altura-barra-navegacion: 70px;
   }
+}
+
+/*--------------------
+Tema oscuro
+---------------------*/
+.dark {
+  --color-primario: #FFFFFF;
+  --color-primario-hover: #CCCCCC;
+  --color-secundario: #38BDF8;
+  --color-info: #38BDF8;
+
+  --color-inclusion: rgba(46, 160, 67, 0.2);
+  --color-error-suave: rgba(248, 81, 73, 0.2);
+  --color-eliminar-hover: rgba(248, 81, 73, 0.2);
+  --color-opcion-activa: rgba(56, 189, 248, 0.1);
+
+  --color-fondo: #121212;
+  --color-fondo-secundario: #1E1E1E;
+  --color-fondo-acento: #252525;
+  --color-fondo-hover: #2A2A2A;
+
+  --color-borde: #333333;
+  --color-borde-suave: #2C2C2C;
+
+  --color-texto: #F0F0F0;
+  --color-texto-secundario: #A0A0A0;
+  --color-texto-terciario: #666666;
+
+  --sombra-suave: 0 2px 4px rgba(80, 80, 80, 0.4);
+  --sombra-media: 0 4px 12px rgba(80, 80, 80, 0.5);
+  --sombra-fuerte: 0 8px 24px rgba(80, 80, 80, 0.6);
+  --sombra-navegacion: 0 -2px 10px rgba(80, 80, 80, 0.4);
 }
 
 /* ---------------------
@@ -177,15 +215,24 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+html:not(.dark) {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
 body {
-  font-family:              var(--fuente-familia);
-  font-size:                var(--fuente-tamano-base);
-  font-weight:              var(--fuente-altura-xs);
-  line-height:              1.5;
-  color:                    var(--color-texto);
-  background-color:         var(--color-fondo);
-  -webkit-font-smoothing:   antialiased;
-  -moz-osx-font-smoothing:  grayscale;
+  font-family: var(--fuente-familia);
+  font-size: var(--fuente-tamano-base);
+  font-weight: var(--fuente-altura-xs);
+  line-height: 1.5;
+  color: var(--color-texto);
+  background-color: var(--color-fondo);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color var(--transicion-base), color var(--transicion-base);
 }
 
 #root {
@@ -198,17 +245,39 @@ body {
 Tipografia base
 -------------------------*/
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: var(--fuente-altura);
   line-height: 1.2;
 }
 
-h1 { font-size: var(--fuente-tamano-xxxl); }
-h2 { font-size: var(--fuente-tamano-xxl);  }
-h3 { font-size: var(--fuente-tamano-xl);   }
-h4 { font-size: var(--fuente-tamano-lg);   }
-h5 { font-size: var(--fuente-tamano-base); }
-h6 { font-size: var(--fuente-tamano-sm);   }
+h1 {
+  font-size: var(--fuente-tamano-xxxl);
+}
+
+h2 {
+  font-size: var(--fuente-tamano-xxl);
+}
+
+h3 {
+  font-size: var(--fuente-tamano-xl);
+}
+
+h4 {
+  font-size: var(--fuente-tamano-lg);
+}
+
+h5 {
+  font-size: var(--fuente-tamano-base);
+}
+
+h6 {
+  font-size: var(--fuente-tamano-sm);
+}
 
 p {
   margin-bottom: var(--espacio-md);
@@ -270,19 +339,44 @@ Utilidades
 --------------------*/
 
 /* Visibilidad */
-.oculto           { display: none !important; }
-.visible          { display: block !important; }
-.invisible        { visibility: hidden; }
+.oculto {
+  display: none !important;
+}
+
+.visible {
+  display: block !important;
+}
+
+.invisible {
+  visibility: hidden;
+}
 
 /* Texto */
-.texto-centrado   { text-align: center; }
-.texto-derecha    { text-align: right; }
-.texto-izquierda  { text-align: left; }
+.texto-centrado {
+  text-align: center;
+}
+
+.texto-derecha {
+  text-align: right;
+}
+
+.texto-izquierda {
+  text-align: left;
+}
 
 /* Espaciado */
-.mt-auto          { margin-top: auto; }
-.mb-auto          { margin-bottom: auto; }
-.mx-auto          { margin-left: auto; margin-right: auto; }
+.mt-auto {
+  margin-top: auto;
+}
+
+.mb-auto {
+  margin-bottom: auto;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
 
 /* Truncar texto largo */
 .truncar {
@@ -322,6 +416,7 @@ Animaciones
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -333,6 +428,7 @@ Animaciones
     opacity: 0;
     transform: translateX(20px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -340,23 +436,47 @@ Animaciones
 }
 
 @keyframes latido {
-  0%, 100% { transform: scale(1);    }
-  50%       { transform: scale(1.05); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 @keyframes girar {
-  from { transform: rotate(0deg);   }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Clases de animación */
-.animacion-aparecer  { animation: aparecer       var(--transicion-base); }
-.animacion-deslizar  { animation: deslizarDerecha var(--transicion-base); }
-.animacion-latido    { animation: latido          2s infinite; }
-.animacion-girar     { animation: girar           1s linear infinite; }
+.animacion-aparecer {
+  animation: aparecer var(--transicion-base);
+}
+
+.animacion-deslizar {
+  animation: deslizarDerecha var(--transicion-base);
+}
+
+.animacion-latido {
+  animation: latido 2s infinite;
+}
+
+.animacion-girar {
+  animation: girar 1s linear infinite;
+}
 
 /* Respetar preferencias de movimiento reducido */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {

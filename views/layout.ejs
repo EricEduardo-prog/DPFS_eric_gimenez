@@ -14,7 +14,7 @@
     <!-- CSS de componentes -->
     <link rel="stylesheet" href="css/components/header.css">
     <link rel="stylesheet" href="css/components/navbar.css">
-    
+
     <!-- CSS de página específica -->
     <% if (pageCss) { %>
         <link rel="stylesheet" href="css/pages/<%= pageCss %>.css">
@@ -27,6 +27,17 @@
                 content="ferretería, herramientas, climatización, hogar, construcción, instalación, servicios">
             <meta name="author" content="E-E">
 
+            <!-- Anti-flash: aplica el tema ANTES del primer render para evitar parpadeo -->
+            <script>
+                (function () {
+                    const guardado = localStorage.getItem('tema');
+                    const prefereDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    if (guardado === 'dark' || (!guardado && prefereDark)) {
+                        document.documentElement.classList.add('dark');
+                    }
+                })();
+            </script>
+
 </head>
 
 <body>
@@ -38,8 +49,11 @@
 
             <!-- Contenido Principal -->
             <main class="contenedor-principal">
-                      <%- include(body) %>
+                <%- include(body) %>
             </main>
+
+            <!-- Gestor de tema claro/oscuro -->
+            <script src="/js/tema.js"></script>
 
 </body>
 
