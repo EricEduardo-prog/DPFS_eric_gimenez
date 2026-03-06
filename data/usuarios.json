@@ -1,0 +1,70 @@
+{
+  "_meta": {
+    "descripcion": "Clientes registrados en la plataforma E-E",
+    "version": "1.0.0",
+    "campos_requeridos": ["id", "nombre", "email", "passwordHash", "aceptoTerminos"],
+    "nota_seguridad": "passwordHash generado con bcrypt (cost factor 10). Nunca almacenar password en texto plano."
+  },
+  "usuarios": [
+    {
+      "id": "usr_001",
+      "nombre": "María García",
+      "email": "maria.garcia@gmail.com",
+      "passwordHash": "$2b$10$eImiTXuWVxfM37uY4JANjOe2Kp1J5J5J5J5J5J5J5J5J5J5J5J5J",
+      "telefono": "+54 9 223 411-2233",
+      "direccion": {
+        "calle": "Av. Colón",
+        "numero": "1234",
+        "piso": "3",
+        "depto": "B",
+        "ciudad": "Mar del Plata",
+        "provincia": "Buenos Aires",
+        "codigoPostal": "7600"
+      },
+      "aceptoTerminos": true,
+      "activo": true,
+      "fechaRegistro": "2025-01-10T09:30:00.000Z",
+      "fechaModificacion": "2025-01-10T09:30:00.000Z"
+    },
+    {
+      "id": "usr_002",
+      "nombre": "Carlos Fernández",
+      "email": "carlosfernandez@hotmail.com",
+      "passwordHash": "$2b$10$abcXYZ123abcXYZ123abcXabcXYZ123abcXYZ123abcXYZ123abcX",
+      "telefono": "+54 9 223 533-4455",
+      "direccion": {
+        "calle": "Belgrano",
+        "numero": "3456",
+        "piso": "",
+        "depto": "",
+        "ciudad": "Mar del Plata",
+        "provincia": "Buenos Aires",
+        "codigoPostal": "7600"
+      },
+      "aceptoTerminos": true,
+      "activo": true,
+      "fechaRegistro": "2025-01-25T14:15:00.000Z",
+      "fechaModificacion": "2025-02-10T11:00:00.000Z"
+    },
+    {
+      "id": "usr_003",
+      "nombre": "Lucía Ramírez",
+      "email": "lucia.ramirez@outlook.com",
+      "passwordHash": "$2b$10$ZZZ999ZZZ999ZZZ999ZZZoZZZ999ZZZ999ZZZ999ZZZ999ZZZ999Z",
+      "telefono": "",
+      "direccion": {
+        "calle": "San Martín",
+        "numero": "890",
+        "piso": "1",
+        "depto": "A",
+        "ciudad": "Mar del Plata",
+        "provincia": "Buenos Aires",
+        "codigoPostal": "7600"
+      },
+      "aceptoTerminos": true,
+      "activo": false,
+      "fechaRegistro": "2025-02-03T18:45:00.000Z",
+      "fechaModificacion": "2025-02-20T08:00:00.000Z"
+    }
+  ]
+}

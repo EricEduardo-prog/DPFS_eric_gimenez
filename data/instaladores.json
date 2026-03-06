@@ -1,0 +1,103 @@
+{
+  "_meta": {
+    "descripcion": "Instaladores profesionales certificados de E-E",
+    "version": "1.0.0",
+    "campos_requeridos": ["id", "nombre", "matricula", "profesion", "email"],
+    "nota_valoracion": "El campo valoracion.valor y trabajosCompletados son de solo lectura desde el CRUD de instaladores. Se actualizan únicamente desde el módulo de órdenes/trabajos.",
+    "nota_disponibilidad": "La grilla disponibilidad usa días en español sin tildes como clave. Turnos: manana (08:00-13:00) y tarde (13:00-18:00)."
+  },
+  "instaladores": [
+    {
+      "id": "inst_001",
+      "nombre": "Juan Carlos Rodríguez",
+      "matricula": "MP-04578",
+      "profesion": "Técnico en climatización",
+      "email": "jcrodriguez@gmail.com",
+      "telefono": "+54 9 223 456-7890",
+      "disponibilidad": {
+        "lunes":     { "manana": true,  "tarde": false },
+        "martes":    { "manana": true,  "tarde": true  },
+        "miercoles": { "manana": false, "tarde": true  },
+        "jueves":    { "manana": true,  "tarde": true  },
+        "viernes":   { "manana": true,  "tarde": false }
+      },
+      "valoracion": {
+        "valor": 4.8,
+        "cantidad": 23
+      },
+      "trabajosCompletados": 23,
+      "activo": true,
+      "fechaAlta": "2025-01-10T09:00:00.000Z",
+      "fechaModificacion": "2025-02-15T11:30:00.000Z"
+    },
+    {
+      "id": "inst_002",
+      "nombre": "Roberto Sánchez",
+      "matricula": "MN-12345",
+      "profesion": "Electricista",
+      "email": "roberto.sanchez@outlook.com",
+      "telefono": "+54 9 223 567-8901",
+      "disponibilidad": {
+        "lunes":     { "manana": true,  "tarde": true  },
+        "martes":    { "manana": false, "tarde": true  },
+        "miercoles": { "manana": true,  "tarde": true  },
+        "jueves":    { "manana": false, "tarde": false },
+        "viernes":   { "manana": true,  "tarde": true  }
+      },
+      "valoracion": {
+        "valor": 4.5,
+        "cantidad": 15
+      },
+      "trabajosCompletados": 15,
+      "activo": true,
+      "fechaAlta": "2025-01-18T10:00:00.000Z",
+      "fechaModificacion": "2025-01-18T10:00:00.000Z"
+    },
+    {
+      "id": "inst_003",
+      "nombre": "Alejandro López",
+      "matricula": "MP-09871",
+      "profesion": "Plomero / Gasista",
+      "email": "alopez.plomeria@gmail.com",
+      "telefono": "+54 9 223 678-9012",
+      "disponibilidad": {
+        "lunes":     { "manana": true,  "tarde": false },
+        "martes":    { "manana": true,  "tarde": false },
+        "miercoles": { "manana": true,  "tarde": false },
+        "jueves":    { "manana": true,  "tarde": false },
+        "viernes":   { "manana": true,  "tarde": false }
+      },
+      "valoracion": {
+        "valor": 4.9,
+        "cantidad": 38
+      },
+      "trabajosCompletados": 38,
+      "activo": true,
+      "fechaAlta": "2024-12-01T08:00:00.000Z",
+      "fechaModificacion": "2025-03-01T09:00:00.000Z"
+    },
+    {
+      "id": "inst_004",
+      "nombre": "Marcela Torres",
+      "matricula": "MP-33210",
+      "profesion": "Técnico en refrigeración",
+      "email": "marcela.torres.tec@gmail.com",
+      "telefono": "",
+      "disponibilidad": {
+        "lunes":     { "manana": false, "tarde": true  },
+        "martes":    { "manana": false, "tarde": true  },
+        "miercoles": { "manana": false, "tarde": true  },
+        "jueves":    { "manana": false, "tarde": true  },
+        "viernes":   { "manana": false, "tarde": false }
+      },
+      "valoracion": {
+        "valor": 0,
+        "cantidad": 0
+      },
+      "trabajosCompletados": 0,
+      "activo": false,
+      "fechaAlta": "2025-02-28T14:00:00.000Z",
+      "fechaModificacion": "2025-02-28T14:00:00.000Z"
+    }
+  ]
+}

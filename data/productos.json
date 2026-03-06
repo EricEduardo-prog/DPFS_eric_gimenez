@@ -1,0 +1,159 @@
+{
+  "_meta": {
+    "descripcion": "Catálogo de productos E-E",
+    "version": "1.0.0",
+    "campos_requeridos": ["id", "nombre", "sku", "categoriaId", "descripcion", "imagen", "precio"],
+    "nota_categoria": "categoriaId referencia el campo 'id' de categorias.json. Usar el slug solo para URLs amigables."
+  },
+  "productos": [
+    {
+      "id": "prod_001",
+      "nombre": "Aire Acondicionado Split 4500 Frigorías",
+      "sku": "AC-4500-SIL",
+      "categoriaId": "cat_001",
+      "descripcion": "Aire acondicionado split de 4500 frigorías, ideal para ambientes de 20-25 m² con eficiencia energética A++ y función frío/calor.",
+      "caracteristicas": [
+        "4500 frigorías - Ideal para ambientes de 20-25 m²",
+        "Eficiencia energética A++",
+        "Función frío/calor",
+        "Modo silencioso (22 dB)",
+        "Control por Wi-Fi y app móvil",
+        "Filtro antibacterial y antialérgico",
+        "Garantía oficial 2 años"
+      ],
+      "imagen": "https://ejemplo.com/productos/ac-4500.jpg",
+      "imagenes": [
+        "https://ejemplo.com/productos/ac-4500-frente.jpg",
+        "https://ejemplo.com/productos/ac-4500-lateral.jpg",
+        "https://ejemplo.com/productos/ac-4500-control.jpg"
+      ],
+      "colores": ["Blanco"],
+      "talles": ["3000 BTU", "4500 BTU", "6000 BTU"],
+      "precio": 199999,
+      "precioOriginal": 235000,
+      "instalacion": {
+        "disponible": true,
+        "precio": 30000,
+        "profesionalesDisponibles": true
+      },
+      "rating": {
+        "valor": 4.5,
+        "cantidad": 128
+      },
+      "activo": true,
+      "fechaCreacion": "2025-01-15T10:00:00.000Z",
+      "fechaModificacion": "2025-02-20T09:00:00.000Z"
+    },
+    {
+      "id": "prod_002",
+      "nombre": "Taladro Percutor Inalámbrico 20V",
+      "sku": "TAL-20V-INA",
+      "categoriaId": "cat_002",
+      "descripcion": "Taladro percutor inalámbrico de 20V con batería de litio de larga duración. Incluye maletín, 2 baterías y cargador rápido.",
+      "caracteristicas": [
+        "Motor brushless de alta eficiencia",
+        "20V batería de ión litio 4Ah",
+        "2 velocidades: 0-450 / 0-1800 rpm",
+        "Par máximo 65 Nm",
+        "Portabrocas 13mm con bloqueo automático",
+        "Luz LED de trabajo",
+        "Incluye 2 baterías + cargador rápido + maletín"
+      ],
+      "imagen": "https://ejemplo.com/productos/taladro-20v.jpg",
+      "imagenes": [
+        "https://ejemplo.com/productos/taladro-20v-frente.jpg",
+        "https://ejemplo.com/productos/taladro-20v-maleta.jpg"
+      ],
+      "colores": ["Negro/Verde", "Negro/Rojo"],
+      "talles": [],
+      "precio": 89999,
+      "precioOriginal": 110000,
+      "instalacion": {
+        "disponible": false,
+        "precio": 0,
+        "profesionalesDisponibles": false
+      },
+      "rating": {
+        "valor": 4.8,
+        "cantidad": 64
+      },
+      "activo": true,
+      "fechaCreacion": "2025-01-20T11:00:00.000Z",
+      "fechaModificacion": "2025-01-20T11:00:00.000Z"
+    },
+    {
+      "id": "prod_003",
+      "nombre": "Kit Lámparas LED GU10 6W Luz Cálida x10",
+      "sku": "LED-GU10-6W-CX10",
+      "categoriaId": "cat_004",
+      "descripcion": "Pack de 10 lámparas LED GU10 de 6W con luz cálida 3000K. Reemplazo directo de dicroicas halógenas de 50W. Vida útil 25.000 horas.",
+      "caracteristicas": [
+        "Potencia: 6W (equivale a 50W halógena)",
+        "Temperatura de color: 3000K (luz cálida)",
+        "Flujo luminoso: 500 lm",
+        "Vida útil: 25.000 horas",
+        "Base GU10 estándar",
+        "No requiere transformador",
+        "Apto para exterior cubierto"
+      ],
+      "imagen": "https://ejemplo.com/productos/led-gu10.jpg",
+      "imagenes": [
+        "https://ejemplo.com/productos/led-gu10-pack.jpg",
+        "https://ejemplo.com/productos/led-gu10-instalada.jpg"
+      ],
+      "colores": [],
+      "talles": ["3000K cálida", "6500K fría"],
+      "precio": 12999,
+      "precioOriginal": 0,
+      "instalacion": {
+        "disponible": false,
+        "precio": 0,
+        "profesionalesDisponibles": false
+      },
+      "rating": {
+        "valor": 4.2,
+        "cantidad": 211
+      },
+      "activo": true,
+      "fechaCreacion": "2025-02-01T08:30:00.000Z",
+      "fechaModificacion": "2025-02-01T08:30:00.000Z"
+    },
+    {
+      "id": "prod_004",
+      "nombre": "Termotanque Eléctrico 80L",
+      "sku": "TT-ELEC-80L",
+      "categoriaId": "cat_005",
+      "descripcion": "Termotanque eléctrico de 80 litros con cuba de acero vitrificado y ánodo de magnesio. Apto para 3-4 personas.",
+      "caracteristicas": [
+        "Capacidad: 80 litros",
+        "Potencia: 1500W / 220V",
+        "Cuba de acero vitrificado de alta resistencia",
+        "Ánodo de magnesio anticorrosión",
+        "Termostato regulable 35°C - 75°C",
+        "Válvula de seguridad incluida",
+        "Garantía 5 años en cuba"
+      ],
+      "imagen": "https://ejemplo.com/productos/termotanque-80l.jpg",
+      "imagenes": [
+        "https://ejemplo.com/productos/termotanque-80l-frente.jpg",
+        "https://ejemplo.com/productos/termotanque-80l-instalado.jpg"
+      ],
+      "colores": ["Blanco"],
+      "talles": ["50L", "80L", "100L"],
+      "precio": 149999,
+      "precioOriginal": 175000,
+      "instalacion": {
+        "disponible": true,
+        "precio": 25000,
+        "profesionalesDisponibles": true
+      },
+      "rating": {
+        "valor": 4.6,
+        "cantidad": 47
+      },
+      "activo": true,
+      "fechaCreacion": "2025-02-10T13:00:00.000Z",
+      "fechaModificacion": "2025-03-01T10:00:00.000Z"
+    }
+  ]
+}

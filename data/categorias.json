@@ -1,0 +1,98 @@
+{
+  "_meta": {
+    "descripcion": "Categorías de productos del catálogo E-E",
+    "version": "1.0.0",
+    "campos_requeridos": ["id", "nombre"],
+    "nota": "El campo 'id' es la clave foránea usada en productos.json. Si se cambia un id, actualizar todos los productos que lo referencian."
+  },
+  "categorias": [
+    {
+      "id": "cat_001",
+      "slug": "climatizacion",
+      "nombre": "Climatización",
+      "descripcion": "Aires acondicionados, ventiladores, estufas y calefactores",
+      "icono": "❄️",
+      "activo": true,
+      "orden": 1,
+      "fechaCreacion": "2025-01-01T00:00:00.000Z",
+      "fechaModificacion": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "cat_002",
+      "slug": "herramientas",
+      "nombre": "Herramientas",
+      "descripcion": "Herramientas manuales, eléctricas e industriales",
+      "icono": "🔧",
+      "activo": true,
+      "orden": 2,
+      "fechaCreacion": "2025-01-01T00:00:00.000Z",
+      "fechaModificacion": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "cat_003",
+      "slug": "ferreteria",
+      "nombre": "Ferretería",
+      "descripcion": "Tornillos, bulones, anclajes y fijaciones",
+      "icono": "🔩",
+      "activo": true,
+      "orden": 3,
+      "fechaCreacion": "2025-01-01T00:00:00.000Z",
+      "fechaModificacion": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "cat_004",
+      "slug": "iluminacion",
+      "nombre": "Iluminación",
+      "descripcion": "Lámparas, spots, tiras LED y artefactos de iluminación",
+      "icono": "💡",
+      "activo": true,
+      "orden": 4,
+      "fechaCreacion": "2025-01-01T00:00:00.000Z",
+      "fechaModificacion": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "cat_005",
+      "slug": "plomeria",
+      "nombre": "Plomería",
+      "descripcion": "Cañerías, llaves de paso, termotanques y sanitarios",
+      "icono": "🚿",
+      "activo": true,
+      "orden": 5,
+      "fechaCreacion": "2025-01-01T00:00:00.000Z",
+      "fechaModificacion": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "cat_006",
+      "slug": "electricidad",
+      "nombre": "Electricidad",
+      "descripcion": "Cables, tableros, disyuntores y materiales eléctricos",
+      "icono": "⚡",
+      "activo": true,
+      "orden": 6,
+      "fechaCreacion": "2025-01-01T00:00:00.000Z",
+      "fechaModificacion": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "cat_007",
+      "slug": "pinturas",
+      "nombre": "Pinturas",
+      "descripcion": "Pinturas, esmaltes, barnices y accesorios de pintura",
+      "icono": "🎨",
+      "activo": true,
+      "orden": 7,
+      "fechaCreacion": "2025-01-01T00:00:00.000Z",
+      "fechaModificacion": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "cat_008",
+      "slug": "construccion",
+      "nombre": "Construcción",
+      "descripcion": "Cemento, ladrillos, cerámicos y materiales de obra",
+      "icono": "🏗️",
+      "activo": true,
+      "orden": 8,
+      "fechaCreacion": "2025-01-01T00:00:00.000Z",
+      "fechaModificacion": "2025-01-01T00:00:00.000Z"
+    }
+  ]
+}
