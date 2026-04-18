@@ -1,0 +1,35 @@
+<%#
+  Uso: 
+  - id: string, id del input
+  - name: string, nombre del campo
+  - label: string, texto del label
+  - helpText: string, texto de ayuda (opcional)
+  - checked: boolean, estado inicial
+  - disabled: boolean (opcional)
+%>
+    <div class="campo-formulario">
+        <div class="toggle-fila">
+            <div class="toggle-fila__info">
+                <label class="etiqueta-campo" for="<%= id %>">
+                    <%= label %>
+                </label>
+                <% if (helpText) { %>
+                    <p class="campo-formulario__ayuda">
+                        <%= helpText %>
+                    </p>
+                    <% } %>
+            </div>
+            <label class="toggle-switch">
+                <input type="checkbox" id="<%= id %>" name="<%= name %>" value="true" <%=checked ? 'checked' : '' %>
+                <%= typeof disabled !== 'undefined' && disabled ? 'disabled' : '' %>>
+                    <span class="toggle-switch__slider"></span>
+            </label>
+        </div>
+        <div class="estado-indicator" id="estadoIndicator_<%= id %>">
+            <span class="estado-indicator__dot estado-indicator__dot--<%= checked ? 'activo' : 'inactivo' %>"
+                id="estadoDot_<%= id %>"></span>
+            <span class="estado-indicator__texto" id="estadoTexto_<%= id %>">
+                <%= checked ? 'Visible en el sitio' : 'Oculta del sitio' %>
+            </span>
+        </div>
+    </div>

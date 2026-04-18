@@ -1,0 +1,52 @@
+<%# Uso: - namePrefix: string, prefijo para los nombres de los campos (ej: 'disponibilidad' ) - dias: array de objetos
+    con { id, nombre } - turnos: array de objetos con { id, nombre, horario } - valoresIniciales: objeto con estructura
+    { diaId: { turnoId: true } } %>
+
+    <div class="disponibilidad-grilla" role="group" aria-label="Disponibilidad por día y turno">
+        <!-- Encabezado de columnas: días -->
+        <div class="disponibilidad-grilla__cabecera">
+            <div class="disponibilidad-grilla__etiqueta-turno"></div>
+            <% dias.forEach(function(dia) { %>
+                <div class="disponibilidad-grilla__dia">
+                    <%= dia.nombre %>
+                </div>
+                <% }); %>
+        </div>
+
+        <!-- Filas: turnos -->
+        <% turnos.forEach(function(turno) { %>
+            <div class="disponibilidad-grilla__fila">
+                <div class="disponibilidad-grilla__turno-info">
+                    <span class="disponibilidad-grilla__turno-nombre">
+                        <%= turno.nombre %>
+                    </span>
+                    <span class="disponibilidad-grilla__turno-horario">
+                        <%= turno.horario %>
+                    </span>
+                </div>
+                <% dias.forEach(function(dia) { %>
+                    <% const campoName=`${namePrefix}_${dia.id}_${turno.id}`; const estaSeleccionado=valoresIniciales &&
+                        valoresIniciales[dia.id] && valoresIniciales[dia.id][turno.id]; %>
+                        <div class="disponibilidad-celda">
+                            <label class="disponibilidad-celda__label" title="<%= dia.nombre %> - <%= turno.nombre %>">
+                                <%# ✅ Campo oculto con nombre diferente (sufijo _hidden) %>
+                                    <input type="hidden" name="<%= campoName %>_hidden" value="false">
+
+                                    <%# Checkbox con el nombre original %>
+                                        <input type="checkbox" name="<%= campoName %>" value="true"
+                                            class="disponibilidad-checkbox" data-dia="<%= dia.id %>"
+                                            data-turno="<%= turno.id %>" <%=estaSeleccionado ? 'checked' : '' %>
+                                        >
+                                        <span class="disponibilidad-celda__visual">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                            </svg>
+                                        </span>
+                            </label>
+                        </div>
+                        <% }); %>
+            </div>
+            <% }); %>
+    </div>

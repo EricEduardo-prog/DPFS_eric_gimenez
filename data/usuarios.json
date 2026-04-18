@@ -2,7 +2,13 @@
   "_meta": {
     "descripcion": "Clientes registrados en la plataforma E-E",
     "version": "1.0.0",
-    "campos_requeridos": ["id", "nombre", "email", "passwordHash", "aceptoTerminos"],
+    "campos_requeridos": [
+      "id",
+      "nombre",
+      "email",
+      "passwordHash",
+      "aceptoTerminos"
+    ],
     "nota_seguridad": "passwordHash generado con bcrypt (cost factor 10). Nunca almacenar password en texto plano."
   },
   "usuarios": [
@@ -10,7 +16,7 @@
       "id": "usr_001",
       "nombre": "María García",
       "email": "maria.garcia@gmail.com",
-      "passwordHash": "$2b$10$eImiTXuWVxfM37uY4JANjOe2Kp1J5J5J5J5J5J5J5J5J5J5J5J5J",
+      "passwordHash": "$2b$10$UxlAiezHOJlcWuO4aZbHr.l3DC8YIzev.FEayIQJ7GCLhYqE5tpXi",
       "telefono": "+54 9 223 411-2233",
       "direccion": {
         "calle": "Av. Colón",
@@ -24,7 +30,7 @@
       "aceptoTerminos": true,
       "activo": true,
       "fechaRegistro": "2025-01-10T09:30:00.000Z",
-      "fechaModificacion": "2025-01-10T09:30:00.000Z"
+      "fechaModificacion": "2026-04-14T22:18:22.997Z"
     },
     {
       "id": "usr_002",
@@ -62,9 +68,69 @@
         "codigoPostal": "7600"
       },
       "aceptoTerminos": true,
-      "activo": false,
+      "activo": true,
       "fechaRegistro": "2025-02-03T18:45:00.000Z",
-      "fechaModificacion": "2025-02-20T08:00:00.000Z"
+      "fechaModificacion": "2026-04-14T22:18:29.231Z"
+    },
+    {
+      "id": "usr_004",
+      "nombre": "Eric El Mas PRo",
+      "email": "ericpro@gmail.com",
+      "passwordHash": "$2b$10$a7BlJaRgfSAbqQsx2ZrSaOjQi6veayGcdBSKh5ktxUjqZoaZX60K2",
+      "telefono": "",
+      "direccion": {
+        "calle": "",
+        "numero": "",
+        "piso": "",
+        "depto": "",
+        "ciudad": "",
+        "provincia": "",
+        "codigoPostal": ""
+      },
+      "aceptoTerminos": true,
+      "activo": true,
+      "fechaRegistro": "2026-04-14T13:39:45.892Z",
+      "fechaModificacion": "2026-04-17T16:25:39.220Z"
+    },
+    {
+      "id": "usr_005",
+      "nombre": "Jose Garcia",
+      "email": "josegarcia@invento.com",
+      "passwordHash": "$2b$10$Th5S1Ex2cUwCsiAMCk6l9eGU2dadlRDON9BXbgnRIoCGH9mjSL/LK",
+      "telefono": "",
+      "direccion": {
+        "calle": "",
+        "numero": "",
+        "piso": "",
+        "depto": "",
+        "ciudad": "Chubut",
+        "provincia": "",
+        "codigoPostal": "8900"
+      },
+      "aceptoTerminos": true,
+      "activo": true,
+      "fechaRegistro": "2026-04-14T22:19:27.688Z",
+      "fechaModificacion": "2026-04-14T22:19:27.688Z"
+    },
+    {
+      "id": "usr_006",
+      "nombre": "Pablo Campazo",
+      "email": "pablo@invento.com",
+      "passwordHash": "$2b$10$6knI.I0rKI0bhnnsHJ.jE.IH5Mqhfoq8sb863zJ68YephNnOVgP8K",
+      "telefono": "",
+      "direccion": {
+        "calle": "",
+        "numero": "",
+        "piso": "",
+        "depto": "",
+        "ciudad": "",
+        "provincia": "",
+        "codigoPostal": ""
+      },
+      "aceptoTerminos": true,
+      "activo": true,
+      "fechaRegistro": "2026-04-14T22:22:24.539Z",
+      "fechaModificacion": "2026-04-14T22:22:24.539Z"
     }
   ]
 }

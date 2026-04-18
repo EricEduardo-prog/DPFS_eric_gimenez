@@ -37,13 +37,27 @@
         <span class="texto-enlace">Carrito</span>
     </a>
     <!-- Enlace Perfil/Login -->
-    <a href="/login" class="enlace-navegacion <%= currentPage === 'login' ? 'activo' : '' %>" title="Iniciar sesión">
-        <div class="contenedor-icono">
-            <span class="icono-nav">🔐</span>
-            <% if (currentPage==='login' ) { %>
-                <span class="indicador-activo"></span>
-                <% } %>
-        </div>
-        <span class="texto-enlace">Ingresar</span>
-    </a>
+    <% if (usuario) { %>
+        <a href="/usuarios/perfil" class="enlace-navegacion <%= currentPage === 'perfil' ? 'activo' : '' %>"
+            title="Mi perfil">
+            <div class="contenedor-icono">
+                <span class="icono-nav">👤</span>
+                <% if (currentPage==='perfil' ) { %>
+                    <span class="indicador-activo"></span>
+                    <% } %>
+            </div>
+            <span class="texto-enlace">Mi Perfil</span>
+        </a>
+        <% } else { %>
+            <a href="/login" class="enlace-navegacion <%= currentPage === 'login' ? 'activo' : '' %>"
+                title="Iniciar sesión">
+                <div class="contenedor-icono">
+                    <span class="icono-nav">🔐</span>
+                    <% if (currentPage==='login' ) { %>
+                        <span class="indicador-activo"></span>
+                        <% } %>
+                </div>
+                <span class="texto-enlace">Ingresar</span>
+            </a>
+            <% } %>
 </nav>

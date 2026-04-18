@@ -9,34 +9,57 @@
     </title>
 
     <!-- CSS Global -->
-    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="/css/global.css">
 
     <!-- CSS de componentes -->
-    <link rel="stylesheet" href="css/components/header.css">
-    <link rel="stylesheet" href="css/components/navbar.css">
+    <link rel="stylesheet" href="/css/components/header.css">
+    <link rel="stylesheet" href="/css/components/navbar.css">
 
     <!-- CSS de página específica -->
     <% if (pageCss) { %>
-        <link rel="stylesheet" href="css/pages/<%= pageCss %>.css">
-        <% } %>
+        <%
+        // Normalizar pageCss a un array de strings válidos
+        
+        let cssFiles = [];
+        if (Array.isArray(pageCss)) {
+            cssFiles = pageCss;
+        } else if (typeof pageCss === 'string') {
+            cssFiles = [pageCss];
+        }
+        
+        // Filtrar y validar: solo strings no vacíos, alfanuméricos con guiones/underscores
+        // Esto previene inyección y errores si se pasan valores inválidos desde el controlador
+        cssFiles = cssFiles.filter(css => 
+            typeof css === 'string' && 
+            css.trim().length > 0 && 
+            /^[a-zA-Z0-9_-]+$/.test(css.trim())
+        );
+        
+        // Eliminar duplicados para optimizar carga
+        cssFiles = [...new Set(cssFiles)];
+        %>
+        <% cssFiles.forEach(function(css) { %>
+            <link rel="stylesheet" href="/css/pages/<%= css %>.css">
+        <% }); %>
+    <% } %>
 
-            <!-- Meta tags SEO -->
-            <meta name="description"
-                content="E-E - Todo lo que necesitas para tu hogar y negocio. Productos de ferretería, climatización, herramientas y más. Servicios de instalación y colocación de artefactos, servicios de mantenimiento en general.">
-            <meta name="keywords"
-                content="ferretería, herramientas, climatización, hogar, construcción, instalación, servicios">
-            <meta name="author" content="E-E">
+                        <!-- Meta tags SEO -->
+                        <meta name="description"
+                            content="E-E - Todo lo que necesitas para tu hogar y negocio. Productos de ferretería, climatización, herramientas y más. Servicios de instalación y colocación de artefactos, servicios de mantenimiento en general.">
+                        <meta name="keywords"
+                            content="ferretería, herramientas, climatización, hogar, construcción, instalación, servicios">
+                        <meta name="author" content="E-E">
 
-            <!-- Anti-flash: aplica el tema ANTES del primer render para evitar parpadeo -->
-            <script>
-                (function () {
-                    const guardado = localStorage.getItem('tema');
-                    const prefereDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                    if (guardado === 'dark' || (!guardado && prefereDark)) {
-                        document.documentElement.classList.add('dark');
-                    }
-                })();
-            </script>
+                        <!-- Anti-flash: aplica el tema ANTES del primer render para evitar parpadeo -->
+                        <script>
+                            (function () {
+                                const guardado = localStorage.getItem('tema');
+                                const prefereDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                                if (guardado === 'dark' || (!guardado && prefereDark)) {
+                                    document.documentElement.classList.add('dark');
+                                }
+                            })();
+                        </script>
 
 </head>
 
@@ -45,7 +68,7 @@
     <%- include('./partials/header') %>
 
         <!--Barra de Navegación-->
-        <%- include('./partials/navbar')%>
+        <%- include('./partials/navbar') %>
 
             <!-- Contenido Principal -->
             <main class="contenedor-principal">

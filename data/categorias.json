@@ -1,9 +1,15 @@
 {
   "_meta": {
     "descripcion": "Categorías de productos del catálogo E-E",
-    "version": "1.0.0",
-    "campos_requeridos": ["id", "nombre"],
-    "nota": "El campo 'id' es la clave foránea usada en productos.json. Si se cambia un id, actualizar todos los productos que lo referencian."
+    "version": "1.1.0",
+    "campos_requeridos": [
+      "id",
+      "nombre"
+    ],
+    "nota": "El campo 'id' es la clave foránea usada en productos.json. Si se cambia un id, actualizar todos los productos que lo referencian.",
+    "nota_id": "El id es autoincremental. El próximo id se calcula como max(id numérico) + 1 en _generarId().",
+    "nota_cantidad": "cantidadProductos es calculado. Se actualiza con recalcularCantidadProductos() al crear/editar/eliminar productos.",
+    "ultimaActualizacion": "2026-04-17T23:49:43.457Z"
   },
   "categorias": [
     {
@@ -15,7 +21,8 @@
       "activo": true,
       "orden": 1,
       "fechaCreacion": "2025-01-01T00:00:00.000Z",
-      "fechaModificacion": "2025-01-01T00:00:00.000Z"
+      "fechaModificacion": "2026-04-17T23:49:43.431Z",
+      "cantidadProductos": 1
     },
     {
       "id": "cat_002",
@@ -26,7 +33,8 @@
       "activo": true,
       "orden": 2,
       "fechaCreacion": "2025-01-01T00:00:00.000Z",
-      "fechaModificacion": "2025-01-01T00:00:00.000Z"
+      "fechaModificacion": "2026-04-17T23:49:43.433Z",
+      "cantidadProductos": 1
     },
     {
       "id": "cat_003",
@@ -37,7 +45,8 @@
       "activo": true,
       "orden": 3,
       "fechaCreacion": "2025-01-01T00:00:00.000Z",
-      "fechaModificacion": "2025-01-01T00:00:00.000Z"
+      "fechaModificacion": "2026-04-17T23:49:43.435Z",
+      "cantidadProductos": 0
     },
     {
       "id": "cat_004",
@@ -48,7 +57,8 @@
       "activo": true,
       "orden": 4,
       "fechaCreacion": "2025-01-01T00:00:00.000Z",
-      "fechaModificacion": "2025-01-01T00:00:00.000Z"
+      "fechaModificacion": "2026-04-17T23:49:43.436Z",
+      "cantidadProductos": 2
     },
     {
       "id": "cat_005",
@@ -59,7 +69,8 @@
       "activo": true,
       "orden": 5,
       "fechaCreacion": "2025-01-01T00:00:00.000Z",
-      "fechaModificacion": "2025-01-01T00:00:00.000Z"
+      "fechaModificacion": "2026-04-17T23:49:43.438Z",
+      "cantidadProductos": 1
     },
     {
       "id": "cat_006",
@@ -70,7 +81,8 @@
       "activo": true,
       "orden": 6,
       "fechaCreacion": "2025-01-01T00:00:00.000Z",
-      "fechaModificacion": "2025-01-01T00:00:00.000Z"
+      "fechaModificacion": "2026-04-17T23:49:43.440Z",
+      "cantidadProductos": 0
     },
     {
       "id": "cat_007",
@@ -81,7 +93,8 @@
       "activo": true,
       "orden": 7,
       "fechaCreacion": "2025-01-01T00:00:00.000Z",
-      "fechaModificacion": "2025-01-01T00:00:00.000Z"
+      "fechaModificacion": "2026-04-17T23:49:43.442Z",
+      "cantidadProductos": 0
     },
     {
       "id": "cat_008",
@@ -92,7 +105,56 @@
       "activo": true,
       "orden": 8,
       "fechaCreacion": "2025-01-01T00:00:00.000Z",
-      "fechaModificacion": "2025-01-01T00:00:00.000Z"
+      "fechaModificacion": "2026-04-17T23:49:43.449Z",
+      "cantidadProductos": 1
+    },
+    {
+      "id": "cat_009",
+      "slug": "manicura",
+      "nombre": "Manicura",
+      "descripcion": "\"Corte de uñas\"\r\n\"Esmaltado\"\r\n\"Permanentes\"",
+      "icono": "💅",
+      "cantidadProductos": 0,
+      "activo": true,
+      "orden": 9,
+      "fechaCreacion": "2026-04-08T22:44:58.299Z",
+      "fechaModificacion": "2026-04-17T23:49:43.451Z"
+    },
+    {
+      "id": "cat_010",
+      "slug": "capacitaciones",
+      "nombre": "Capacitaciones",
+      "descripcion": "Cursos con certificaciones brindadas por profesionales academicos expertos es su materia.",
+      "icono": "👨‍🏫",
+      "cantidadProductos": 1,
+      "activo": true,
+      "orden": 10,
+      "fechaCreacion": "2026-04-08T22:44:58.301Z",
+      "fechaModificacion": "2026-04-17T23:49:43.453Z"
+    },
+    {
+      "id": "cat_011",
+      "slug": "masajista",
+      "nombre": "Masajista",
+      "descripcion": "Profesionales con titulos habilitantes para desarrollar terapias corporales.",
+      "icono": "💆",
+      "activo": true,
+      "orden": 11,
+      "fechaCreacion": "2026-04-10T15:46:41.341Z",
+      "fechaModificacion": "2026-04-17T23:49:43.455Z",
+      "cantidadProductos": 1
+    },
+    {
+      "id": "cat_012",
+      "slug": "artilugios",
+      "nombre": "Artilugios",
+      "descripcion": "Objetos realizados únicamente para funciones especificas.",
+      "icono": "🃏",
+      "activo": true,
+      "orden": 12,
+      "fechaCreacion": "2026-04-14T21:54:08.267Z",
+      "fechaModificacion": "2026-04-17T23:49:43.457Z",
+      "cantidadProductos": 1
     }
   ]
 }

@@ -1,0 +1,197 @@
+<%# Vista: pages/admin/category/list.ejs Controller: categoriaController.js → listar() Variables: - categorias {Array}
+    Resultado de categoriaModel.getAll() (activas e inactivas) - mensaje {string|null} Query param ?mensaje=- error
+    {string|null} Query param ?error=%>
+
+    <div class="admin-listado">
+        <!-- Encabezado -->
+        <div class="admin-listado__encabezado">
+            <div class="admin-listado__titulo-bloque">
+                <h1 class="admin-listado__titulo">Categorías</h1>
+                <span class="admin-listado__conteo">
+                    <%= categorias.length %> registros
+                </span>
+            </div>
+            <a href="/admin/categorias/nueva" class="boton boton--primario">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                Nueva categoría
+            </a>
+        </div>
+
+        <!-- Alertas de feedback -->
+        <% if (mensaje) { %>
+            <div class="admin-alerta admin-alerta--exito" role="alert">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                    <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+                <%= mensaje %>
+            </div>
+            <% } %>
+
+                <% if (error) { %>
+                    <div class="admin-alerta admin-alerta--error" role="alert">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                        <%= error %>
+                    </div>
+                    <% } %>
+
+                        <!-- Filtros (simples para categorías) -->
+                        <div class="admin-filtros">
+                            <div class="admin-filtros__grupo">
+                                <label class="admin-filtros__check-label">
+                                    <input type="checkbox" id="filtroSoloActivas" name="soloActivas" value="true">
+                                    Solo activas
+                                </label>
+                                <button type="button" id="btnFiltrar" class="boton boton--secundario">Filtrar</button>
+                                <a href="/admin/categorias" class="boton boton--secundario">Limpiar</a>
+                            </div>
+                        </div>
+
+                        <!-- Estado vacío -->
+                        <% if (categorias.length===0) { %>
+                            <div class="admin-vacio">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.3">
+                                    <path
+                                        d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                                </svg>
+                                <p>No hay categorías creadas todavía.</p>
+                                <a href="/admin/categorias/nueva" class="boton boton--primario">Crear primera
+                                    categoría</a>
+                            </div>
+                            <% } else { %>
+                                <!-- Tabla de categorías -->
+                                <div class="admin-tabla-contenedor">
+                                    <table class="admin-tabla" id="tablaCategorias">
+                                        <thead>
+                                            <tr>
+                                                <th class="sortable" data-sort="orden">Orden <span
+                                                        class="sort-icon">↕️</span></th>
+                                                <th class="sortable" data-sort="nombre">Categoría <span
+                                                        class="sort-icon">↕️</span></th>
+                                                <th class="sortable" data-sort="slug">Slug <span
+                                                        class="sort-icon">↕️</span></th>
+                                                <th class="sortable" data-sort="productos">Productos <span
+                                                        class="sort-icon">↕️</span></th>
+                                                <th>Estado</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% categorias.forEach(function(cat) { %>
+                                                <tr class="<%= !cat.activo ? 'admin-tabla__fila--inactiva' : '' %>"
+                                                    data-orden="<%= cat.orden || 999 %>"
+                                                    data-nombre="<%= cat.nombre.toLowerCase() %>"
+                                                    data-slug="<%= (cat.slug || '').toLowerCase() %>"
+                                                    data-productos="<%= cat.cantidadProductos || 0 %>">
+
+                                                    <!-- Orden -->
+                                                    <td class="admin-tabla__orden">
+                                                        <%= cat.orden || '—' %>
+                                                    </td>
+
+                                                    <!-- Ícono + nombre + descripción -->
+                                                    <td class="admin-tabla__celda-producto">
+                                                        <span class="admin-tabla__icono-cat" aria-hidden="true">
+                                                            <%= cat.icono || '📁' %>
+                                                        </span>
+                                                        <div class="admin-tabla__producto-info">
+                                                            <span class="admin-tabla__nombre">
+                                                                <%= cat.nombre %>
+                                                            </span>
+                                                            <% if (cat.descripcion) { %>
+                                                                <span class="admin-tabla__descripcion-corta">
+                                                                    <%= cat.descripcion.length> 55 ?
+                                                                        cat.descripcion.substring(0, 55) + '…' :
+                                                                        cat.descripcion %>
+                                                                </span>
+                                                                <% } %>
+                                                        </div>
+                                                    </td>
+
+                                                    <!-- Slug -->
+                                                    <td><code class="admin-tabla__codigo"><%= cat.slug || '—' %></code>
+                                                    </td>
+
+                                                    <!-- Cantidad productos -->
+                                                    <td class="admin-tabla__td-num">
+                                                        <span class="admin-tabla__conteo-badge">
+                                                            <%= cat.cantidadProductos || 0 %>
+                                                        </span>
+                                                    </td>
+
+                                                    <!-- Estado -->
+                                                    <td>
+                                                        <span
+                                                            class="admin-estado-dot admin-estado-dot--<%= cat.activo ? 'activo' : 'inactivo' %>">
+                                                            <%= cat.activo ? 'Activa' : 'Inactiva' %>
+                                                        </span>
+                                                    </td>
+
+                                                    <!-- Acciones -->
+                                                    <td>
+                                                        <div class="admin-tabla__acciones">
+                                                            <a href="/admin/categorias/<%= cat.id %>/editar"
+                                                                class="admin-tabla__btn-accion"
+                                                                title="Editar <%= cat.nombre %>"
+                                                                aria-label="Editar <%= cat.nombre %>">
+                                                                <svg width="14" height="14" viewBox="0 0 24 24"
+                                                                    fill="none" stroke="currentColor" stroke-width="2">
+                                                                    <path
+                                                                        d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                                                    <path
+                                                                        d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                                                </svg>
+                                                            </a>
+
+                                                            <form action="/admin/categorias/<%= cat.id %>/baja"
+                                                                method="POST" class="form-toggle-estado"
+                                                                data-id="<%= cat.id %>" data-nombre="<%= cat.nombre %>"
+                                                                data-activo="<%= cat.activo %>">
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <button type="button"
+                                                                    class="admin-tabla__btn-accion <%= cat.activo ? 'admin-tabla__btn-accion--baja' : 'admin-tabla__btn-accion--alta' %> btn-toggle-estado"
+                                                                    title="<%= cat.activo ? 'Desactivar' : 'Reactivar' %>"
+                                                                    data-id="<%= cat.id %>"
+                                                                    data-nombre="<%= cat.nombre %>"
+                                                                    data-activo="<%= cat.activo %>">
+                                                                    <% if (cat.activo) { %>
+                                                                        <svg width="14" height="14" viewBox="0 0 24 24"
+                                                                            fill="none" stroke="currentColor"
+                                                                            stroke-width="2">
+                                                                            <circle cx="12" cy="12" r="10" />
+                                                                            <line x1="4.93" y1="4.93" x2="19.07"
+                                                                                y2="19.07" />
+                                                                        </svg>
+                                                                        <% } else { %>
+                                                                            <svg width="14" height="14"
+                                                                                viewBox="0 0 24 24" fill="none"
+                                                                                stroke="currentColor" stroke-width="2">
+                                                                                <path
+                                                                                    d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                                                                <polyline
+                                                                                    points="22 4 12 14.01 9 11.01" />
+                                                                            </svg>
+                                                                            <% } %>
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <% }); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <% } %>
+    </div>
+
+    <!-- JavaScript externo -->
+    <script src="/js/admin/category-list.js"></script>

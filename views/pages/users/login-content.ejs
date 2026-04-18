@@ -1,0 +1,136 @@
+<%# Vista: pages/users/login.ejs Controlador: usuarioController.js → mostrarFormLogin() / login() Variables: - errores
+    {Array} Mensajes de error del servidor - formData {Object} Datos del formulario para repoblar - mensaje
+    {string|null} Mensaje de éxito (ej: después de registro) %>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <!-- Logo -->
+            <div class="auth-header">
+                <a href="/" class="auth-logo">
+                    <span class="auth-logo-icon">🏠</span>
+                    <span class="auth-logo-text">E-E</span>
+                </a>
+                <p class="auth-subtitle">Todo para tu hogar y/o negocio</p>
+            </div>
+
+            <!-- Mensaje de éxito (ej: después de registro) -->
+            <% if (typeof mensaje !=='undefined' && mensaje) { %>
+                <div class="auth-alert auth-alert--success" role="alert">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                        <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    <%= mensaje %>
+                </div>
+                <% } %>
+
+                    <!-- Errores generales -->
+                    <% if (typeof errores !=='undefined' && errores && errores.length> 0) { %>
+                        <div class="auth-alert auth-alert--error" role="alert">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                            <ul style="margin:0; padding-left: var(--espacio-md);">
+                                <% errores.forEach(function(e) { %>
+                                    <li>
+                                        <%= e %>
+                                    </li>
+                                    <% }); %>
+                            </ul>
+                        </div>
+                        <% } %>
+
+                            <!-- Formulario de login -->
+                            <form action="/login" method="POST" id="formLogin" class="auth-form" novalidate>
+                                <h2 class="auth-title">Iniciar Sesión</h2>
+
+                                <!-- Campo Email -->
+                                <div class="campo-formulario">
+                                    <label class="etiqueta-campo" for="login-email">
+                                        Email <span class="campo-requerido">*</span>
+                                    </label>
+                                    <input type="email" id="login-email" name="email" class="entrada"
+                                        placeholder="tu@email.com"
+                                        value="<%= formData && formData.email ? formData.email : '' %>" required
+                                        autofocus>
+                                    <span class="mensaje-error" id="error-email"></span>
+                                </div>
+
+                                <!-- Campo Contraseña -->
+                                <div class="campo-formulario">
+                                    <label class="etiqueta-campo" for="login-password">
+                                        Contraseña <span class="campo-requerido">*</span>
+                                    </label>
+                                    <div class="contenedor-entrada">
+                                        <input type="password" id="login-password" name="password" class="entrada"
+                                            placeholder="••••••••" required>
+                                        <button type="button" class="boton-visibilidad" aria-label="Mostrar contraseña"
+                                            data-target="login-password">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                <circle cx="12" cy="12" r="3" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <span class="mensaje-error" id="error-password"></span>
+                                </div>
+
+                                <!-- Opciones -->
+                                <div class="auth-options">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="recordarme" value="true">
+                                        <span>Recordarme</span>
+                                    </label>
+                                    <a href="/recuperar-password" class="auth-link">¿Olvidaste tu contraseña?</a>
+                                </div>
+
+                                <!-- Botón Submit -->
+                                <button type="submit" class="auth-btn auth-btn--primary">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                                        <polyline points="10 17 15 12 10 7" />
+                                        <line x1="15" y1="12" x2="3" y2="12" />
+                                    </svg>
+                                    Iniciar Sesión
+                                </button>
+                            </form>
+
+                            <!-- Enlaces adicionales -->
+                            <div class="auth-footer-links">
+                                <p class="auth-footer-text">
+                                    ¿No tienes cuenta?
+                                    <a href="/register" class="auth-link">Regístrate aquí</a>
+                                </p>
+
+                                <div class="auth-separator">
+                                    <span>o continúa con</span>
+                                </div>
+
+                                <div class="auth-social-buttons">
+                                    <button type="button" class="auth-social-btn auth-social-btn--google">
+                                        <span class="auth-social-icon">G</span>
+                                        <span>Google</span>
+                                    </button>
+                                    <button type="button" class="auth-social-btn auth-social-btn--apple">
+                                        <span class="auth-social-icon">🍎</span>
+                                        <span>Apple</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Términos -->
+                            <div class="auth-terms">
+                                <p>
+                                    Al continuar, aceptas nuestros
+                                    <a href="/terminos" class="auth-link">Términos de Servicio</a>
+                                    y
+                                    <a href="/privacidad" class="auth-link">Política de Privacidad</a>
+                                </p>
+                            </div>
+        </div>
+    </div>

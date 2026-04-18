@@ -1,0 +1,187 @@
+<%# Vista: pages/users/register-content.ejs Controlador: usuarioController.js → mostrarFormRegistro() / registrar()
+    Variables: - errores {Array} Mensajes de error del servidor - formData {Object} Datos del formulario para repoblar -
+    mensaje {string|null} Mensaje de éxito %>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <!-- Logo y título -->
+            <div class="auth-header">
+                <a href="/" class="auth-logo">
+                    <span class="auth-logo-icon">🏠</span>
+                    <span class="auth-logo-text">E-E</span>
+                </a>
+                <h1 class="auth-title">Crear cuenta</h1>
+                <p class="auth-subtitle">Completá tus datos para registrarte</p>
+            </div>
+
+            <!-- Mensajes de éxito -->
+            <% if (typeof mensaje !=='undefined' && mensaje) { %>
+                <div class="auth-alert auth-alert--success" role="alert">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                        <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    <%= mensaje %>
+                </div>
+                <% } %>
+
+                    <!-- Errores -->
+                    <% if (typeof errores !=='undefined' && errores && errores.length> 0) { %>
+                        <div class="auth-alert auth-alert--error" role="alert">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                            <ul style="margin:0; padding-left: var(--espacio-md);">
+                                <% errores.forEach(function(e) { %>
+                                    <li>
+                                        <%= e %>
+                                    </li>
+                                    <% }); %>
+                            </ul>
+                        </div>
+                        <% } %>
+
+                            <!-- Formulario de registro -->
+                            <form action="/register" method="POST" id="formRegistro" novalidate>
+                                <!-- Nombre completo -->
+                                <div class="campo-formulario">
+                                    <label class="etiqueta-campo" for="nombre">
+                                        Nombre completo <span class="campo-requerido">*</span>
+                                    </label>
+                                    <input type="text" id="nombre" name="nombre" class="entrada"
+                                        placeholder="Ej: María García"
+                                        value="<%= formData && formData.nombre ? formData.nombre : '' %>"
+                                        maxlength="100" required>
+                                    <span class="mensaje-error" id="error-nombre"></span>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="campo-formulario">
+                                    <label class="etiqueta-campo" for="email">
+                                        Email <span class="campo-requerido">*</span>
+                                    </label>
+                                    <input type="email" id="email" name="email" class="entrada"
+                                        placeholder="usuario@ejemplo.com"
+                                        value="<%= formData && formData.email ? formData.email : '' %>" required>
+                                    <span class="mensaje-error" id="error-email"></span>
+                                </div>
+
+                                <!-- Contraseña -->
+                                <div class="campo-formulario">
+                                    <label class="etiqueta-campo" for="password">
+                                        Contraseña <span class="campo-requerido">*</span>
+                                    </label>
+                                    <input type="password" id="password" name="password" class="entrada"
+                                        placeholder="Mínimo 6 caracteres" minlength="6" required>
+                                    <p class="campo-formulario__ayuda">Mínimo 6 caracteres. Recomendado: usar
+                                        letras, números y símbolos.</p>
+                                    <span class="mensaje-error" id="error-password"></span>
+                                </div>
+
+                                <!-- Confirmar contraseña -->
+                                <div class="campo-formulario">
+                                    <label class="etiqueta-campo" for="confirmPassword">
+                                        Confirmar contraseña <span class="campo-requerido">*</span>
+                                    </label>
+                                    <input type="password" id="confirmPassword" name="confirmPassword" class="entrada"
+                                        placeholder="Repetí tu contraseña" required>
+                                    <span class="mensaje-error" id="error-confirmPassword"></span>
+                                </div>
+
+                                <!-- Teléfono (opcional) -->
+                                <div class="campo-formulario">
+                                    <label class="etiqueta-campo" for="telefono">
+                                        Teléfono <span class="etiqueta-opcional">(opcional)</span>
+                                    </label>
+                                    <input type="tel" id="telefono" name="telefono" class="entrada"
+                                        placeholder="Ej: +54 9 223 456-7890"
+                                        value="<%= formData && formData.telefono ? formData.telefono : '' %>">
+                                    <span class="mensaje-error" id="error-telefono"></span>
+                                </div>
+
+                                <!-- Sección de dirección (opcional) -->
+                                <details class="auth-details">
+                                    <summary class="auth-details__summary">Dirección de envío (opcional)</summary>
+                                    <div class="auth-details__content">
+                                        <div class="admin-formulario__fila-doble">
+                                            <div class="campo-formulario">
+                                                <label class="etiqueta-campo" for="direccion_calle">Calle</label>
+                                                <input type="text" id="direccion_calle" name="direccion_calle"
+                                                    class="entrada" placeholder="Ej: Av. Colón"
+                                                    value="<%= formData && formData.direccion_calle ? formData.direccion_calle : '' %>">
+                                            </div>
+                                            <div class="campo-formulario">
+                                                <label class="etiqueta-campo" for="direccion_numero">Número</label>
+                                                <input type="text" id="direccion_numero" name="direccion_numero"
+                                                    class="entrada" placeholder="Ej: 1234"
+                                                    value="<%= formData && formData.direccion_numero ? formData.direccion_numero : '' %>">
+                                            </div>
+                                        </div>
+
+                                        <div class="admin-formulario__fila-doble">
+                                            <div class="campo-formulario">
+                                                <label class="etiqueta-campo" for="direccion_piso">Piso</label>
+                                                <input type="text" id="direccion_piso" name="direccion_piso"
+                                                    class="entrada" placeholder="Ej: 3"
+                                                    value="<%= formData && formData.direccion_piso ? formData.direccion_piso : '' %>">
+                                            </div>
+                                            <div class="campo-formulario">
+                                                <label class="etiqueta-campo" for="direccion_depto">Departamento</label>
+                                                <input type="text" id="direccion_depto" name="direccion_depto"
+                                                    class="entrada" placeholder="Ej: B"
+                                                    value="<%= formData && formData.direccion_depto ? formData.direccion_depto : '' %>">
+                                            </div>
+                                        </div>
+
+                                        <div class="admin-formulario__fila-doble">
+                                            <div class="campo-formulario">
+                                                <label class="etiqueta-campo" for="direccion_ciudad">Ciudad</label>
+                                                <input type="text" id="direccion_ciudad" name="direccion_ciudad"
+                                                    class="entrada" placeholder="Ej: Mar del Plata"
+                                                    value="<%= formData && formData.direccion_ciudad ? formData.direccion_ciudad : '' %>">
+                                            </div>
+                                            <div class="campo-formulario">
+                                                <label class="etiqueta-campo"
+                                                    for="direccion_provincia">Provincia</label>
+                                                <input type="text" id="direccion_provincia" name="direccion_provincia"
+                                                    class="entrada" placeholder="Ej: Buenos Aires"
+                                                    value="<%= formData && formData.direccion_provincia ? formData.direccion_provincia : '' %>">
+                                            </div>
+                                        </div>
+
+                                        <div class="campo-formulario">
+                                            <label class="etiqueta-campo" for="direccion_codigoPostal">Código
+                                                Postal</label>
+                                            <input type="text" id="direccion_codigoPostal" name="direccion_codigoPostal"
+                                                class="entrada" placeholder="Ej: 7600"
+                                                value="<%= formData && formData.direccion_codigoPostal ? formData.direccion_codigoPostal : '' %>">
+                                        </div>
+                                    </div>
+                                </details>
+
+                                <!-- Términos y condiciones -->
+                                <div class="campo-formulario">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="aceptoTerminos" value="true" <%=formData &&
+                                            formData.aceptoTerminos==='true' ? 'checked' : '' %> required>
+                                        <span>Acepto los <a href="/terminos" target="_blank">términos y
+                                                condiciones</a></span>
+                                    </label>
+                                    <span class="mensaje-error" id="error-terminos"></span>
+                                </div>
+
+                                <!-- Botón de registro -->
+                                <button type="submit" class="auth-btn auth-btn--primary">
+                                    Registrarse
+                                </button>
+
+                                <!-- Enlace a login -->
+                                <p class="auth-footer">
+                                    ¿Ya tenés cuenta? <a href="/login">Iniciar sesión</a>
+                                </p>
+                            </form>
+        </div>
+    </div>

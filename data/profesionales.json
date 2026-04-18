@@ -1,0 +1,345 @@
+{
+  "_meta": {
+    "descripcion": "Profesionales certificados de E-E",
+    "version": "2.0.0",
+    "campos_requeridos": [
+      "id",
+      "nombre",
+      "matricula",
+      "profesion",
+      "email"
+    ],
+    "nota_valoracion": "El campo valoracion.valor y trabajosCompletados son de solo lectura desde el CRUD de instaladores. Se actualizan únicamente desde el módulo de órdenes/trabajos.",
+    "nota_disponibilidad": "La grilla disponibilidad usa días en español sin tildes como clave. Turnos: manana (08:00-13:00) y tarde (13:00-18:00).",
+    "nota_validacion": "Los campos servicioId, servicioPersonalizado, estadoServicio, certificacionUrl, certificacionVerificada, fechaValidacion, validadoPor y observacionAdmin son para el sistema de validación de profesionales."
+  },
+  "profesionales": [
+    {
+      "id": "prof_001",
+      "nombre": "Juan Carlos Rodríguez",
+      "matricula": "MP-04578",
+      "profesion": "Técnico en climatización",
+      "servicioId": "serv_003",
+      "servicioPersonalizado": null,
+      "estadoServicio": "aprobado",
+      "experienciaAnios": 8,
+      "certificacionUrl": "/uploads/certificados/mp-04578_climatizacion.pdf",
+      "certificacionVerificada": true,
+      "fechaValidacion": "2025-01-15T10:00:00.000Z",
+      "validadoPor": "admin@ee.com",
+      "observacionAdmin": "Certificación válida y experiencia comprobada.",
+      "email": "jcrodriguez@gmail.com",
+      "telefono": "+54 9 223 456-7890",
+      "disponibilidad": {
+        "lunes": {
+          "manana": false,
+          "tarde": true
+        },
+        "martes": {
+          "manana": false,
+          "tarde": true
+        },
+        "miercoles": {
+          "manana": false,
+          "tarde": true
+        },
+        "jueves": {
+          "manana": false,
+          "tarde": true
+        },
+        "viernes": {
+          "manana": false,
+          "tarde": true
+        }
+      },
+      "valoracion": {
+        "valor": 4.8,
+        "cantidad": 23
+      },
+      "trabajosCompletados": 23,
+      "activo": true,
+      "fechaAlta": "2025-01-10T09:00:00.000Z",
+      "fechaModificacion": "2026-04-14T21:43:00.532Z"
+    },
+    {
+      "id": "prof_002",
+      "nombre": "Roberto Sánchez",
+      "matricula": "MN-12345",
+      "profesion": "Electricista",
+      "servicioId": "serv_001",
+      "servicioPersonalizado": null,
+      "estadoServicio": "aprobado",
+      "experienciaAnios": 5,
+      "certificacionUrl": "/uploads/certificados/mn-12345_electricista.pdf",
+      "certificacionVerificada": true,
+      "fechaValidacion": "2025-01-20T11:00:00.000Z",
+      "validadoPor": "admin@ee.com",
+      "observacionAdmin": "Documentación completa y en regla.",
+      "email": "roberto.sanchez@outlook.com",
+      "telefono": "+54 9 223 567-8901",
+      "disponibilidad": {
+        "lunes": {
+          "manana": true,
+          "tarde": true
+        },
+        "martes": {
+          "manana": false,
+          "tarde": true
+        },
+        "miercoles": {
+          "manana": true,
+          "tarde": true
+        },
+        "jueves": {
+          "manana": false,
+          "tarde": false
+        },
+        "viernes": {
+          "manana": true,
+          "tarde": true
+        }
+      },
+      "valoracion": {
+        "valor": 4.5,
+        "cantidad": 15
+      },
+      "trabajosCompletados": 15,
+      "activo": true,
+      "fechaAlta": "2025-01-18T10:00:00.000Z",
+      "fechaModificacion": "2025-01-18T10:00:00.000Z"
+    },
+    {
+      "id": "prof_003",
+      "nombre": "Alejandro López",
+      "matricula": "MP-09871",
+      "profesion": "Plomero / Gasista",
+      "servicioId": "serv_002",
+      "servicioPersonalizado": null,
+      "estadoServicio": "aprobado",
+      "experienciaAnios": 12,
+      "certificacionUrl": "/uploads/certificados/mp-09871_plomeria.pdf",
+      "certificacionVerificada": true,
+      "fechaValidacion": "2025-01-05T09:00:00.000Z",
+      "validadoPor": "admin@ee.com",
+      "observacionAdmin": "Profesional con amplia experiencia.",
+      "email": "alopez.plomeria@gmail.com",
+      "telefono": "+54 9 223 678-9012",
+      "disponibilidad": {
+        "lunes": {
+          "manana": false,
+          "tarde": false
+        },
+        "martes": {
+          "manana": true,
+          "tarde": true
+        },
+        "miercoles": {
+          "manana": false,
+          "tarde": false
+        },
+        "jueves": {
+          "manana": false,
+          "tarde": false
+        },
+        "viernes": {
+          "manana": false,
+          "tarde": true
+        }
+      },
+      "valoracion": {
+        "valor": 4.9,
+        "cantidad": 38
+      },
+      "trabajosCompletados": 38,
+      "activo": true,
+      "fechaAlta": "2024-12-01T08:00:00.000Z",
+      "fechaModificacion": "2026-04-14T23:01:54.961Z"
+    },
+    {
+      "id": "prof_004",
+      "nombre": "Marcela Torres",
+      "matricula": "MP-33210",
+      "profesion": "Técnico en refrigeración",
+      "servicioId": "serv_004",
+      "servicioPersonalizado": null,
+      "estadoServicio": "aprobado",
+      "experienciaAnios": 3,
+      "certificacionUrl": "/uploads/certificados/mp-33210_refrigeracion.pdf",
+      "certificacionVerificada": true,
+      "fechaValidacion": "2026-04-15T15:42:40.180Z",
+      "validadoPor": "admin@ee.com",
+      "observacionAdmin": "Certificacion adecuada.\r\nSe da de alta solicitud de nuevo servicio.",
+      "email": "marcela.torres.tec@gmail.com",
+      "telefono": "",
+      "disponibilidad": {
+        "lunes": {
+          "manana": false,
+          "tarde": true
+        },
+        "martes": {
+          "manana": false,
+          "tarde": false
+        },
+        "miercoles": {
+          "manana": true,
+          "tarde": false
+        },
+        "jueves": {
+          "manana": true,
+          "tarde": false
+        },
+        "viernes": {
+          "manana": false,
+          "tarde": true
+        }
+      },
+      "valoracion": {
+        "valor": 0,
+        "cantidad": 0
+      },
+      "trabajosCompletados": 0,
+      "activo": true,
+      "fechaAlta": "2025-02-28T14:00:00.000Z",
+      "fechaModificacion": "2026-04-15T15:42:40.180Z"
+    },
+    {
+      "id": "prof_005",
+      "nombre": "Marta Stuart",
+      "matricula": "MN-02938",
+      "profesion": "Pintor",
+      "servicioId": null,
+      "servicioPersonalizado": "Pintura artística y decorativa",
+      "estadoServicio": "rechazado",
+      "experienciaAnios": 6,
+      "certificacionUrl": null,
+      "certificacionVerificada": false,
+      "fechaValidacion": "2026-04-17T15:26:55.971Z",
+      "validadoPor": "admin@ee.com",
+      "observacionAdmin": "Marta es cantante.",
+      "email": "marta@stuart.org",
+      "telefono": "",
+      "disponibilidad": {
+        "lunes": {
+          "manana": true,
+          "tarde": false
+        },
+        "martes": {
+          "manana": true,
+          "tarde": false
+        },
+        "miercoles": {
+          "manana": true,
+          "tarde": false
+        },
+        "jueves": {
+          "manana": true,
+          "tarde": false
+        },
+        "viernes": {
+          "manana": true,
+          "tarde": false
+        }
+      },
+      "valoracion": {
+        "valor": 0,
+        "cantidad": 0
+      },
+      "trabajosCompletados": 0,
+      "activo": true,
+      "fechaAlta": "2026-04-14T21:47:51.867Z",
+      "fechaModificacion": "2026-04-17T15:26:55.971Z"
+    },
+    {
+      "id": "prof_006",
+      "nombre": "Raul Obrero",
+      "matricula": "MP-12523",
+      "profesion": "",
+      "email": "raulpc@gmail.com",
+      "telefono": "",
+      "disponibilidad": {
+        "lunes": {
+          "manana": true,
+          "tarde": true
+        },
+        "martes": {
+          "manana": true,
+          "tarde": true
+        },
+        "miercoles": {
+          "manana": true,
+          "tarde": true
+        },
+        "jueves": {
+          "manana": true,
+          "tarde": true
+        },
+        "viernes": {
+          "manana": true,
+          "tarde": true
+        }
+      },
+      "valoracion": {
+        "valor": 0,
+        "cantidad": 0
+      },
+      "trabajosCompletados": 0,
+      "activo": true,
+      "fechaAlta": "2026-04-15T15:31:21.851Z",
+      "fechaModificacion": "2026-04-17T14:47:45.169Z",
+      "servicioId": "serv_002",
+      "servicioPersonalizado": null,
+      "estadoServicio": "rechazado",
+      "experienciaAnios": 3,
+      "certificacionVerificada": false,
+      "fechaValidacion": "2026-04-17T14:47:45.169Z",
+      "validadoPor": "admin@ee.com",
+      "observacionAdmin": "Profesional genero solicitud de servicio incorrecta"
+    },
+    {
+      "id": "prof_007",
+      "nombre": "Roberto Carlos",
+      "matricula": "MN-00938",
+      "profesion": "",
+      "email": "robertocarlos@gmail.com",
+      "telefono": "",
+      "disponibilidad": {
+        "lunes": {
+          "manana": false,
+          "tarde": false
+        },
+        "martes": {
+          "manana": false,
+          "tarde": false
+        },
+        "miercoles": {
+          "manana": false,
+          "tarde": false
+        },
+        "jueves": {
+          "manana": false,
+          "tarde": false
+        },
+        "viernes": {
+          "manana": false,
+          "tarde": true
+        }
+      },
+      "valoracion": {
+        "valor": 0,
+        "cantidad": 0
+      },
+      "trabajosCompletados": 0,
+      "activo": true,
+      "fechaAlta": "2026-04-17T15:14:47.719Z",
+      "fechaModificacion": "2026-04-17T15:26:13.002Z",
+      "servicioId": "serv_010",
+      "servicioPersonalizado": null,
+      "estadoServicio": "aprobado",
+      "experienciaAnios": 16,
+      "certificacionVerificada": true,
+      "fechaValidacion": "2026-04-17T15:26:13.002Z",
+      "validadoPor": "admin@ee.com",
+      "observacionAdmin": "Correcto, es un crack."
+    }
+  ]
+}

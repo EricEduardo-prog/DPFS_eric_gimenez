@@ -1,0 +1,437 @@
+{
+  "_meta": {
+    "version": "1.0.0",
+    "descripcion": "Catálogo de servicios/profesiones disponibles en la plataforma",
+    "ultimaActualizacion": "2026-04-17T15:26:23.309Z"
+  },
+  "servicios": [
+    {
+      "id": "serv_001",
+      "nombre": "Electricista",
+      "slug": "electricista",
+      "descripcion": "Instalación, reparación y mantenimiento de sistemas eléctricos residenciales y comerciales. Incluye tableros, cableado, disyuntores y sistemas de iluminación.",
+      "nivelesExperiencia": [
+        {
+          "nivel": "Sin experiencia",
+          "requisitos": [
+            "Curso básico de electricidad"
+          ]
+        },
+        {
+          "nivel": "1-2 años",
+          "requisitos": [
+            "Experiencia comprobable",
+            "Curso de seguridad eléctrica"
+          ]
+        },
+        {
+          "nivel": "3-5 años",
+          "requisitos": [
+            "Matrícula habilitante",
+            "Certificado de altura"
+          ]
+        },
+        {
+          "nivel": "6-10 años",
+          "requisitos": [
+            "Matrícula profesional",
+            "Especialización en alta tensión"
+          ]
+        },
+        {
+          "nivel": "+10 años",
+          "requisitos": [
+            "Matrícula profesional",
+            "Certificación en gestión de proyectos"
+          ]
+        }
+      ],
+      "certificacionRequerida": true,
+      "destacado": true,
+      "activo": true,
+      "fechaCreacion": "2026-01-01T00:00:00.000Z",
+      "fechaModificacion": "2026-04-15T15:45:59.568Z"
+    },
+    {
+      "id": "serv_002",
+      "nombre": "Plomero / Gasista",
+      "slug": "plomero-gasista",
+      "descripcion": "Instalación y reparación de sistemas de agua fría/caliente, desagües, termotanques, calefones y redes de gas natural.",
+      "nivelesExperiencia": [
+        {
+          "nivel": "Sin experiencia",
+          "requisitos": [
+            "Curso básico de plomería"
+          ]
+        },
+        {
+          "nivel": "1-2 años",
+          "requisitos": [
+            "Experiencia comprobable",
+            "Curso de gasista"
+          ]
+        },
+        {
+          "nivel": "3-5 años",
+          "requisitos": [
+            "Matrícula de gasista",
+            "Certificado de instalador"
+          ]
+        },
+        {
+          "nivel": "6-10 años",
+          "requisitos": [
+            "Matrícula profesional",
+            "Especialización en termomecánica"
+          ]
+        },
+        {
+          "nivel": "+10 años",
+          "requisitos": [
+            "Matrícula profesional",
+            "Certificación en eficiencia energética"
+          ]
+        }
+      ],
+      "certificacionRequerida": true,
+      "destacado": true,
+      "activo": true,
+      "fechaCreacion": "2026-01-01T00:00:00.000Z",
+      "fechaModificacion": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "serv_003",
+      "nombre": "Técnico en climatización",
+      "slug": "tecnico-climatizacion",
+      "descripcion": "Instalación, mantenimiento y reparación de aires acondicionados, sistemas de calefacción central, bombas de calor y ventilación.",
+      "nivelesExperiencia": [
+        {
+          "nivel": "Sin experiencia",
+          "requisitos": [
+            "Curso básico de refrigeración"
+          ]
+        },
+        {
+          "nivel": "1-2 años",
+          "requisitos": [
+            "Experiencia comprobable",
+            "Manejo de herramientas"
+          ]
+        },
+        {
+          "nivel": "3-5 años",
+          "requisitos": [
+            "Título técnico",
+            "Manejo de gases refrigerantes"
+          ]
+        },
+        {
+          "nivel": "6-10 años",
+          "requisitos": [
+            "Matrícula profesional",
+            "Especialización en VRF"
+          ]
+        },
+        {
+          "nivel": "+10 años",
+          "requisitos": [
+            "Certificación internacional",
+            "Gestión de proyectos HVAC"
+          ]
+        }
+      ],
+      "certificacionRequerida": true,
+      "destacado": true,
+      "activo": true,
+      "fechaCreacion": "2026-01-01T00:00:00.000Z",
+      "fechaModificacion": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "serv_004",
+      "nombre": "Técnico en refrigeración",
+      "slug": "tecnico-refrigeracion",
+      "descripcion": "Mantenimiento y reparación de sistemas de refrigeración comercial e industrial: cámaras frigoríficas, heladeras, freezers y vitrinas.",
+      "nivelesExperiencia": [
+        {
+          "nivel": "Sin experiencia",
+          "requisitos": [
+            "Curso básico de refrigeración"
+          ]
+        },
+        {
+          "nivel": "1-2 años",
+          "requisitos": [
+            "Experiencia comprobable",
+            "Manejo de herramientas"
+          ]
+        },
+        {
+          "nivel": "3-5 años",
+          "requisitos": [
+            "Título técnico",
+            "Certificación en gases refrigerantes"
+          ]
+        },
+        {
+          "nivel": "6-10 años",
+          "requisitos": [
+            "Matrícula profesional",
+            "Especialización en sistemas comerciales"
+          ]
+        },
+        {
+          "nivel": "+10 años",
+          "requisitos": [
+            "Certificación internacional",
+            "Gestión de equipos"
+          ]
+        }
+      ],
+      "certificacionRequerida": true,
+      "destacado": false,
+      "activo": true,
+      "fechaCreacion": "2026-01-01T00:00:00.000Z",
+      "fechaModificacion": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "serv_005",
+      "nombre": "Técnico electromecánico",
+      "slug": "tecnico-electromecanico",
+      "descripcion": "Mantenimiento y reparación de equipos electromecánicos: motores, bombas, generadores, sistemas de automatización y control industrial.",
+      "nivelesExperiencia": [
+        {
+          "nivel": "Sin experiencia",
+          "requisitos": [
+            "Curso básico de electromecánica"
+          ]
+        },
+        {
+          "nivel": "1-2 años",
+          "requisitos": [
+            "Experiencia comprobable",
+            "Manejo de instrumentos"
+          ]
+        },
+        {
+          "nivel": "3-5 años",
+          "requisitos": [
+            "Título técnico",
+            "Manejo de PLC"
+          ]
+        },
+        {
+          "nivel": "6-10 años",
+          "requisitos": [
+            "Matrícula profesional",
+            "Especialización en automatización"
+          ]
+        },
+        {
+          "nivel": "+10 años",
+          "requisitos": [
+            "Certificación en gestión de mantenimiento",
+            "Liderazgo técnico"
+          ]
+        }
+      ],
+      "certificacionRequerida": true,
+      "destacado": false,
+      "activo": true,
+      "fechaCreacion": "2026-01-01T00:00:00.000Z",
+      "fechaModificacion": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "serv_006",
+      "nombre": "Albañil / Constructor",
+      "slug": "albanil-constructor",
+      "descripcion": "Construcción, reparación y mantenimiento de estructuras civiles: mampostería, hormigón, revoques, contrapisos y refacciones.",
+      "nivelesExperiencia": [
+        {
+          "nivel": "Sin experiencia",
+          "requisitos": [
+            "Curso básico de albañilería"
+          ]
+        },
+        {
+          "nivel": "1-2 años",
+          "requisitos": [
+            "Experiencia comprobable",
+            "Manejo de herramientas"
+          ]
+        },
+        {
+          "nivel": "3-5 años",
+          "requisitos": [
+            "Formación técnica",
+            "Lectura de planos"
+          ]
+        },
+        {
+          "nivel": "6-10 años",
+          "requisitos": [
+            "Matrícula de constructor",
+            "Gestión de obras"
+          ]
+        },
+        {
+          "nivel": "+10 años",
+          "requisitos": [
+            "Ingeniería o arquitectura",
+            "Dirección de obras"
+          ]
+        }
+      ],
+      "certificacionRequerida": true,
+      "destacado": false,
+      "activo": true,
+      "fechaCreacion": "2026-01-01T00:00:00.000Z",
+      "fechaModificacion": "2026-04-15T15:44:27.791Z"
+    },
+    {
+      "id": "serv_007",
+      "nombre": "Pintor",
+      "slug": "pintor",
+      "descripcion": "Pintura de interiores y exteriores, preparación de superficies, empastado, laqueado y aplicación de revestimientos decorativos.",
+      "nivelesExperiencia": [
+        {
+          "nivel": "Sin experiencia",
+          "requisitos": [
+            "Curso básico de pintura"
+          ]
+        },
+        {
+          "nivel": "1-2 años",
+          "requisitos": [
+            "Experiencia comprobable",
+            "Manejo de equipos"
+          ]
+        },
+        {
+          "nivel": "3-5 años",
+          "requisitos": [
+            "Técnicas avanzadas",
+            "Manejo de colores"
+          ]
+        },
+        {
+          "nivel": "6-10 años",
+          "requisitos": [
+            "Especialización en revestimientos",
+            "Presupuestación"
+          ]
+        },
+        {
+          "nivel": "+10 años",
+          "requisitos": [
+            "Certificación en calidad",
+            "Gestión de proyectos"
+          ]
+        }
+      ],
+      "certificacionRequerida": false,
+      "destacado": false,
+      "activo": true,
+      "fechaCreacion": "2026-01-01T00:00:00.000Z",
+      "fechaModificacion": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "serv_008",
+      "nombre": "Masajista",
+      "slug": "masajista",
+      "descripcion": "Distintos tipos de masajes corporales.",
+      "nivelesExperiencia": [
+        {
+          "nivel": "Sin experiencia",
+          "requisitos": []
+        },
+        {
+          "nivel": "1-2 años",
+          "requisitos": []
+        },
+        {
+          "nivel": "3-5 años",
+          "requisitos": []
+        },
+        {
+          "nivel": "6-10 años",
+          "requisitos": []
+        },
+        {
+          "nivel": "+10 años",
+          "requisitos": []
+        }
+      ],
+      "certificacionRequerida": true,
+      "destacado": true,
+      "activo": true,
+      "fechaCreacion": "2026-04-15T01:40:35.857Z",
+      "fechaModificacion": "2026-04-15T01:40:35.857Z"
+    },
+    {
+      "id": "serv_009",
+      "nombre": "Técnico Informático",
+      "slug": "tecnico-informatico",
+      "descripcion": "Profesionales capacidades y skill desde manejo de redes hasta programacion.",
+      "nivelesExperiencia": [
+        {
+          "nivel": "Sin experiencia",
+          "requisitos": []
+        },
+        {
+          "nivel": "1-2 años",
+          "requisitos": []
+        },
+        {
+          "nivel": "3-5 años",
+          "requisitos": []
+        },
+        {
+          "nivel": "6-10 años",
+          "requisitos": []
+        },
+        {
+          "nivel": "+10 años",
+          "requisitos": []
+        }
+      ],
+      "certificacionRequerida": true,
+      "destacado": true,
+      "activo": true,
+      "fechaCreacion": "2026-04-15T15:45:37.764Z",
+      "fechaModificacion": "2026-04-15T15:45:37.764Z"
+    },
+    {
+      "id": "serv_010",
+      "nombre": "Cantante",
+      "slug": "cantante",
+      "descripcion": "Servicio solicitado por Roberto Carlos",
+      "nivelesExperiencia": [
+        {
+          "nivel": "Sin experiencia",
+          "requisitos": []
+        },
+        {
+          "nivel": "1-2 años",
+          "requisitos": []
+        },
+        {
+          "nivel": "3-5 años",
+          "requisitos": []
+        },
+        {
+          "nivel": "6-10 años",
+          "requisitos": []
+        },
+        {
+          "nivel": "+10 años",
+          "requisitos": []
+        }
+      ],
+      "certificacionRequerida": true,
+      "destacado": true,
+      "activo": true,
+      "fechaCreacion": "2026-04-17T15:26:12.998Z",
+      "fechaModificacion": "2026-04-17T15:26:23.309Z"
+    }
+  ]
+}

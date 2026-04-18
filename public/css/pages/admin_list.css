@@ -1,0 +1,574 @@
+/*
+ * admin_listados.css
+ * Estilos para las vistas de listado y detalle del panel admin.
+ * Importar junto a admin_forms.css.
+ * Usa las mismas variables CSS de global.css.
+ */
+
+/* ─────────────────────────────────────────────
+   Layout del listado
+───────────────────────────────────────────── */
+
+.admin-listado {
+    padding: var(--espacio-ml) var(--espacio-ml) calc(var(--altura-barra-navegacion) + var(--espacio-xl)) var(--espacio-ml);
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.admin-listado__encabezado {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--espacio-md);
+    margin-bottom: var(--espacio-xl);
+    flex-wrap: wrap;
+}
+
+.admin-listado__titulo-bloque {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-sm);
+}
+
+.admin-listado__titulo {
+    font-size: var(--fuente-tamano-xxl);
+    font-weight: var(--fuente-altura-l);
+    color: var(--color-texto);
+    margin: 0;
+}
+
+.admin-listado__conteo {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    background: var(--color-fondo-secundario);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-borde-completo);
+    font-size: var(--fuente-tamano-xs);
+    color: var(--color-texto-secundario);
+    font-weight: var(--fuente-altura-s);
+}
+
+/* ─────────────────────────────────────────────
+   Alertas de feedback
+───────────────────────────────────────────── */
+
+.admin-alerta {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--espacio-sm);
+    padding: var(--espacio-ms) var(--espacio-md);
+    border-radius: var(--radio-borde-pequeno);
+    margin-bottom: var(--espacio-lg);
+    font-size: var(--fuente-tamano-sm);
+    line-height: 1.5;
+}
+
+.admin-alerta--exito {
+    background: var(--color-inclusion);
+    color: var(--color-exito);
+    border: 1px solid rgba(46, 125, 50, 0.25);
+}
+
+.admin-alerta--error {
+    background: var(--color-error-suave);
+    color: var(--color-error);
+    border: 1px solid rgba(211, 47, 47, 0.25);
+}
+
+.admin-alerta svg {
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+/* ─────────────────────────────────────────────
+   Filtros
+───────────────────────────────────────────── */
+
+.admin-filtros {
+    margin-bottom: var(--espacio-lg);
+}
+
+.admin-filtros__grupo {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-ms);
+    flex-wrap: wrap;
+}
+
+.admin-filtros__select {
+    width: auto;
+    min-width: 200px;
+}
+
+.admin-filtros__check-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--espacio-sm);
+    font-size: var(--fuente-tamano-sm);
+    color: var(--color-texto);
+    cursor: pointer;
+    user-select: none;
+}
+
+/* ─────────────────────────────────────────────
+   Tabla
+───────────────────────────────────────────── */
+
+.admin-tabla-contenedor {
+    border: 1.5px solid var(--color-borde);
+    border-radius: var(--radio-borde-mediano);
+    overflow: scroll;
+    box-shadow: var(--sombra-suave);
+}
+
+.admin-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--fuente-tamano-sm);
+}
+
+.admin-tabla thead {
+    background: var(--color-fondo-acento);
+    border-bottom: 1.5px solid var(--color-borde);
+}
+
+.admin-tabla th {
+    padding: var(--espacio-ms) var(--espacio-md);
+    text-align: left;
+    font-size: var(--fuente-tamano-xs);
+    font-weight: var(--fuente-altura-l);
+    color: var(--color-texto-secundario);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.admin-tabla td {
+    padding: var(--espacio-ms) var(--espacio-md);
+    color: var(--color-texto);
+    border-bottom: 1px solid var(--color-borde);
+    vertical-align: middle;
+}
+
+.admin-tabla tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-tabla tbody tr {
+    transition: background var(--transicion-rapida);
+}
+
+.admin-tabla tbody tr:hover {
+    background: var(--color-fondo-hover);
+}
+
+.admin-tabla__fila--inactiva {
+    opacity: 0.55;
+}
+
+/* Celda producto (imagen + nombre) */
+.admin-tabla__celda-producto {
+    /*display: flex !important;*/
+    align-items: center;
+    gap: var(--espacio-ms);
+    min-width: 200px;
+}
+
+.admin-tabla__img-wrap {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radio-borde-pequeno);
+    border: 1px solid var(--color-borde);
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--color-fondo-secundario);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-tabla__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.admin-tabla__img-placeholder {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+/* Avatar para personas (inicial) */
+.admin-tabla__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--color-primario);
+    color: var(--color-fondo);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--fuente-tamano-sm);
+    font-weight: var(--fuente-altura-l);
+    flex-shrink: 0;
+}
+
+.admin-tabla__producto-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.admin-tabla__nombre {
+    font-weight: var(--fuente-altura);
+    color: var(--color-texto);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+.admin-tabla__descripcion-corta {
+    font-size: var(--fuente-tamano-xs);
+    color: var(--color-texto-secundario);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+/* Celda categoría con ícono */
+.admin-tabla__celda-categoria {
+    /*display: flex !important;*/
+    align-items: center;
+    gap: var(--espacio-sm);
+}
+
+.admin-tabla__icono-cat {
+    font-size: 22px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+/* Código / SKU */
+.admin-tabla__codigo {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: var(--fuente-tamano-xs);
+    background: var(--color-fondo-secundario);
+    padding: 2px 6px;
+    border-radius: var(--radio-borde-xxs);
+    border: 1px solid var(--color-borde);
+    color: var(--color-texto);
+    letter-spacing: 0.04em;
+}
+
+/* Precio */
+.admin-tabla__precio {
+    /*  display: flex;*/
+    align-items: center;
+    gap: var(--espacio-xs);
+    white-space: nowrap;
+}
+
+/* Badge mini */
+.admin-tabla__badge-mini {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 7px;
+    border-radius: var(--radio-borde-completo);
+    font-size: 11px;
+    font-weight: var(--fuente-altura);
+    line-height: 1.4;
+}
+
+.admin-tabla__badge-mini--info {
+    background: rgba(0, 119, 182, 0.1);
+    color: var(--color-secundario);
+}
+
+.admin-tabla__badge-mini--descuento {
+    background: rgba(255, 107, 107, 0.12);
+    color: var(--color-descuento);
+}
+
+/* Conteo badge (para categorías) */
+.admin-tabla__conteo-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    padding: 2px 8px;
+    background: var(--color-fondo-secundario);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-borde-completo);
+    font-size: var(--fuente-tamano-xs);
+    font-weight: var(--fuente-altura);
+    color: var(--color-texto-secundario);
+}
+
+/* Rating inline */
+.admin-tabla__rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--fuente-tamano-sm);
+}
+
+.admin-tabla__texto-suave {
+    color: var(--color-texto-terciario);
+    font-size: var(--fuente-tamano-xs);
+}
+
+/* Orden */
+.admin-tabla__orden {
+    text-align: center;
+    font-weight: var(--fuente-altura-l);
+    color: var(--color-texto-secundario);
+    min-width: 50px;
+}
+
+/* Disponibilidad días (instaladores) */
+.admin-tabla__disponibilidad {
+    display: flex;
+    gap: 3px;
+}
+
+.admin-tabla__dia-dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: var(--fuente-altura-l);
+    background: var(--color-fondo-secundario);
+    color: var(--color-texto-terciario);
+    border: 1px solid var(--color-borde);
+    cursor: default;
+    transition: background var(--transicion-rapida);
+}
+
+.admin-tabla__dia-dot--activo {
+    background: var(--color-primario);
+    color: var(--color-fondo);
+    border-color: var(--color-primario);
+}
+
+/* ─────────────────────────────────────────────
+   Estado dot (usado en tablas y detalle)
+───────────────────────────────────────────── */
+
+.admin-estado-dot {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--fuente-tamano-xs);
+    font-weight: var(--fuente-altura);
+    white-space: nowrap;
+}
+
+.admin-estado-dot::before {
+    content: '';
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.admin-estado-dot--activo {
+    color: var(--color-exito);
+}
+
+.admin-estado-dot--activo::before {
+    background: var(--color-exito);
+    box-shadow: 0 0 0 2px var(--color-inclusion);
+}
+
+.admin-estado-dot--inactivo {
+    color: var(--color-error);
+}
+
+.admin-estado-dot--inactivo::before {
+    background: var(--color-error);
+    box-shadow: 0 0 0 2px var(--color-error-suave);
+}
+
+/* ─────────────────────────────────────────────
+   Botones de acción en tabla
+───────────────────────────────────────────── */
+
+.admin-tabla__acciones {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-xs);
+}
+
+.admin-tabla__btn-accion {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radio-borde-pequeno);
+    border: 1.5px solid var(--color-borde);
+    background: var(--color-fondo);
+    color: var(--color-texto-secundario);
+    cursor: pointer;
+    transition: background var(--transicion-rapida), color var(--transicion-rapida), border-color var(--transicion-rapida);
+    text-decoration: none;
+    font-family: inherit;
+}
+
+.admin-tabla__btn-accion:hover {
+    background: var(--color-fondo-hover);
+    color: var(--color-primario);
+    border-color: var(--color-primario);
+}
+
+.admin-tabla__btn-accion--baja:hover {
+    background: var(--color-eliminar-hover);
+    color: var(--color-error);
+    border-color: var(--color-error);
+}
+
+.admin-tabla__btn-accion--alta:hover {
+    background: var(--color-inclusion);
+    color: var(--color-exito);
+    border-color: var(--color-exito);
+}
+
+/* ─────────────────────────────────────────────
+   Estado vacío
+───────────────────────────────────────────── */
+
+.admin-vacio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--espacio-lg);
+    padding: var(--espacio-xxl) var(--espacio-md);
+    text-align: center;
+    border: 2px dashed var(--color-borde);
+    border-radius: var(--radio-borde-mediano);
+    color: var(--color-texto-secundario);
+}
+
+.admin-vacio svg {
+    opacity: 0.4;
+}
+
+.admin-vacio p {
+    margin: 0;
+    font-size: var(--fuente-tamano-base);
+}
+
+/* ─────────────────────────────────────────────
+   Vista de detalle (usuario)
+───────────────────────────────────────────── */
+
+.admin-detalle__campo {
+    display: flex;
+    align-items: baseline;
+    gap: var(--espacio-md);
+    padding: var(--espacio-ms) 0;
+    border-bottom: 1px solid var(--color-borde-suave);
+}
+
+.admin-detalle__campo:last-child {
+    border-bottom: none;
+}
+
+.admin-detalle__clave {
+    flex-shrink: 0;
+    width: 160px;
+    font-size: var(--fuente-tamano-sm);
+    font-weight: var(--fuente-altura);
+    color: var(--color-texto-secundario);
+}
+
+.admin-detalle__valor {
+    font-size: var(--fuente-tamano-sm);
+    color: var(--color-texto);
+    word-break: break-word;
+}
+
+/* Estados del servicio */
+.estado-servicio-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.estado-aprobado {
+    background: #28a745;
+    color: white;
+}
+
+.estado-pendiente {
+    background: #ffc107;
+    color: #856404;
+}
+
+.estado-rechazado {
+    background: #dc3545;
+    color: white;
+}
+
+/* ─────────────────────────────────────────────
+   Responsive
+───────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+
+    .admin-tabla th:nth-child(4),
+    .admin-tabla td:nth-child(4),
+    .admin-tabla th:nth-child(5),
+    .admin-tabla td:nth-child(5) {
+        display: none;
+    }
+
+    .admin-listado__encabezado {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .admin-tabla__nombre {
+        max-width: 140px;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-listado {
+        padding: var(--espacio-md) var(--espacio-sm) calc(var(--altura-barra-navegacion) + var(--espacio-xl));
+    }
+
+    .admin-filtros__select {
+        min-width: 100%;
+        width: 100%;
+    }
+
+    .admin-filtros__grupo {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .admin-detalle__campo {
+        flex-direction: column;
+        gap: var(--espacio-xs);
+    }
+
+    .admin-detalle__clave {
+        width: auto;
+    }
+}

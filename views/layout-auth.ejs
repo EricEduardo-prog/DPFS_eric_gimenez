@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title || 'E-E - Autenticación' %>
+    </title>
+
+    <!-- CSS Global -->
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/auth.css">
+
+    <!-- CSS de página específica -->
+    <% if (pageCss) { %>
+        <link rel="stylesheet" href="/css/pages/<%= pageCss %>.css">
+        <% } %>
+
+            <!-- Anti-flash tema -->
+            <script>
+                (function () {
+                    const guardado = localStorage.getItem('tema');
+                    const prefereDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    if (guardado === 'dark' || (!guardado && prefereDark)) {
+                        document.documentElement.classList.add('dark');
+                    }
+                })();
+            </script>
+</head>
+
+<body>
+    <main class="contenedor-principal">
+        <%- include(body) %>
+    </main>
+
+    <script src="/js/tema.js"></script>
+
+    <% if (typeof authScript !=='undefined' && authScript) { %>
+        <script src="/js/<%= authScript %>.js"></script>
+        <% } %>
+</body>
+
+</html>

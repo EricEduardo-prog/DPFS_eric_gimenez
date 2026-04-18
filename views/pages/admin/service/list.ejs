@@ -1,0 +1,125 @@
+<%# Vista: pages/admin/service/list.ejs
+Controller: servicioController.js → listar() %>
+
+    <div class="admin-listado">
+        <div class="admin-listado__encabezado">
+            <div class="admin-listado__titulo-bloque">
+                <h1 class="admin-listado__titulo">Servicios</h1>
+                <span class="admin-listado__conteo">
+                    <%= servicios.length %> registros
+                </span>
+            </div>
+            <a href="/admin/servicios/nuevo" class="boton boton--primario">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                Nuevo servicio
+            </a>
+        </div>
+
+        <% if (mensaje) { %>
+            <div class="admin-alerta admin-alerta--exito" role="alert">
+                <%= mensaje %>
+            </div>
+            <% } %>
+                <% if (error) { %>
+                    <div class="admin-alerta admin-alerta--error" role="alert">
+                        <%= error %>
+                    </div>
+                    <% } %>
+
+                        <form class="admin-filtros" method="GET" action="/admin/servicios">
+                            <div class="admin-filtros__grupo">
+                                <label class="admin-filtros__check-label">
+                                    <input type="checkbox" name="soloActivos" value="true"
+                                        <%=filtros.soloActivos==='true' ? 'checked' : '' %>> Solo activos
+                                </label>
+                                <label class="admin-filtros__check-label">
+                                    <input type="checkbox" name="destacados" value="true" <%=filtros.destacados==='true'
+                                        ? 'checked' : '' %>> Solo destacados
+                                </label>
+                                <button type="submit" class="boton boton--secundario">Filtrar</button>
+                                <a href="/admin/servicios" class="boton boton--secundario">Limpiar</a>
+                            </div>
+                        </form>
+
+                        <% if (servicios.length===0) { %>
+                            <div class="admin-vacio">
+                                <p>No hay servicios registrados.</p>
+                                <a href="/admin/servicios/nuevo" class="boton boton--primario">Crear primer servicio</a>
+                            </div>
+                            <% } else { %>
+                                <div class="admin-tabla-contenedor">
+                                    <table class="admin-tabla">
+                                        <thead>
+                                            <tr>
+                                                <th>Servicio</th>
+                                                <th>Slug</th>
+                                                <th>Certificación</th>
+                                                <th>Destacado</th>
+                                                <th>Estado</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% servicios.forEach(function(s) { %>
+                                                <tr class="<%= !s.activo ? 'admin-tabla__fila--inactiva' : '' %>">
+                                                    <td class="admin-tabla__celda-producto">
+                                                        <span class="admin-tabla__icono-cat">
+                                                            <%= s.icono || '🔧' %>
+                                                        </span>
+                                                        <div class="admin-tabla__producto-info">
+                                                            <span class="admin-tabla__nombre">
+                                                                <%= s.nombre %>
+                                                            </span>
+                                                            <% if (s.descripcion) { %>
+                                                                <span class="admin-tabla__descripcion-corta">
+                                                                    <%= s.descripcion.substring(0, 60) %>...
+                                                                </span>
+                                                                <% } %>
+                                                        </div>
+                                                    </td>
+                                                    <td><code class="admin-tabla__codigo"><%= s.slug %></code></td>
+                                                    <td>
+                                                        <%= s.certificacionRequerida ? '✅ Requerida' : '❌ No requerida'
+                                                            %>
+                                                    </td>
+                                                    <td>
+                                                        <form action="/admin/servicios/<%= s.id %>/destacado"
+                                                            method="POST" style="display:inline">
+                                                            <input type="hidden" name="_method" value="POST">
+                                                            <button type="submit" class="admin-tabla__btn-accion"
+                                                                title="<%= s.destacado ? 'Quitar destacado' : 'Marcar destacado' %>">
+                                                                <%= s.destacado ? '⭐ Destacado' : '☆ No destacado' %>
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                    <td>
+                                                        <span
+                                                            class="admin-estado-dot admin-estado-dot--<%= s.activo ? 'activo' : 'inactivo' %>">
+                                                            <%= s.activo ? 'Activo' : 'Inactivo' %>
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <div class="admin-tabla__acciones">
+                                                            <a href="/admin/servicios/<%= s.id %>/editar"
+                                                                class="admin-tabla__btn-accion" title="Editar">✏️</a>
+                                                            <form action="/admin/servicios/<%= s.id %>/baja"
+                                                                method="POST" style="display:inline">
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <button type="submit"
+                                                                    class="admin-tabla__btn-accion admin-tabla__btn-accion--baja"
+                                                                    title="<%= s.activo ? 'Desactivar' : 'Activar' %>">
+                                                                    <%= s.activo ? '🔴' : '🟢' %>
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <% }); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <% } %>
+    </div>

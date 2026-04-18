@@ -1,0 +1,231 @@
+<%# Vista: pages/users/profile-edit.ejs Controlador: usuarioController.js → editarMiPerfil() / actualizarMiPerfil()
+    Variables: - usuario {Object} Datos del usuario logueado - errores {Array} Mensajes de error del servidor - formData
+    {Object|null} Datos del formulario para repoblar (en caso de error) %>
+
+    <% const datos=formData || usuario || {}; const titulo='Editar Perfil' ; %>
+
+        <div class="admin-formulario">
+            <!-- Encabezado -->
+            <div class="admin-formulario__encabezado">
+                <a href="/usuarios/perfil" class="admin-formulario__volver">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                    Volver a mi perfil
+                </a>
+                <div class="admin-formulario__titulo-bloque">
+                    <h1 class="admin-formulario__titulo">
+                        <%= titulo %>
+                    </h1>
+                    <span class="admin-formulario__badge admin-formulario__badge--edicion">
+                        <%= usuario.activo ? 'Cuenta activa' : 'Cuenta inactiva' %>
+                    </span>
+                </div>
+                <p class="campo-formulario__ayuda">Actualizá tus datos personales y de contacto</p>
+            </div>
+
+            <!-- Errores del servidor -->
+            <%- include('../../partials/admin/_error-summary.ejs', { errores: errores }) %>
+
+                <!-- Formulario -->
+                <form action="/usuarios/perfil?_method=PUT" method="POST" id="formEditarPerfil" novalidate>
+                    <input type="hidden" name="_method" value="PUT">
+
+                    <div class="admin-formulario__layout">
+                        <!-- COLUMNA PRINCIPAL -->
+                        <div class="admin-formulario__columna-principal">
+
+                            <!-- Sección: Información personal -->
+                            <div class="admin-formulario__seccion">
+                                <h2 class="admin-formulario__seccion-titulo">
+                                    <span class="admin-formulario__seccion-icono">👤</span>
+                                    Información personal
+                                </h2>
+
+                                <!-- Nombre completo -->
+                                <div class="campo-formulario">
+                                    <label class="etiqueta-campo" for="nombre">
+                                        Nombre completo <span class="campo-requerido">*</span>
+                                    </label>
+                                    <input type="text" id="nombre" name="nombre" class="entrada"
+                                        placeholder="Ej: María García" value="<%= datos.nombre || '' %>" maxlength="100"
+                                        required>
+                                    <span class="mensaje-error" id="error-nombre"></span>
+                                    <p class="campo-formulario__ayuda">Tu nombre como aparecerá en tu perfil y pedidos.
+                                    </p>
+                                </div>
+
+                                <!-- Email (solo lectura) -->
+                                <div class="campo-formulario">
+                                    <label class="etiqueta-campo" for="email">
+                                        Email
+                                    </label>
+                                    <input type="email" id="email" name="email" class="entrada"
+                                        value="<%= usuario.email %>" disabled readonly>
+                                    <p class="campo-formulario__ayuda">El email no puede ser modificado. Si necesitas
+                                        cambiarlo, contacta al administrador.</p>
+                                </div>
+
+                                <!-- Teléfono -->
+                                <div class="campo-formulario">
+                                    <label class="etiqueta-campo" for="telefono">
+                                        Teléfono <span class="etiqueta-opcional">(opcional)</span>
+                                    </label>
+                                    <input type="tel" id="telefono" name="telefono" class="entrada"
+                                        placeholder="Ej: +54 9 223 456-7890" value="<%= datos.telefono || '' %>">
+                                    <span class="mensaje-error" id="error-telefono"></span>
+                                    <p class="campo-formulario__ayuda">Incluí el código de área. Ej: +54 9 223 456-7890
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Sección: Dirección -->
+                            <div class="admin-formulario__seccion">
+                                <h2 class="admin-formulario__seccion-titulo">
+                                    <span class="admin-formulario__seccion-icono">📍</span>
+                                    Dirección de envío
+                                </h2>
+                                <p class="campo-formulario__ayuda" style="margin-bottom: var(--espacio-md);">
+                                    Esta dirección se usará como predeterminada para tus envíos.
+                                </p>
+
+                                <div class="admin-formulario__fila-doble">
+                                    <div class="campo-formulario">
+                                        <label class="etiqueta-campo" for="direccion_calle">Calle</label>
+                                        <input type="text" id="direccion_calle" name="direccion_calle" class="entrada"
+                                            placeholder="Ej: Av. Colón"
+                                            value="<%= (datos.direccion && datos.direccion.calle) || '' %>">
+                                    </div>
+                                    <div class="campo-formulario">
+                                        <label class="etiqueta-campo" for="direccion_numero">Número</label>
+                                        <input type="text" id="direccion_numero" name="direccion_numero" class="entrada"
+                                            placeholder="Ej: 1234"
+                                            value="<%= (datos.direccion && datos.direccion.numero) || '' %>">
+                                    </div>
+                                </div>
+
+                                <div class="admin-formulario__fila-doble">
+                                    <div class="campo-formulario">
+                                        <label class="etiqueta-campo" for="direccion_piso">Piso</label>
+                                        <input type="text" id="direccion_piso" name="direccion_piso" class="entrada"
+                                            placeholder="Ej: 3"
+                                            value="<%= (datos.direccion && datos.direccion.piso) || '' %>">
+                                    </div>
+                                    <div class="campo-formulario">
+                                        <label class="etiqueta-campo" for="direccion_depto">Departamento</label>
+                                        <input type="text" id="direccion_depto" name="direccion_depto" class="entrada"
+                                            placeholder="Ej: B"
+                                            value="<%= (datos.direccion && datos.direccion.depto) || '' %>">
+                                    </div>
+                                </div>
+
+                                <div class="admin-formulario__fila-doble">
+                                    <div class="campo-formulario">
+                                        <label class="etiqueta-campo" for="direccion_ciudad">Ciudad</label>
+                                        <input type="text" id="direccion_ciudad" name="direccion_ciudad" class="entrada"
+                                            placeholder="Ej: Mar del Plata"
+                                            value="<%= (datos.direccion && datos.direccion.ciudad) || '' %>">
+                                    </div>
+                                    <div class="campo-formulario">
+                                        <label class="etiqueta-campo" for="direccion_provincia">Provincia</label>
+                                        <input type="text" id="direccion_provincia" name="direccion_provincia"
+                                            class="entrada" placeholder="Ej: Buenos Aires"
+                                            value="<%= (datos.direccion && datos.direccion.provincia) || '' %>">
+                                    </div>
+                                </div>
+
+                                <div class="campo-formulario">
+                                    <label class="etiqueta-campo" for="direccion_codigoPostal">Código Postal</label>
+                                    <input type="text" id="direccion_codigoPostal" name="direccion_codigoPostal"
+                                        class="entrada" placeholder="Ej: 7600"
+                                        value="<%= (datos.direccion && datos.direccion.codigoPostal) || '' %>">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- COLUMNA LATERAL -->
+                        <aside class="admin-formulario__lateral">
+
+                            <!-- Card: Avatar y acciones rápidas -->
+                            <div class="admin-lateral__card">
+                                <div class="profile-avatar">
+                                    <div class="profile-avatar__circle">
+                                        <%= usuario.nombre.charAt(0).toUpperCase() %>
+                                    </div>
+                                    <h3 class="profile-avatar__name">
+                                        <%= usuario.nombre %>
+                                    </h3>
+                                    <p class="profile-avatar__email">
+                                        <%= usuario.email %>
+                                    </p>
+                                </div>
+
+                                <div class="profile-actions">
+                                    <a href="/usuarios/cambiar-password" class="boton boton--secundario"
+                                        style="width: 100%;">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                        </svg>
+                                        Cambiar contraseña
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Card: Información de ayuda -->
+                            <div class="admin-lateral__card admin-lateral__card--metadata">
+                                <h3 class="admin-lateral__card-titulo">Información de la cuenta</h3>
+                                <ul class="metadata-lista">
+                                    <li class="metadata-item">
+                                        <span class="metadata-item__clave">Miembro desde</span>
+                                        <span class="metadata-item__valor">
+                                            <%= new Date(usuario.fechaRegistro).toLocaleDateString('es-AR', {
+                                                day: 'numeric' , month: 'long' , year: 'numeric' }) %>
+                                        </span>
+                                    </li>
+                                    <li class="metadata-item">
+                                        <span class="metadata-item__clave">ID de usuario</span>
+                                        <span class="metadata-item__valor metadata-item__valor--codigo">
+                                            <%= usuario.id %>
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Card: Consejos -->
+                            <div class="admin-lateral__card">
+                                <h3 class="admin-lateral__card-titulo">Consejos</h3>
+                                <ul class="metadata-lista">
+                                    <li class="metadata-item">
+                                        <span class="metadata-item__valor">📞 Un teléfono de contacto ayuda a los
+                                            repartidores</span>
+                                    </li>
+                                    <li class="metadata-item">
+                                        <span class="metadata-item__valor">📍 Una dirección completa evita demoras en
+                                            los envíos</span>
+                                    </li>
+                                    <li class="metadata-item">
+                                        <span class="metadata-item__valor">✏️ Tu nombre se mostrará en facturas y
+                                            envíos</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </aside>
+                    </div>
+
+                    <!-- Barra de acciones fija -->
+                    <div class="admin-formulario__acciones">
+                        <a href="/usuarios/perfil" class="boton boton--secundario">Cancelar</a>
+                        <button type="submit" class="boton boton--primario">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                <polyline points="7 3 7 8 15 8"></polyline>
+                            </svg>
+                            Guardar cambios
+                        </button>
+                    </div>
+                </form>
+        </div>

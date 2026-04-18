@@ -1,0 +1,189 @@
+<%# Vista: pages/admin/validaciones/list.ejs Controller: validacionController.js → mostrarPanelValidacion() Variables: -
+    profesionales {Array} Profesionales pendientes de validación - mensaje {string|null} Mensaje de éxito - error
+    {string|null} Mensaje de error %>
+
+    <div class="admin-listado">
+        <div class="admin-listado__encabezado">
+            <div class="admin-listado__titulo-bloque">
+                <h1 class="admin-listado__titulo">Validación de Profesionales</h1>
+                <span class="admin-listado__conteo">
+                    <%= profesionales.length %> pendientes
+                </span>
+            </div>
+        </div>
+
+        <% if (mensaje) { %>
+            <div class="admin-alerta admin-alerta--exito" role="alert">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                    <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+                <%= mensaje %>
+            </div>
+            <% } %>
+
+                <% if (error) { %>
+                    <div class="admin-alerta admin-alerta--error" role="alert">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                        <%= error %>
+                    </div>
+                    <% } %>
+
+                        <% if (profesionales.length===0) { %>
+                            <div class="admin-vacio">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.3">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                    <polyline points="22 4 12 14.01 9 11.01" />
+                                </svg>
+                                <p>No hay profesionales pendientes de validación.</p>
+                            </div>
+                            <% } else { %>
+                                <div class="admin-tabla-contenedor">
+                                    <table class="admin-tabla">
+                                        <thead>
+                                            <tr>
+                                                <th>Profesional</th>
+                                                <th>Servicio solicitado</th>
+                                                <th>Matrícula</th>
+                                                <th>Experiencia</th>
+                                                <th>Certificación</th>
+                                                <th>Fecha solicitud</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% profesionales.forEach(function(prof) { %>
+                                                <tr class="<%= !prof.activo ? 'admin-tabla__fila--inactiva' : '' %>">
+                                                    <td class="admin-tabla__celda-producto">
+                                                        <div class="admin-tabla__avatar">
+                                                            <%= prof.nombre.charAt(0).toUpperCase() %>
+                                                        </div>
+                                                        <div class="admin-tabla__producto-info">
+                                                            <span class="admin-tabla__nombre">
+                                                                <%= prof.nombre %>
+                                                            </span>
+                                                            <span class="admin-tabla__descripcion-corta">
+                                                                <%= prof.email %>
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span
+                                                            class="admin-tabla__badge-mini admin-tabla__badge-mini--info">
+                                                            <%= prof.servicioNombre %>
+                                                        </span>
+                                                    </td>
+                                                    <td><code class="admin-tabla__codigo"><%= prof.matricula %></code>
+                                                    </td>
+                                                    <td>
+                                                        <%= prof.experienciaAnios || 0 %> años
+                                                    </td>
+                                                    <td>
+                                                        <% if (prof.certificacionUrl) { %>
+                                                            <span class="admin-tabla__badge-mini"
+                                                                style="background: #d4edda; color: #155724;">
+                                                                📎 Adjuntada
+                                                            </span>
+                                                            <% } else { %>
+                                                                <span class="admin-tabla__badge-mini"
+                                                                    style="background: #f8d7da; color: #721c24;">
+                                                                    ❌ No adjuntada
+                                                                </span>
+                                                                <% } %>
+                                                    </td>
+                                                    <td>
+                                                        <%= new Date(prof.fechaAlta).toLocaleDateString('es-AR') %>
+                                                    </td>
+                                                    <td>
+                                                        <div class="admin-tabla__acciones">
+                                                            <a href="/admin/validaciones/<%= prof.id %>"
+                                                                class="admin-tabla__btn-accion" title="Validar">
+                                                                <svg width="16" height="16" viewBox="0 0 24 24"
+                                                                    fill="none" stroke="currentColor" stroke-width="2">
+                                                                    <path
+                                                                        d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                                    <circle cx="12" cy="12" r="3" />
+                                                                </svg>
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <% }); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <% } %>
+
+                                    <!-- Sección de Solicitudes Rechazadas -->
+                                    <% if (rechazados && rechazados.length> 0) { %>
+                                        <div class="admin-listado__seccion">
+                                            <h2 class="admin-listado__subtitulo">Solicitudes Rechazadas</h2>
+                                            <div class="admin-tabla-contenedor">
+                                                <table class="admin-tabla">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Profesional</th>
+                                                            <th>Servicio solicitado</th>
+                                                            <th>Matrícula</th>
+                                                            <th>Motivo rechazo</th>
+                                                            <th>Fecha rechazo</th>
+                                                            <th>Acciones</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% rechazados.forEach(function(prof) { %>
+                                                            <tr>
+                                                                <td class="admin-tabla__celda-producto">
+                                                                    <div class="admin-tabla__avatar">
+                                                                        <%= prof.nombre.charAt(0).toUpperCase() %>
+                                                                    </div>
+                                                                    <div class="admin-tabla__producto-info">
+                                                                        <span class="admin-tabla__nombre">
+                                                                            <%= prof.nombre %>
+                                                                        </span>
+                                                                        <span class="admin-tabla__descripcion-corta">
+                                                                            <%= prof.email %>
+                                                                        </span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <%= prof.servicioNombre %>
+                                                                </td>
+                                                                <td><code
+                                                                        class="admin-tabla__codigo"><%= prof.matricula %></code>
+                                                                </td>
+                                                                <td>
+                                                                    <%= prof.observacionAdmin || '—' %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= prof.fechaValidacion ? new
+                                                                        Date(prof.fechaValidacion).toLocaleDateString('es-AR')
+                                                                        : '—' %>
+                                                                </td>
+                                                                <td>
+                                                                    <a href="/admin/validaciones/<%= prof.id %>"
+                                                                        class="admin-tabla__btn-accion"
+                                                                        title="Ver detalle">
+                                                                        <svg width="14" height="14" viewBox="0 0 24 24"
+                                                                            fill="none" stroke="currentColor"
+                                                                            stroke-width="2">
+                                                                            <path
+                                                                                d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                                            <circle cx="12" cy="12" r="3" />
+                                                                        </svg>
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            <% }); %>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <% } %>
+    </div>

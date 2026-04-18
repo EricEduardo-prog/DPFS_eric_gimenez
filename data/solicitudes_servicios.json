@@ -1,0 +1,48 @@
+{
+  "_meta": {
+    "version": "1.0.0",
+    "descripcion": "Solicitudes de nuevos servicios por parte de profesionales"
+  },
+  "solicitudes": [
+    {
+      "id": "sol_001",
+      "profesionalId": "prof_005",
+      "servicioSolicitado": "Instalador de paneles solares",
+      "descripcion": "Especialista en energía solar fotovoltaica",
+      "estado": "rechazado",
+      "fechaSolicitud": "2026-04-14T10:00:00.000Z",
+      "fechaRespuesta": "2026-04-15T15:41:36.945Z",
+      "respuestaAdmin": "admin@ee.com"
+    },
+    {
+      "id": "sol_002",
+      "profesionalId": "prof_006",
+      "servicioSolicitado": "Reparador de PC",
+      "descripcion": "Instalación de Software, arreglos de hardware.",
+      "estado": "rechazado",
+      "fechaSolicitud": "2026-04-15T15:31:21.841Z",
+      "fechaRespuesta": "2026-04-17T14:47:45.172Z",
+      "respuestaAdmin": "admin@ee.com"
+    },
+    {
+      "id": "sol_003",
+      "profesionalId": "prof_007",
+      "servicioSolicitado": "Cantante",
+      "descripcion": "Cantante para eventos.",
+      "estado": "aprobado",
+      "fechaSolicitud": "2026-04-17T15:14:28.572Z",
+      "fechaRespuesta": "2026-04-17T15:26:13.003Z",
+      "respuestaAdmin": "admin@ee.com"
+    },
+    {
+      "id": "sol_004",
+      "profesionalId": null,
+      "servicioSolicitado": "Cantante",
+      "descripcion": "Cantante para eventos.",
+      "estado": "pendiente",
+      "fechaSolicitud": "2026-04-17T15:14:47.715Z",
+      "fechaRespuesta": null,
+      "respuestaAdmin": null
+    }
+  ]
+}

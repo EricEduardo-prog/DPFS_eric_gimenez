@@ -1,0 +1,105 @@
+<%
+  const esEdicion = servicio && servicio.id;
+  const datos = formData || servicio || {};
+  const titulo = esEdicion ? 'Editar Servicio' : 'Nuevo Servicio';
+  const formAction = esEdicion ? `/admin/servicios/${servicio.id}?_method=PUT` : '/admin/servicios';
+%>
+
+<section class="admin-formulario">
+  <div class="admin-formulario__encabezado">
+    <a href="/admin/servicios" class="admin-formulario__volver">← Volver al listado</a>
+    <div class="admin-formulario__titulo-bloque">
+      <h1 class="admin-formulario__titulo"><%= titulo %></h1>
+      <% if (esEdicion) { %>
+        <span class="admin-formulario__badge admin-formulario__badge--edicion">Editando #<%= servicio.id %></span>
+      <% } else { %>
+        <span class="admin-formulario__badge admin-formulario__badge--nuevo">Nuevo</span>
+      <% } %>
+    </div>
+  </div>
+
+  <%- include('../../../partials/admin/_error-summary.ejs', { errores: errores }) %>
+
+  <form action="<%= formAction %>" method="POST" id="formServicio" novalidate>
+    <% if (esEdicion) { %>
+      <input type="hidden" name="_method" value="PUT">
+      <input type="hidden" name="id" value="<%= servicio.id %>">
+    <% } %>
+
+    <div class="admin-formulario__layout">
+      <div class="admin-formulario__columna-principal">
+        <div class="admin-formulario__seccion">
+          <h2 class="admin-formulario__seccion-titulo">Datos del servicio</h2>
+
+          <div class="campo-formulario">
+            <label class="etiqueta-campo" for="nombre">Nombre <span class="campo-requerido">*</span></label>
+            <input type="text" id="nombre" name="nombre" class="entrada" value="<%= datos.nombre || '' %>" maxlength="80" required>
+            <span class="mensaje-error" id="error-nombre"></span>
+          </div>
+
+          <div class="campo-formulario">
+            <label class="etiqueta-campo" for="slug">Slug</label>
+            <input type="text" id="slug" name="slug" class="entrada" placeholder="Se genera automáticamente" value="<%= datos.slug || '' %>">
+            <p class="campo-formulario__ayuda">Dejar vacío para generar automáticamente.</p>
+          </div>
+
+          <div class="campo-formulario">
+            <label class="etiqueta-campo" for="descripcion">Descripción</label>
+            <textarea id="descripcion" name="descripcion" class="entrada entrada--textarea" rows="4" maxlength="500"><%= datos.descripcion || '' %></textarea>
+            <span class="mensaje-error" id="error-descripcion"></span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="admin-formulario__lateral">
+        <div class="admin-lateral__card">
+          <h3 class="admin-lateral__card-titulo">Configuración</h3>
+
+          <div class="campo-formulario">
+            <label class="toggle-fila">
+              <div class="toggle-fila__info">
+                <span class="etiqueta-campo">Certificación requerida</span>
+                <p class="campo-formulario__ayuda">¿El profesional necesita matrícula habilitante?</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" name="certificacionRequerida" value="true" <%= datos.certificacionRequerida ? 'checked' : '' %>>
+                <span class="toggle-switch__slider"></span>
+              </label>
+            </label>
+          </div>
+
+          <div class="campo-formulario">
+            <label class="toggle-fila">
+              <div class="toggle-fila__info">
+                <span class="etiqueta-campo">Destacado</span>
+                <p class="campo-formulario__ayuda">Mostrar en la página principal</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" name="destacado" value="true" <%= datos.destacado ? 'checked' : '' %>>
+                <span class="toggle-switch__slider"></span>
+              </label>
+            </label>
+          </div>
+        </div>
+
+        <% if (esEdicion) { %>
+          <div class="admin-lateral__card admin-lateral__card--metadata">
+            <h3 class="admin-lateral__card-titulo">Información del registro</h3>
+            <ul class="metadata-lista">
+              <li class="metadata-item"><span class="metadata-item__clave">ID</span><span class="metadata-item__valor"><%= servicio.id %></span></li>
+              <li class="metadata-item"><span class="metadata-item__clave">Creado</span><span class="metadata-item__valor"><%= new Date(servicio.fechaCreacion).toLocaleDateString('es-AR') %></span></li>
+              <li class="metadata-item"><span class="metadata-item__clave">Modificado</span><span class="metadata-item__valor"><%= new Date(servicio.fechaModificacion).toLocaleDateString('es-AR') %></span></li>
+            </ul>
+          </div>
+        <% } %>
+      </aside>
+    </div>
+
+    <div class="admin-formulario__acciones">
+      <a href="/admin/servicios" class="boton boton--secundario">Cancelar</a>
+      <button type="submit" class="boton boton--primario"><%= esEdicion ? 'Guardar cambios' : 'Crear servicio' %></button>
+    </div>
+  </form>
+</section>
+
+<script src="/js/admin/servicio-form.js"></script>

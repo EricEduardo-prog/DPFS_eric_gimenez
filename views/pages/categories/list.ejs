@@ -1,0 +1,29 @@
+<div class="contenedor">
+    <div class="seccion-categorias">
+        <div class="encabezado-seccion">
+            <h1 class="titulo-pagina">Todas las Categorías</h1>
+        </div>
+
+        <div class="grid-categorias">
+            <% if (categorias && categorias.length> 0) { %>
+                <% categorias.forEach(function(cat) { %>
+                    <a href="/productos?categoria=<%= cat.id %>" class="tarjeta-categoria">
+                        <span class="icono-categoria">
+                            <%= cat.icono || '📁' %>
+                        </span>
+                        <h3 class="nombre-categoria">
+                            <%= cat.nombre %>
+                        </h3>
+                        <span class="cantidad-productos">
+                            <%= cat.cantidadProductos || 0 %> productos
+                        </span>
+                    </a>
+                    <% }); %>
+                        <% } else { %>
+                            <div class="sin-categorias">
+                                <p>No hay categorías disponibles.</p>
+                            </div>
+                            <% } %>
+        </div>
+    </div>
+</div>

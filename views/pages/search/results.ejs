@@ -1,0 +1,34 @@
+<div class="contenedor">
+    <div class="resultados-busqueda">
+        <h1 class="titulo-pagina">Resultados de búsqueda</h1>
+
+        <% if (query) { %>
+            <p class="info-busqueda">Mostrando resultados para: <strong>"<%= query %>"</strong></p>
+            <p class="total-resultados">
+                <%= total %> producto(s) encontrado(s)
+            </p>
+            <% } %>
+
+                <% if (productos && productos.length> 0) { %>
+                    <div class="grid-productos">
+                        <% productos.forEach(function(prod) { %>
+                            <div class="tarjeta-producto">
+                                <img src="<%= prod.imagen %>" alt="<%= prod.nombre %>" class="imagen-producto"
+                                    onerror="this.onerror=null;this.src='/images/placeholder.png'">
+                                <h3 class="nombre-producto">
+                                    <%= prod.nombre %>
+                                </h3>
+                                <div class="precio-producto">$<%= prod.precio.toLocaleString('es-AR') %>
+                                </div>
+                                <a href="/productDetail/<%= prod.id %>" class="boton-producto">Ver más</a>
+                            </div>
+                            <% }); %>
+                    </div>
+                    <% } else { %>
+                        <div class="sin-resultados">
+                            <p>No se encontraron productos que coincidan con tu búsqueda.</p>
+                            <a href="/" class="boton-volver">Volver al inicio</a>
+                        </div>
+                        <% } %>
+    </div>
+</div>

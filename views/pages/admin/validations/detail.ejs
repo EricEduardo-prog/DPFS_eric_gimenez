@@ -1,0 +1,239 @@
+<%# Vista: pages/admin/validaciones/detalle.ejs Controller: validacionController.js → mostrarDetalleValidacion()
+    Variables: - profesional {Object} Datos del profesional - servicio {Object|null} Datos del servicio (si existe) -
+    solicitud {Object|null} Datos de la solicitud (si es servicio personalizado) - error {string|null} Mensaje de error
+    %>
+
+    <%
+  const servicioNombre = servicio 
+    ? servicio.nombre 
+    : (profesional.servicioPersonalizado || profesional.profesion || 'No especificado');
+  const esServicioPersonalizado = !profesional.servicioId && profesional.servicioPersonalizado;
+%>
+
+        <div class="admin-formulario">
+            <div class="admin-formulario__encabezado">
+                <a href="/admin/validaciones" class="admin-formulario__volver">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                    Volver a validaciones
+                </a>
+                <div class="admin-formulario__titulo-bloque">
+                    <h1 class="admin-formulario__titulo">Validar: <%= profesional.nombre %>
+                    </h1>
+                    <span class="admin-formulario__badge admin-formulario__badge--edicion">
+                        ⏳ Pendiente de revisión
+                    </span>
+                </div>
+            </div>
+
+            <% if (error) { %>
+                <div class="admin-alerta admin-alerta--error" role="alert">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                    <%= error %>
+                </div>
+                <% } %>
+
+                    <div class="admin-formulario__layout">
+                        <!-- COLUMNA PRINCIPAL -->
+                        <div class="admin-formulario__columna-principal">
+
+                            <!-- Sección: Datos del profesional -->
+                            <div class="admin-formulario__seccion">
+                                <h2 class="admin-formulario__seccion-titulo">
+                                    <span class="admin-formulario__seccion-icono">👤</span>
+                                    Datos del profesional
+                                </h2>
+
+                                <div class="admin-detalle__campo">
+                                    <div class="admin-detalle__clave">Nombre completo</div>
+                                    <div class="admin-detalle__valor"><strong>
+                                            <%= profesional.nombre %>
+                                        </strong></div>
+                                </div>
+                                <div class="admin-detalle__campo">
+                                    <div class="admin-detalle__clave">Email</div>
+                                    <div class="admin-detalle__valor">
+                                        <%= profesional.email %>
+                                    </div>
+                                </div>
+                                <div class="admin-detalle__campo">
+                                    <div class="admin-detalle__clave">Teléfono</div>
+                                    <div class="admin-detalle__valor">
+                                        <%= profesional.telefono || 'No especificado' %>
+                                    </div>
+                                </div>
+                                <div class="admin-detalle__campo">
+                                    <div class="admin-detalle__clave">Matrícula</div>
+                                    <div class="admin-detalle__valor"><code
+                                            class="admin-tabla__codigo"><%= profesional.matricula %></code></div>
+                                </div>
+                                <div class="admin-detalle__campo">
+                                    <div class="admin-detalle__clave">Experiencia declarada</div>
+                                    <div class="admin-detalle__valor">
+                                        <%= profesional.experienciaAnios || 0 %> años
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sección: Servicio solicitado -->
+                            <div class="admin-formulario__seccion">
+                                <h2 class="admin-formulario__seccion-titulo">
+                                    <span class="admin-formulario__seccion-icono">🎯</span>
+                                    Servicio solicitado
+                                </h2>
+
+                                <div class="admin-detalle__campo">
+                                    <div class="admin-detalle__clave">Servicio</div>
+                                    <div class="admin-detalle__valor">
+                                        <strong>
+                                            <%= servicioNombre %>
+                                        </strong>
+                                        <% if (esServicioPersonalizado) { %>
+                                            <span class="admin-detalle__badge"
+                                                style="background: #ffeeba; color: #856404;">Nuevo servicio</span>
+                                            <% } %>
+                                    </div>
+                                </div>
+
+                                <% if (servicio && servicio.descripcion) { %>
+                                    <div class="admin-detalle__campo">
+                                        <div class="admin-detalle__clave">Descripción del servicio</div>
+                                        <div class="admin-detalle__valor">
+                                            <%= servicio.descripcion %>
+                                        </div>
+                                    </div>
+                                    <% } %>
+
+                                        <% if (solicitud && solicitud.descripcion) { %>
+                                            <div class="admin-detalle__campo">
+                                                <div class="admin-detalle__clave">Descripción del profesional</div>
+                                                <div class="admin-detalle__valor">
+                                                    <%= solicitud.descripcion %>
+                                                </div>
+                                            </div>
+                                            <% } %>
+
+                                                <% if (servicio && servicio.certificacionRequerida) { %>
+                                                    <div class="admin-detalle__campo">
+                                                        <div class="admin-detalle__clave">Certificación requerida</div>
+                                                        <div class="admin-detalle__valor">
+                                                            <span class="admin-detalle__badge"
+                                                                style="background: #d4edda; color: #155724;">✅ Sí</span>
+                                                        </div>
+                                                    </div>
+                                                    <% } %>
+                            </div>
+
+                            <!-- Sección: Documentación -->
+                            <% if (profesional.certificacionUrl) { %>
+                                <div class="admin-formulario__seccion">
+                                    <h2 class="admin-formulario__seccion-titulo">
+                                        <span class="admin-formulario__seccion-icono">📄</span>
+                                        Documentación adjunta
+                                    </h2>
+                                    <div class="admin-detalle__campo">
+                                        <div class="admin-detalle__clave">Certificación</div>
+                                        <div class="admin-detalle__valor">
+                                            <a href="<%= profesional.certificacionUrl %>" target="_blank"
+                                                class="boton boton--secundario" style="display: inline-flex; gap: 8px;">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2">
+                                                    <path
+                                                        d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                                    <polyline points="14 2 14 8 20 8" />
+                                                </svg>
+                                                Ver certificación
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% } %>
+                        </div>
+
+                        <!-- COLUMNA LATERAL - Acciones -->
+                        <aside class="admin-formulario__lateral">
+
+                            <!-- Card: Acciones de validación -->
+                            <div class="admin-lateral__card">
+                                <h3 class="admin-lateral__card-titulo">Acciones de validación</h3>
+
+                                <!-- Formulario de aprobación -->
+                                <form action="/admin/validaciones/<%= profesional.id %>/aprobar" method="POST">
+                                    <div class="campo-formulario">
+                                        <label class="etiqueta-campo" for="observacionAprobacion">Observación
+                                            (opcional)</label>
+                                        <textarea id="observacionAprobacion" name="observacion"
+                                            class="entrada entrada--textarea" rows="3"
+                                            placeholder="Comentarios sobre la aprobación..."></textarea>
+                                    </div>
+                                    <button type="submit" class="boton boton--primario"
+                                        style="width: 100%; background: #28a745; border-color: #28a745;">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+                                            <polyline points="20 6 9 17 4 12" />
+                                        </svg>
+                                        Aprobar profesional
+                                    </button>
+                                </form>
+
+                                <hr style="margin: var(--espacio-md) 0; border-color: var(--color-borde);">
+
+                                <!-- Formulario de rechazo -->
+                                <form action="/admin/validaciones/<%= profesional.id %>/rechazar" method="POST">
+                                    <div class="campo-formulario">
+                                        <label class="etiqueta-campo" for="observacionRechazo">Motivo del rechazo <span
+                                                class="campo-requerido">*</span></label>
+                                        <textarea id="observacionRechazo" name="observacion"
+                                            class="entrada entrada--textarea" rows="3" required
+                                            placeholder="Explicar el motivo del rechazo..."></textarea>
+                                    </div>
+                                    <button type="submit" class="boton boton--primario"
+                                        style="width: 100%; background: #dc3545; border-color: #dc3545;">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <line x1="18" y1="6" x2="6" y2="18" />
+                                        </svg>
+                                        Rechazar profesional
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Card: Información adicional -->
+                            <div class="admin-lateral__card admin-lateral__card--metadata">
+                                <h3 class="admin-lateral__card-titulo">Información adicional</h3>
+                                <ul class="metadata-lista">
+                                    <li class="metadata-item">
+                                        <span class="metadata-item__clave">ID</span>
+                                        <span class="metadata-item__valor metadata-item__valor--codigo">
+                                            <%= profesional.id %>
+                                        </span>
+                                    </li>
+                                    <li class="metadata-item">
+                                        <span class="metadata-item__clave">Solicitado el</span>
+                                        <span class="metadata-item__valor">
+                                            <%= new Date(profesional.fechaAlta).toLocaleDateString('es-AR') %>
+                                        </span>
+                                    </li>
+                                    <li class="metadata-item">
+                                        <span class="metadata-item__clave">Estado actual</span>
+                                        <span class="metadata-item__valor">
+                                            <% if (profesional.estadoServicio==='pendiente' ) { %>
+                                                <span style="color: #856404;">⏳ Pendiente</span>
+                                                <% } else if (profesional.estadoServicio==='aprobado' ) { %>
+                                                    <span style="color: #28a745;">✅ Aprobado</span>
+                                                    <% } else if (profesional.estadoServicio==='rechazado' ) { %>
+                                                        <span style="color: #dc3545;">❌ Rechazado</span>
+                                                        <% } %>
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </aside>
+                    </div>
+        </div>

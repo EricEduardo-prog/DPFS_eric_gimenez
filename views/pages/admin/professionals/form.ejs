@@ -1,0 +1,315 @@
+<%# Vista: pages/admin/professionals/form.ejs Controller: profesionalesController.js → mostrarFormNuevo() /
+  mostrarFormEditar() / crear() / actualizar() Variables: - profesional {Object|null} null=alta, objeto=edición -
+  errores {Array} Mensajes de error del servidor (vacío si no hay) - formData {Object|null} Datos del body cuando hay
+  error de validación (para repoblar) %>
+
+  <% const esEdicion=profesional && profesional.id; const datos=formData || profesional || {};
+    const titulo=esEdicion ? 'Editar Profesional' : 'Nuevo Profesional' ;
+    const formAction=esEdicion ? `/admin/profesionales/${profesional.id}?` : '/admin/profesionales' ;
+    // Datos estáticos
+    const diasSemana=[ 
+    { id: 'lunes' , nombre: 'Lun' }, 
+    { id: 'martes' , nombre: 'Mar' }, 
+    { id: 'miercoles' , nombre: 'Mié' }, 
+    { id: 'jueves' , nombre: 'Jue' },
+    { id: 'viernes' , nombre: 'Vie' } ];
+
+    const turnos=[ { 
+    id: 'manana' , nombre: 'Mañana' ,horario: '08:00 – 13:00' },
+    { id: 'tarde' , nombre: 'Tarde' , horario: '13:00 – 18:00' } ];
+    const profesiones=[ 'Electricista' , 'Plomero / Gasista' , 'Técnico en climatización' , 'Técnico en refrigeración'
+    , 'Técnico electromecánico' , 'Albañil / Constructor' , 'Herrero / Soldador' , 'Pintor' , 'Carpintero' , 'Otro' ];
+    %>
+
+
+    <section class="admin-formulario">
+      <!-- Encabezado -->
+      <div class="admin-formulario__encabezado">
+        <a href="/admin/profesionales" class="admin-formulario__volver">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          Volver al listado
+        </a>
+        <div class="admin-formulario__titulo-bloque">
+          <h1 class="admin-formulario__titulo">
+            <%= titulo %>
+          </h1>
+          <% if (esEdicion) { %>
+            <span class="admin-formulario__badge admin-formulario__badge--edicion">Editando #<%= profesional.id %>
+            </span>
+            <% } else { %>
+              <span class="admin-formulario__badge admin-formulario__badge--nuevo">Nuevo</span>
+              <% } %>
+        </div>
+      </div>
+
+      <!-- Errores del servidor -->
+      <%- include('../../../partials/admin/_error-summary.ejs', { errores: errores }) %>
+
+        <form action="<%= esEdicion ? `/admin/profesionales/${profesional.id}?_method=PUT` : '/admin/profesionales' %>"
+          method="POST" id="formProfesional" novalidate>
+          <% if (esEdicion) { %>
+            <input type="hidden" name="_method" value="PUT">
+            <input type="hidden" name="id" value="<%= profesional.id %>">
+            <% } %>
+
+              <div class="admin-formulario__layout">
+                <!-- COLUMNA PRINCIPAL -->
+                <div class="admin-formulario__columna-principal">
+
+                  <!-- Sección: Datos personales -->
+                  <div class="admin-formulario__seccion">
+                    <h2 class="admin-formulario__seccion-titulo">
+                      <span class="admin-formulario__seccion-icono">01</span>
+                      Datos del profesional
+                    </h2>
+
+                    <!-- Nombre -->
+                    <div class="campo-formulario">
+                      <label class="etiqueta-campo" for="nombre">Nombre completo <span
+                          class="campo-requerido">*</span></label>
+                      <input type="text" id="nombre" name="nombre" class="entrada"
+                        placeholder="Ej: Juan Carlos Rodríguez" value="<%= datos.nombre || '' %>" required>
+                      <span class="mensaje-error" id="error-nombre"></span>
+                    </div>
+
+                    <div class="admin-formulario__fila-doble">
+                      <!-- Matrícula -->
+                      <div class="campo-formulario">
+                        <label class="etiqueta-campo" for="matricula">Matrícula certificada <span
+                            class="campo-requerido">*</span></label>
+                        <input type="text" id="matricula" name="matricula" class="entrada entrada--codigo"
+                          placeholder="Ej: MP-04578 / MN-12345" value="<%= datos.matricula || '' %>" required>
+                        <span class="mensaje-error" id="error-matricula"></span>
+                        <p class="campo-formulario__ayuda">Matrícula Provincial (MP) o Nacional (MN).</p>
+                      </div>
+
+                      <!-- Profesión -->
+
+                      <!-- Sección: Servicio / Profesión -->
+                      <div class="admin-formulario__seccion">
+                        <h2 class="admin-formulario__seccion-titulo">
+                          <span class="admin-formulario__seccion-icono">🎯</span>
+                          Servicio / Profesión
+                        </h2>
+
+                        <!-- Tipo de selección -->
+                        <div class="campo-formulario">
+                          <label class="etiqueta-campo">Tipo de servicio <span class="campo-requerido">*</span></label>
+                          <div class="radio-group">
+                            <label class="radio-label">
+                              <input type="radio" name="tipoServicio" value="existente" <%=(!esEdicion ||
+                                (datos.servicioId && !datos.servicioPersonalizado)) ? 'checked' : '' %>>
+                              <span>Seleccionar servicio existente</span>
+                            </label>
+                            <label class="radio-label">
+                              <input type="radio" name="tipoServicio" value="otro" <%=(datos.servicioPersonalizado)
+                                ? 'checked' : '' %>>
+                              <span>Solicitar nuevo servicio</span>
+                            </label>
+                          </div>
+                        </div>
+
+
+                        <% const mostrarExistente=(!esEdicion || (datos.servicioId && !datos.servicioPersonalizado));
+                          const mostrarNuevo=(!esEdicion || datos.servicioPersonalizado); %>
+
+                          <!-- Selector de servicios existentes -->
+                          <div id="servicioExistentePanel"
+                            class="panel-condicional <%= mostrarExistente ? '' : 'oculto' %>">
+                            <div class="campo-formulario">
+                              <label class="etiqueta-campo" for="servicioId">Seleccionar servicio <span
+                                  class="campo-requerido">*</span></label>
+                              <select id="servicioId" name="servicioId" class="entrada entrada--select">
+                                <option value="">-- Seleccionar --</option>
+                                <% if (servicios && servicios.length> 0) { %>
+                                  <% servicios.forEach(function(serv) { %>
+                                    <option value='<%= serv.id %>' <%=datos.servicioId===serv.id ? 'selected' : '' %>>
+                                      <%= serv.icono || '🔧' %>
+                                        <%= serv.nombre %>
+                                          <% if (serv.certificacionRequerida) { %> (requiere certificación)<% } %>
+                                    </option>
+                                    <% }); %>
+                                      <% } else { %>
+                                        <option value="" disabled>No hay servicios disponibles</option>
+                                        <% } %>
+                              </select>
+                              <span class="mensaje-error" id="error-servicioId"></span>
+                            </div>
+                          </div>
+
+                          <!-- Panel para solicitar nuevo servicio -->
+                          <div id="nuevoServicioPanel" class="panel-condicional <%= mostrarNuevo ? '' : 'oculto' %>">
+                            <div class="campo-formulario">
+                              <label class="etiqueta-campo" for="nuevoServicio">Nuevo servicio <span
+                                  class="campo-requerido">*</span></label>
+                              <input type="text" id="nuevoServicio" name="nuevoServicio" class="entrada"
+                                placeholder="Ej: Instalador de paneles solares"
+                                value="<%= datos.servicioPersonalizado || '' %>" maxlength="80">
+                              <p class="campo-formulario__ayuda">Este servicio será revisado por un administrador antes
+                                de ser aprobado.</p>
+                              <span class="mensaje-error" id="error-nuevoServicio"></span>
+                            </div>
+
+                            <div class="campo-formulario">
+                              <label class="etiqueta-campo" for="descripcionServicio">Descripción del servicio
+                                (opcional)</label>
+                              <textarea id="descripcionServicio" name="descripcionServicio"
+                                class="entrada entrada--textarea"
+                                placeholder="Describe brevemente el servicio que ofreces..." rows="2"
+                                maxlength="200"><%= datos.descripcionServicio || '' %></textarea>
+                            </div>
+                          </div>
+
+                          <!-- Años de experiencia -->
+                          <div class="campo-formulario">
+                            <label class="etiqueta-campo" for="experienciaAnios">Años de experiencia</label>
+                            <select id="experienciaAnios" name="experienciaAnios" class="entrada entrada--select">
+                              <option value="0" <%=datos.experienciaAnios==0 ? 'selected' : '' %>>Sin experiencia
+                              </option>
+                              <option value="1" <%=datos.experienciaAnios==1 ? 'selected' : '' %>>1 año</option>
+                              <option value="2" <%=datos.experienciaAnios==2 ? 'selected' : '' %>>2 años</option>
+                              <option value="3" <%=datos.experienciaAnios==3 ? 'selected' : '' %>>3 años</option>
+                              <option value="4" <%=datos.experienciaAnios==4 ? 'selected' : '' %>>4 años</option>
+                              <option value="5" <%=datos.experienciaAnios==5 ? 'selected' : '' %>>5 años</option>
+                              <option value="6" <%=(datos.experienciaAnios>= 6 && datos.experienciaAnios <= 10)
+                                  ? 'selected' : '' %>>6-10 años</option>
+                              <option value="11" <%=(datos.experienciaAnios>= 11 && datos.experienciaAnios <= 15)
+                                  ? 'selected' : '' %>>11-15 años</option>
+                              <option value="16" <%=(datos.experienciaAnios>= 16) ? 'selected' : '' %>>+15 años</option>
+                            </select>
+                            <p class="campo-formulario__ayuda">Selecciona tu nivel de experiencia en este servicio.</p>
+                          </div>
+                      </div>
+
+                      <!-- Subir certificación (si el servicio la requiere) -->
+                      <div class="campo-formulario" id="certificacionPanel" style="display:none">
+                        <label class="etiqueta-campo" for="certificacionUrl">Certificación / Matrícula</label>
+                        <input type="file" id="certificacionUrl" name="certificacionUrl" class="entrada"
+                          accept=".pdf,.jpg,.png">
+                        <p class="campo-formulario__ayuda">Sube tu matrícula o certificación (formato PDF, JPG o PNG).
+                        </p>
+                        <span class="mensaje-error" id="error-certificacionUrl"></span>
+                      </div>
+                    </div>
+                    
+                    <!-- Email -->
+                    <div class="campo-formulario">
+                      <label class="etiqueta-campo" for="email">Email de contacto <span
+                          class="campo-requerido">*</span></label>
+                      <input type="email" id="email" name="email" class="entrada" placeholder="profesional@ejemplo.com"
+                        value="<%= datos.email || '' %>" required>
+                      <span class="mensaje-error" id="error-email"></span>
+                    </div>
+
+                    <!-- Teléfono -->
+                    <div class="campo-formulario">
+                      <label class="etiqueta-campo" for="telefono">Teléfono / WhatsApp <span
+                          class="etiqueta-opcional">(opcional)</span></label>
+                      <input type="tel" id="telefono" name="telefono" class="entrada"
+                        placeholder="Ej: +54 9 223 456-7890" value="<%= datos.telefono || '' %>">
+                    </div>
+                  </div>
+
+                  <!-- Sección: Disponibilidad semanal -->
+                  <div class="admin-formulario__seccion">
+                    <h2 class="admin-formulario__seccion-titulo">
+                      <span class="admin-formulario__seccion-icono">02</span>
+                      Disponibilidad semanal
+                    </h2>
+
+                    <!-- Acciones rápidas -->
+                    <div class="disponibilidad-acciones">
+                      <button type="button" class="boton-rapido" id="btnTodos">Marcar todos</button>
+                      <button type="button" class="boton-rapido" id="btnNinguno">Limpiar todos</button>
+                      <button type="button" class="boton-rapido" id="btnSoloManana">Solo mañana</button>
+                      <button type="button" class="boton-rapido" id="btnSoloTarde">Solo tarde</button>
+                    </div>
+
+                    <!-- Grilla de disponibilidad -->
+                    <%- include('../../../partials/admin/_availability-grid.ejs', { namePrefix: 'disponibilidad' , dias:
+                      diasSemana, turnos: turnos, valoresIniciales: datos.disponibilidad }) %>
+
+                      <p class="campo-formulario__ayuda" style="margin-top: var(--espaciado-sm);">
+                        Seleccioná los días y turnos en los que el profesional está disponible.
+                      </p>
+                  </div>
+                </div>
+
+                <!-- COLUMNA LATERAL -->
+                <aside class="admin-formulario__lateral">
+                  <!-- Card: Estado -->
+                  <div class="admin-lateral__card">
+                    <h3 class="admin-lateral__card-titulo">Estado del registro</h3>
+                    <%- include('../../../partials/admin/_toggle-switch.ejs', { id: 'activo' , name: 'activo' ,
+                      label: 'Profesional activo' ,
+                      helpText: 'Baja lógica: el registro se conserva pero no aparece en el sistema.' , checked:
+                      (!esEdicion || datos.activo===true) }) %>
+                  </div>
+
+                  <!-- Card: Valoración -->
+                  <div class="admin-lateral__card">
+                    <h3 class="admin-lateral__card-titulo">Valoración</h3>
+                    <%- include('../../../partials/admin/_rating-display.ejs', { valoracion: (datos.valoracion &&
+                      datos.valoracion.valor) ? datos.valoracion.valor : 0, cantidad: (datos.valoracion &&
+                      datos.valoracion.cantidad) ? datos.valoracion.cantidad : 0, esEditable: false }) %>
+                  </div>
+
+                  <!-- Card: Metadata (solo edición) -->
+                  <% if (esEdicion) { %>
+                    <div class="admin-lateral__card admin-lateral__card--metadata">
+                      <h3 class="admin-lateral__card-titulo">Información del registro</h3>
+                      <ul class="metadata-lista">
+                        <li class="metadata-item">
+                          <span class="metadata-item__clave">ID</span>
+                          <span class="metadata-item__valor metadata-item__valor--codigo">#<%= profesional.id %>
+                          </span>
+                        </li>
+                        <% if (profesional.fechaAlta) { %>
+                          <li class="metadata-item">
+                            <span class="metadata-item__clave">Alta</span>
+                            <span class="metadata-item__valor">
+                              <%= new Date(profesional.fechaAlta).toLocaleDateString('es-AR') %>
+                            </span>
+                          </li>
+                          <% } %>
+                            <% if (profesional.fechaModificacion) { %>
+                              <li class="metadata-item">
+                                <span class="metadata-item__clave">Última modificación</span>
+                                <span class="metadata-item__valor">
+                                  <%= new Date(profesional.fechaModificacion).toLocaleDateString('es-AR') %>
+                                </span>
+                              </li>
+                              <% } %>
+                                <% if (profesional.trabajosCompletados !==undefined) { %>
+                                  <li class="metadata-item">
+                                    <span class="metadata-item__clave">Trabajos completados</span>
+                                    <span class="metadata-item__valor">
+                                      <%= profesional.trabajosCompletados %>
+                                    </span>
+                                  </li>
+                                  <% } %>
+                      </ul>
+                    </div>
+                    <% } %>
+                </aside>
+              </div>
+
+              <!-- Barra de acciones fija -->
+              <div class="admin-formulario__acciones">
+                <a href="/admin/profesionales" class="boton boton--secundario">Cancelar</a>
+                <button type="submit" class="boton boton--primario">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                    <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                    <polyline points="7 3 7 8 15 8"></polyline>
+                  </svg>
+                  <%= esEdicion ? 'Guardar cambios' : 'Registrar profesional' %>
+                </button>
+              </div>
+        </form>
+    </section>
+
+    <!-- JavaScript externo -->
+    <script src="/js/admin/professional-form.js"></script>

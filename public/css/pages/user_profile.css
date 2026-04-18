@@ -1,0 +1,270 @@
+/* Avatar del perfil */
+.profile-avatar {
+    text-align: center;
+    margin-bottom: var(--espacio-lg);
+}
+
+.profile-avatar__circle {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto var(--espacio-md);
+    background: var(--color-primario);
+    color: var(--color-fondo);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: var(--fuente-altura-xl);
+}
+
+.profile-avatar__name {
+    font-size: var(--fuente-tamano-lg);
+    font-weight: var(--fuente-altura-l);
+    color: var(--color-texto);
+    margin: 0 0 var(--espacio-xs) 0;
+}
+
+.profile-avatar__email {
+    font-size: var(--fuente-tamano-sm);
+    color: var(--color-texto-secundario);
+    margin: 0;
+}
+
+.profile-actions {
+    margin-top: var(--espacio-lg);
+    padding-top: var(--espacio-lg);
+    border-top: 1px solid var(--color-borde);
+}
+
+/* Campos de detalle */
+.admin-detalle__campo {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--espacio-md);
+    padding: var(--espacio-sm) 0;
+    border-bottom: 1px solid var(--color-borde-suave);
+}
+
+.admin-detalle__campo:last-child {
+    border-bottom: none;
+}
+
+.admin-detalle__clave {
+    flex-shrink: 0;
+    width: 140px;
+    font-size: var(--fuente-tamano-sm);
+    font-weight: var(--fuente-altura);
+    color: var(--color-texto-secundario);
+}
+
+.admin-detalle__valor {
+    flex: 1;
+    font-size: var(--fuente-tamano-sm);
+    color: var(--color-texto);
+    word-break: break-word;
+}
+
+.admin-detalle__badge {
+    display: inline-block;
+    margin-left: var(--espacio-sm);
+    padding: 2px 8px;
+    background: var(--color-fondo-secundario);
+    border-radius: var(--radio-borde-completo);
+    font-size: var(--fuente-tamano-xs);
+    color: var(--color-texto-terciario);
+}
+
+.admin-detalle__link {
+    color: var(--color-primario);
+    text-decoration: none;
+    transition: color var(--transicion-rapida);
+}
+
+.admin-detalle__link:hover {
+    text-decoration: underline;
+    color: var(--color-primario-hover);
+}
+
+.admin-detalle__vacio {
+    color: var(--color-texto-terciario);
+    font-style: italic;
+}
+
+.admin-detalle__vacio-contenedor {
+    text-align: center;
+    padding: var(--espacio-xl);
+    color: var(--color-texto-secundario);
+}
+
+.admin-detalle__vacio-contenedor svg {
+    margin-bottom: var(--espacio-md);
+    opacity: 0.5;
+}
+
+.admin-detalle__vacio-contenedor p {
+    margin: 0;
+    font-size: var(--fuente-tamano-sm);
+}
+
+.admin-detalle__nota {
+    color: var(--color-texto-terciario);
+    font-size: var(--fuente-tamano-xs);
+}
+
+/* ============================================================
+   Estilos específicos para el formulario de edición de perfil
+   ============================================================ */
+
+/* Campo deshabilitado (email) */
+.entrada:disabled {
+    background-color: var(--color-fondo-secundario);
+    color: var(--color-texto-terciario);
+    cursor: not-allowed;
+    border-color: var(--color-borde);
+}
+
+/* Botón de volver */
+.admin-formulario__volver {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--fuente-tamano-sm);
+    color: var(--color-texto-secundario);
+    text-decoration: none;
+    transition: color var(--transicion-rapida);
+    margin-bottom: var(--espacio-sm);
+}
+
+.admin-formulario__volver:hover {
+    color: var(--color-primario);
+}
+
+/* Badge en el encabezado */
+.admin-formulario__badge--edicion {
+    background-color: rgba(0, 119, 182, 0.1);
+    color: var(--color-secundario);
+}
+
+/* Consejos en la columna lateral */
+.admin-lateral__card--metadata .metadata-item__valor {
+    font-size: var(--fuente-tamano-sm);
+    line-height: 1.4;
+}
+
+/* Avatar en el sidebar */
+.profile-avatar {
+    text-align: center;
+    margin-bottom: var(--espacio-lg);
+}
+
+.profile-avatar__circle {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto var(--espacio-md);
+    background: var(--color-primario);
+    color: var(--color-fondo);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: var(--fuente-altura-xl);
+}
+
+.profile-avatar__name {
+    font-size: var(--fuente-tamano-lg);
+    font-weight: var(--fuente-altura-l);
+    color: var(--color-texto);
+    margin: 0 0 var(--espacio-xs) 0;
+}
+
+.profile-avatar__email {
+    font-size: var(--fuente-tamano-sm);
+    color: var(--color-texto-secundario);
+    margin: 0;
+}
+
+.profile-actions {
+    margin-top: var(--espacio-lg);
+    padding-top: var(--espacio-lg);
+    border-top: 1px solid var(--color-borde);
+}
+
+/* ============================================================
+   Estilos específicos para cambiar contraseña
+   ============================================================ */
+
+/* Lista de requisitos */
+.requisitos-lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-sm);
+}
+
+.requisito-item {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-sm);
+    font-size: var(--fuente-tamano-sm);
+    color: var(--color-texto-secundario);
+    transition: color var(--transicion-rapida);
+}
+
+.requisito-item svg {
+    flex-shrink: 0;
+    color: currentColor;
+}
+
+.requisito-item--cumplido {
+    color: var(--color-exito);
+}
+
+.requisito-item--cumplido svg {
+    stroke: var(--color-exito);
+}
+
+/* Contenedor de entrada con botón de visibilidad */
+.contenedor-entrada {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.contenedor-entrada .entrada {
+    flex: 1;
+    padding-right: 40px;
+}
+
+.boton-visibilidad {
+    position: absolute;
+    right: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-texto-secundario);
+    transition: color var(--transicion-rapida);
+}
+
+.boton-visibilidad:hover {
+    color: var(--color-primario);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-detalle__campo {
+        flex-direction: column;
+        gap: var(--espacio-xs);
+    }
+
+    .admin-detalle__clave {
+        width: auto;
+    }
+}

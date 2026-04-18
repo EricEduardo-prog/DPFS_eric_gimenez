@@ -1,0 +1,38 @@
+<% var valoracionNumero=0; var totalValoraciones=0; if (typeof valoracion==='number' ) { valoracionNumero=valoracion; }
+    else if (valoracion && typeof valoracion==='object' ) { valoracionNumero=valoracion.valor || 0;
+    totalValoraciones=valoracion.cantidad || 0; } if (typeof cantidad !=='undefined' && cantidad !==null) {
+    totalValoraciones=cantidad; } %>
+
+    <% if (valoracionNumero> 0) { %>
+        <div class="valoracion-bloque">
+            <div class="valoracion-estrellas">
+                <% for (var i=1; i <=5; i++) { %>
+                    <svg class="estrella <%= i <= Math.round(valoracionNumero) ? 'estrella--llena' : 'estrella--vacia' %>"
+                        width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon
+                            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                    </svg>
+                    <% } %>
+            </div>
+            <div class="valoracion-datos">
+                <span class="valoracion-numero">
+                    <%= valoracionNumero.toFixed(1) %>
+                </span>
+                <span class="valoracion-total">/ 5</span>
+                <% if (totalValoraciones> 0) { %>
+                    <span class="valoracion-cantidad">(<%= totalValoraciones %> valoraciones)</span>
+                    <% } %>
+            </div>
+            <% if (!esEditable) { %>
+                <p class="campo-formulario__ayuda">Valoracion calculada automaticamente. No editable.</p>
+                <% } %>
+        </div>
+        <% } else { %>
+            <div class="valoracion-sin-datos">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <polygon
+                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                </svg>
+                <p>Sin valoraciones aun.</p>
+            </div>
+            <% } %>

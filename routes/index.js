@@ -1,101 +1,48 @@
 var express = require('express');
 var router = express.Router();
+var indexController = require('../controllers/indexController');
+
+console.log('index.js loaded');
+
+router.use((req, res, next) => {
+  console.log('indexRouter request:', req.method, req.path);
+  next();
+});
+
+
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
-  res.render('layout',
-    {
-      title: 'E-E: Todo para su hogar o negocio',
-      pageCss: 'index',
-      currentPage: 'index',
-      body: 'pages/index'
-    });
-});
+router.get('/', indexController.home);
 
-/* GET login page */
-router.get('/login', function (req, res, next) {
-  res.render('layout',
-    {
-      title: 'Login - E-E',
-      pageCss: 'login_register',
-      currentPage: 'login',
-      body: 'pages/users/login'
-    });
-});
+/* GET home page. */
+router.get('/-', indexController.home);
 
-/* GET register page */
-router.get('/register', function (req, res, next) {
-  res.render('layout',
-    {
-      title: 'Registrate - E-E',
-      pageCss: 'login_register',
-      currentPage: 'register',
-      body: 'pages/users/register'
-    });
-});
+/* GET search results */
+router.get('/search', indexController.buscar);
+
+/* GET all categories */
+router.get('/categorias', indexController.listarCategorias);
+
+/* GET all products */
+router.get('/productos', indexController.listarProductos);
 
 /* GET cart page */
 router.get('/cart', function (req, res, next) {
-  res.render('layout',
-    {
-      title: 'Carrito - E-E',
-      pageCss: 'cart',
-      currentPage: 'cart',
-      body: 'pages/products/cart'
-    });
+  res.render('layout', {
+    title: 'Carrito - E-E',
+    pageCss: 'cart',
+    currentPage: 'cart',
+    body: 'pages/products/cart'
+  });
 });
 
 /* GET productDetail page */
-router.get('/productDetail', function (req, res, next) {
-  res.render('layout',
-    {
-      title: 'Detalle de producto - E-E',
-      pageCss: 'product',
-      currentPage: 'product',
-      body: 'pages/products/productDetail'
-    });
-});
+router.get('/detail/:id?', indexController.verProducto);
 
-// Formulario de nuevo producto
-router.get('/productForm', function (req, res, next) {
-  res.render('layout', {
-    title: 'Nuevo Producto - E-E',
-    pageCss: 'admin_forms',
-    currentPage: 'admin',
-    body: 'pages/admin/productForm'
-  });
-});
-
-// Editar producto
-router.get('/productForm/:id', function (req, res, next) {
-  res.render('layout', {
-    title: 'Editar Producto - E-E',
-    pageCss: 'admin_forms',
-    currentPage: 'admin',
-    body: 'pages/admin/productForm',
-    product: productoDesdeDB   // objeto con los campos
-  });
-});
-
-// Formulario de nuevo instalador
-router.get('/installerForm', function (req, res, next) {
-  res.render('layout', {
-    title: 'Nuevo Instalador - E-E',
-    pageCss: 'admin_forms',
-    currentPage: 'admin',
-    body: 'pages/admin/installerForm'
-  });
-});
-
-// Editar instaladores
-router.get('/installerForm/:id', function (req, res, next) {
-  res.render('layout', {
-    title: 'Editar Instalador - E-E',
-    pageCss: 'admin_forms',
-    currentPage: 'admin',
-    body: 'pages/admin/installerForm',
-    installer: instaladoresDesdeDB   // objeto con los campos
-  });
+// Redirigir /admin/- a /admin/productos (solicitud especial)
+router.get('/admin/-', function (req, res, next) {
+  console.log('Redirecting /admin/- to /admin/productos');
+  res.redirect('/admin/productos');
 });
 
 module.exports = router;

@@ -2,7 +2,15 @@
   "_meta": {
     "descripcion": "Catálogo de productos E-E",
     "version": "1.0.0",
-    "campos_requeridos": ["id", "nombre", "sku", "categoriaId", "descripcion", "imagen", "precio"],
+    "campos_requeridos": [
+      "id",
+      "nombre",
+      "sku",
+      "categoriaId",
+      "descripcion",
+      "imagen",
+      "precio"
+    ],
     "nota_categoria": "categoriaId referencia el campo 'id' de categorias.json. Usar el slug solo para URLs amigables."
   },
   "productos": [
@@ -12,29 +20,21 @@
       "sku": "AC-4500-SIL",
       "categoriaId": "cat_001",
       "descripcion": "Aire acondicionado split de 4500 frigorías, ideal para ambientes de 20-25 m² con eficiencia energética A++ y función frío/calor.",
-      "caracteristicas": [
-        "4500 frigorías - Ideal para ambientes de 20-25 m²",
-        "Eficiencia energética A++",
-        "Función frío/calor",
-        "Modo silencioso (22 dB)",
-        "Control por Wi-Fi y app móvil",
-        "Filtro antibacterial y antialérgico",
-        "Garantía oficial 2 años"
-      ],
+      "caracteristicas": [],
       "imagen": "https://ejemplo.com/productos/ac-4500.jpg",
-      "imagenes": [
-        "https://ejemplo.com/productos/ac-4500-frente.jpg",
-        "https://ejemplo.com/productos/ac-4500-lateral.jpg",
-        "https://ejemplo.com/productos/ac-4500-control.jpg"
+      "imagenes": [],
+      "colores": [
+        "Blanco,Negro"
       ],
-      "colores": ["Blanco"],
-      "talles": ["3000 BTU", "4500 BTU", "6000 BTU"],
+      "talles": [
+        "3000 BTU,4500 BTU,6000 BTU"
+      ],
       "precio": 199999,
       "precioOriginal": 235000,
       "instalacion": {
         "disponible": true,
-        "precio": 30000,
-        "profesionalesDisponibles": true
+        "precio": 0,
+        "profesionalesDisponibles": false
       },
       "rating": {
         "valor": 4.5,
@@ -42,7 +42,7 @@
       },
       "activo": true,
       "fechaCreacion": "2025-01-15T10:00:00.000Z",
-      "fechaModificacion": "2025-02-20T09:00:00.000Z"
+      "fechaModificacion": "2026-04-17T23:49:43.424Z"
     },
     {
       "id": "prod_002",
@@ -64,9 +64,11 @@
         "https://ejemplo.com/productos/taladro-20v-frente.jpg",
         "https://ejemplo.com/productos/taladro-20v-maleta.jpg"
       ],
-      "colores": ["Negro/Verde", "Negro/Rojo"],
+      "colores": [
+        "Negro/Verde,Negro/Rojo,Azul/Negro"
+      ],
       "talles": [],
-      "precio": 89999,
+      "precio": 109999,
       "precioOriginal": 110000,
       "instalacion": {
         "disponible": false,
@@ -79,7 +81,7 @@
       },
       "activo": true,
       "fechaCreacion": "2025-01-20T11:00:00.000Z",
-      "fechaModificacion": "2025-01-20T11:00:00.000Z"
+      "fechaModificacion": "2026-04-11T02:56:44.491Z"
     },
     {
       "id": "prod_003",
@@ -102,7 +104,10 @@
         "https://ejemplo.com/productos/led-gu10-instalada.jpg"
       ],
       "colores": [],
-      "talles": ["3000K cálida", "6500K fría"],
+      "talles": [
+        "3000K cálida",
+        "6500K fría"
+      ],
       "precio": 12999,
       "precioOriginal": 0,
       "instalacion": {
@@ -131,15 +136,21 @@
         "Ánodo de magnesio anticorrosión",
         "Termostato regulable 35°C - 75°C",
         "Válvula de seguridad incluida",
-        "Garantía 5 años en cuba"
+        "Garantía 5 años en La matanza"
       ],
       "imagen": "https://ejemplo.com/productos/termotanque-80l.jpg",
       "imagenes": [
         "https://ejemplo.com/productos/termotanque-80l-frente.jpg",
         "https://ejemplo.com/productos/termotanque-80l-instalado.jpg"
       ],
-      "colores": ["Blanco"],
-      "talles": ["50L", "80L", "100L"],
+      "colores": [
+        "Blanco"
+      ],
+      "talles": [
+        "50L",
+        "80L",
+        "100L"
+      ],
       "precio": 149999,
       "precioOriginal": 175000,
       "instalacion": {
@@ -154,6 +165,140 @@
       "activo": true,
       "fechaCreacion": "2025-02-10T13:00:00.000Z",
       "fechaModificacion": "2025-03-01T10:00:00.000Z"
+    },
+    {
+      "id": "prod_005",
+      "nombre": "Ceramicos Porcelanato 25x25",
+      "sku": "CP-01-12302",
+      "categoriaId": "cat_008",
+      "descripcion": "Ceramicos para piso, ideal para:\r\nCocinas\r\nComedores\r\nLiving\r\nSala de Estar",
+      "caracteristicas": [],
+      "imagen": "-",
+      "imagenes": [],
+      "colores": [
+        "Rojo y Negro",
+        "Negro y Rojo",
+        "Celeste y Blanco"
+      ],
+      "talles": [
+        "x100Unidades",
+        "x500Unidades"
+      ],
+      "precio": 1000,
+      "precioOriginal": 5000,
+      "instalacion": {
+        "disponible": true,
+        "precio": 1000,
+        "profesionalesDisponibles": false
+      },
+      "activo": true,
+      "rating": {
+        "valor": 0,
+        "cantidad": 0
+      },
+      "fechaCreacion": "2026-04-10T21:59:36.953Z",
+      "fechaModificacion": "2026-04-10T21:59:36.953Z"
+    },
+    {
+      "id": "prod_006",
+      "nombre": "Lampara Oveja",
+      "sku": "ME-123-12312",
+      "categoriaId": "cat_004",
+      "descripcion": "Lampara con forma de oveja, ideal para habitaciones infantiles. Puede hablar.",
+      "caracteristicas": [
+        "Textura con materiales reciclados.",
+        "Ideal para habitaciones infantiles",
+        "Puede hablar."
+      ],
+      "imagen": ".",
+      "imagenes": [],
+      "colores": [
+        "Negra,blanca,Rojo"
+      ],
+      "talles": [
+        "12.000Volts"
+      ],
+      "precio": 425.211,
+      "precioOriginal": 1000,
+      "instalacion": {
+        "disponible": false,
+        "precio": 0,
+        "profesionalesDisponibles": false
+      },
+      "activo": true,
+      "rating": {
+        "valor": 0,
+        "cantidad": 0
+      },
+      "fechaCreacion": "2026-04-10T22:02:33.469Z",
+      "fechaModificacion": "2026-04-12T05:39:03.312Z"
+    },
+    {
+      "id": "prod_007",
+      "nombre": "Descontracturante de espalda.",
+      "sku": "MD-012-1232",
+      "categoriaId": "cat_011",
+      "descripcion": "Descontracturante de espalda usando las manos u herramientas para la correcta y reconformante experiencia al usuario.",
+      "imagen": ".",
+      "precio": 159.888,
+      "precioOriginal": 1000,
+      "colores": [],
+      "talles": [],
+      "instalacion": {
+        "disponible": true,
+        "precio": 0,
+        "profesionalesDisponibles": false
+      },
+      "activo": true,
+      "rating": {
+        "valor": 0,
+        "cantidad": 0
+      },
+      "fechaCreacion": "2026-04-12T05:45:21.471Z",
+      "fechaModificacion": "2026-04-12T05:45:21.471Z"
+    },
+    {
+      "id": "prod_008",
+      "nombre": "Como hacer helado",
+      "sku": "Cu-01-1232",
+      "categoriaId": "cat_010",
+      "descripcion": "Elaboracion y explicaciones tecnicas de los procesos para la leaboracion de helado artesanal.",
+      "imagen": ".",
+      "precio": 150000,
+      "precioOriginal": 200000,
+      "colores": [],
+      "talles": [],
+      "instalacion": {
+        "disponible": true,
+        "precio": 0,
+        "profesionalesDisponibles": false
+      },
+      "activo": true,
+      "rating": {
+        "valor": 0,
+        "cantidad": 0
+      },
+      "fechaCreacion": "2026-04-12T05:49:31.217Z",
+      "fechaModificacion": "2026-04-14T22:54:59.258Z"
+    },
+    {
+      "id": "prod_009",
+      "nombre": "Aspirador de Gatos",
+      "sku": "CAT-123-12312",
+      "categoriaId": "cat_012",
+      "descripcion": "Revolucionario e innovador aspirador de gatos super silencioso.",
+      "imagen": ".",
+      "precio": 50000,
+      "precioOriginal": 100000,
+      "colores": [],
+      "talles": [],
+      "activo": true,
+      "rating": {
+        "valor": 0,
+        "cantidad": 0
+      },
+      "fechaCreacion": "2026-04-14T22:56:11.002Z",
+      "fechaModificacion": "2026-04-14T22:56:28.133Z"
     }
   ]
 }

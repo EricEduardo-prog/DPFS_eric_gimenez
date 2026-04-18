@@ -1,0 +1,25 @@
+<%# Uso: - idContenedor: string, id del div contenedor - idInput: string, id del input de texto - idHidden: string, id del hidden que guarda los valores (separados por coma) - valoresIniciales: array (opcional) - placeholder: string %>
+<% 
+  // Normalizar valoresIniciales a array
+  var valores = Array.isArray(valoresIniciales) ? valoresIniciales : (valoresIniciales ? String(valoresIniciales).split(',').map(s => s.trim()).filter(Boolean) : []);
+%>
+    <div class="campo-formulario">
+        <label class="etiqueta-campo">
+            <%= label %>
+        </label>
+        <div class="chips-contenedor" id="<%= idContenedor %>">
+            <% if (valores && valores.length) { %>
+                <% valores.forEach(function(val) { %>
+                    <span class="chip" data-valor="<%= val %>">
+                        <%= val %>
+                            <button type="button" class="chip__eliminar" aria-label="Eliminar <%= val %>">×</button>
+                    </span>
+                    <% }); %>
+                        <% } %>
+                            <input type="text" class="chips-input" id="<%= idInput %>" placeholder="<%= placeholder %>"
+                                autocomplete="off">
+        </div>
+        <input type="hidden" name="<%= name %>" id="<%= idHidden %>"
+            value="<%= valores ? valores.join(',') : '' %>">
+        <p class="campo-formulario__ayuda">Presioná <kbd>Enter</kbd> o <kbd>,</kbd> para agregar.</p>
+    </div>

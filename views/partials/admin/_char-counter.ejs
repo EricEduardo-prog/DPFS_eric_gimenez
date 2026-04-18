@@ -1,0 +1,8 @@
+<% // Uso: // - textareaId: string, id del textarea // - counterId: string, id del elemento que muestra el contador // -
+    max: número, longitud máxima %>
+    <div class="campo-formulario__pie">
+        <span class="campo-formulario__ayuda">
+            <%= ayuda || '' %>
+        </span>
+        <span class="contador-caracteres" id="<%= counterId %>">0 / <%= max %></span>
+    </div>

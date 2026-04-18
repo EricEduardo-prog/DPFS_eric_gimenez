@@ -1,0 +1,29 @@
+<div class="contenedor">
+    <div class="seccion-productos">
+        <div class="encabezado-seccion">
+            <h1 class="titulo-pagina">Todos los Productos</h1>
+        </div>
+
+        <% if (productos && productos.length> 0) { %>
+            <div class="grid-productos">
+                <% productos.forEach(function(prod) { %>
+                    <div class="tarjeta-producto">
+                        <img src="<%= prod.imagen %>" alt="<%= prod.nombre %>" class="imagen-producto"
+                            onerror="this.onerror=null;this.src='/images/placeholder.png'">
+                        <h3 class="nombre-producto">
+                            <%= prod.nombre %>
+                        </h3>
+                        <div class="precio-producto"><%= prod.precio.toLocaleString('es-AR') %>
+                        </div>
+                        <a href="/detail/<%= prod.id %>" class="boton-producto">Ver más</a>
+                    </div>
+                    <% }); %>
+            </div>
+            <% } else { %>
+                <div class="sin-productos">
+                    <p>No hay productos disponibles en este momento.</p>
+                    <a href="/" class="boton-volver">Volver al inicio</a>
+                </div>
+                <% } %>
+    </div>
+</div>

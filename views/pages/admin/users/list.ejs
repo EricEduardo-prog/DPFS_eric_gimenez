@@ -1,0 +1,210 @@
+<%# Vista: pages/admin/users/list.ejs Controller: usuarioController.js → listar() Variables: - usuarios {Array}
+    Resultado de usuarioModel.getAll() - mensaje {string|null} Query param ?mensaje=- error {string|null} Query param
+    ?error=%>
+
+    <div class="admin-listado">
+        <!-- Encabezado -->
+        <div class="admin-listado__encabezado">
+            <div class="admin-listado__titulo-bloque">
+                <h1 class="admin-listado__titulo">Usuarios</h1>
+                <span class="admin-listado__conteo">
+                    <%= usuarios.length %> registros
+                </span>
+            </div>
+            <a href="/admin/usuarios/nuevo" class="boton boton--primario">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                Nuevo usuario
+            </a>
+        </div>
+
+        <!-- Alertas de feedback -->
+        <% if (mensaje) { %>
+            <div class="admin-alerta admin-alerta--exito" role="alert">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                    <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+                <%= mensaje %>
+            </div>
+            <% } %>
+
+                <% if (error) { %>
+                    <div class="admin-alerta admin-alerta--error" role="alert">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                        <%= error %>
+                    </div>
+                    <% } %>
+
+                        <!-- Filtros -->
+                        <form class="admin-filtros" method="GET" action="/admin/usuarios" id="filtrosForm">
+                            <div class="admin-filtros__grupo">
+                                <label class="admin-filtros__check-label">
+                                    <input type="checkbox" name="soloActivos" value="true" <%=filtros &&
+                                        filtros.soloActivos==='true' ? 'checked' : '' %>>
+                                    Solo activos
+                                </label>
+                                <button type="submit" class="boton boton--secundario">Filtrar</button>
+                                <a href="/admin/usuarios" class="boton boton--secundario">Limpiar</a>
+                            </div>
+                        </form>
+
+                        <!-- Estado vacío -->
+                        <% if (usuarios.length===0) { %>
+                            <div class="admin-vacio">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.3">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                    <circle cx="12" cy="7" r="4" />
+                                </svg>
+                                <p>No hay usuarios registrados.</p>
+                                <a href="/admin/usuarios/nuevo" class="boton boton--primario">Crear primer usuario</a>
+                            </div>
+                            <% } else { %>
+                                <!-- Tabla de usuarios -->
+                                <div class="admin-tabla-contenedor">
+                                    <table class="admin-tabla" id="usuariosTabla">
+                                        <thead>
+                                            <tr>
+                                                <th class="sortable" data-sort="nombre">Usuario <span
+                                                        class="sort-icon">↕️</span></th>
+                                                <th class="sortable" data-sort="email">Email <span
+                                                        class="sort-icon">↕️</span></th>
+                                                <th>Teléfono</th>
+                                                <th>Dirección</th>
+                                                <th>Estado</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% usuarios.forEach(function(usr) { %>
+                                                <tr class="<%= !usr.activo ? 'admin-tabla__fila--inactiva' : '' %>"
+                                                    data-nombre="<%= usr.nombre.toLowerCase() %>"
+                                                    data-email="<%= usr.email.toLowerCase() %>">
+
+                                                    <!-- Usuario (avatar + nombre) -->
+                                                    <td class="admin-tabla__celda-producto">
+                                                        <div class="admin-tabla__avatar">
+                                                            <%= usr.nombre.charAt(0).toUpperCase() %>
+                                                        </div>
+                                                        <div class="admin-tabla__producto-info">
+                                                            <span class="admin-tabla__nombre">
+                                                                <%= usr.nombre %>
+                                                            </span>
+                                                            <span class="admin-tabla__descripcion-corta">ID: <%= usr.id
+                                                                    %></span>
+                                                        </div>
+                                                    </td>
+
+                                                    <!-- Email -->
+                                                    <td>
+                                                        <a href="mailto:<%= usr.email %>" class="admin-tabla__nombre"
+                                                            style="text-decoration: none;">
+                                                            <%= usr.email %>
+                                                        </a>
+                                                    </td>
+
+                                                    <!-- Teléfono -->
+                                                    <td>
+                                                        <% if (usr.telefono) { %>
+                                                            <a href="tel:<%= usr.telefono.replace(/\s/g, '') %>"
+                                                                class="admin-tabla__texto-suave">
+                                                                <%= usr.telefono %>
+                                                            </a>
+                                                            <% } else { %>
+                                                                <span class="admin-tabla__texto-suave">—</span>
+                                                                <% } %>
+                                                    </td>
+
+                                                    <!-- Dirección (resumida) -->
+                                                    <td class="admin-tabla__celda-categoria">
+                                                        <% if (usr.direccion && usr.direccion.calle) { %>
+                                                            <div class="admin-tabla__producto-info">
+                                                                <span class="admin-tabla__nombre">
+                                                                    <%= usr.direccion.calle %>
+                                                                        <%= usr.direccion.numero || '' %>
+                                                                </span>
+                                                                <span class="admin-tabla__descripcion-corta">
+                                                                    <%= usr.direccion.ciudad || '' %>, <%=
+                                                                            usr.direccion.provincia || '' %>
+                                                                </span>
+                                                            </div>
+                                                            <% } else { %>
+                                                                <span class="admin-tabla__texto-suave">—</span>
+                                                                <% } %>
+                                                    </td>
+
+                                                    <!-- Estado -->
+                                                    <td>
+                                                        <span
+                                                            class="admin-estado-dot admin-estado-dot--<%= usr.activo ? 'activo' : 'inactivo' %>">
+                                                            <%= usr.activo ? 'Activo' : 'Inactivo' %>
+                                                        </span>
+                                                    </td>
+
+                                                    <!-- Acciones -->
+                                                    <td>
+                                                        <div class="admin-tabla__acciones">
+                                                            <a href="/admin/usuarios/<%= usr.id %>/editar"
+                                                                class="admin-tabla__btn-accion"
+                                                                title="Editar <%= usr.nombre %>"
+                                                                aria-label="Editar <%= usr.nombre %>">
+                                                                <svg width="14" height="14" viewBox="0 0 24 24"
+                                                                    fill="none" stroke="currentColor" stroke-width="2">
+                                                                    <path
+                                                                        d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                                                    <path
+                                                                        d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                                                </svg>
+                                                            </a>
+
+                                                            <form action="/admin/usuarios/<%= usr.id %>/baja"
+                                                                method="POST" class="form-toggle-estado"
+                                                                data-id="<%= usr.id %>" data-nombre="<%= usr.nombre %>"
+                                                                data-activo="<%= usr.activo %>">
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <button type="button"
+                                                                    class="admin-tabla__btn-accion <%= usr.activo ? 'admin-tabla__btn-accion--baja' : 'admin-tabla__btn-accion--alta' %> btn-toggle-estado"
+                                                                    title="<%= usr.activo ? 'Desactivar' : 'Reactivar' %>"
+                                                                    data-id="<%= usr.id %>"
+                                                                    data-nombre="<%= usr.nombre %>"
+                                                                    data-activo="<%= usr.activo %>">
+                                                                    <% if (usr.activo) { %>
+                                                                        <svg width="14" height="14" viewBox="0 0 24 24"
+                                                                            fill="none" stroke="currentColor"
+                                                                            stroke-width="2">
+                                                                            <circle cx="12" cy="12" r="10" />
+                                                                            <line x1="4.93" y1="4.93" x2="19.07"
+                                                                                y2="19.07" />
+                                                                        </svg>
+                                                                        <% } else { %>
+                                                                            <svg width="14" height="14"
+                                                                                viewBox="0 0 24 24" fill="none"
+                                                                                stroke="currentColor" stroke-width="2">
+                                                                                <path
+                                                                                    d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                                                                <polyline
+                                                                                    points="22 4 12 14.01 9 11.01" />
+                                                                            </svg>
+                                                                            <% } %>
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <% }); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <% } %>
+    </div>
+
+    <!-- JavaScript externo -->
+    <script src="/js/admin/user-list.js"></script>
