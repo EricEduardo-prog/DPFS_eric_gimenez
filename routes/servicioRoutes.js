@@ -3,17 +3,18 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/servicioController');
+const { isAdmin } = require('../middlewares/authMiddleware');
 
 // Rutas estáticas
-router.get('/', controller.listar);
-router.get('/nuevo', controller.mostrarFormNuevo);
-router.post('/', controller.crear);
+router.get('/', isAdmin, controller.listar);
+router.get('/nuevo', isAdmin, controller.mostrarFormNuevo);
+router.post('/', isAdmin, controller.crear);
 
 // Rutas dinámicas
-router.get('/:id/editar', controller.mostrarFormEditar);
-router.put('/:id', controller.actualizar);
-router.post('/:id', controller.actualizar);
-router.post('/:id/baja', controller.toggleBaja);
-router.post('/:id/destacado', controller.toggleDestacado);
+router.get('/:id/editar', isAdmin, controller.mostrarFormEditar);
+router.put('/:id', isAdmin, controller.actualizar);
+router.post('/:id', isAdmin, controller.actualizar);
+router.post('/:id/baja', isAdmin, controller.toggleBaja);
+router.post('/:id/destacado', isAdmin, controller.toggleDestacado);
 
 module.exports = router;

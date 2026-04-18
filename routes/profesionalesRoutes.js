@@ -16,17 +16,18 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/profesionalesController');
+const { isAdmin } = require('../middlewares/authMiddleware');
 
-router.get('/', controller.listar);
-router.get('/nuevo', controller.mostrarFormNuevo);
-router.post('/', controller.crear);     // POST admin/profesionales 
+router.get('/', isAdmin, controller.listar);
+router.get('/nuevo', isAdmin, controller.mostrarFormNuevo);
+router.post('/', isAdmin, controller.crear);     // POST admin/profesionales 
 
-router.get('/:id/editar', controller.mostrarFormEditar);
+router.get('/:id/editar', isAdmin, controller.mostrarFormEditar);
 // Para actualizar (soporta PUT directo y POST con _method)
-router.put('/:id', controller.actualizar);  // PUT admin/profesionales/:id  
-router.post('/:id', controller.actualizar); // ← Para compatibilidad con _method
+router.put('/:id', isAdmin, controller.actualizar);  // PUT admin/profesionales/:id  
+router.post('/:id', isAdmin, controller.actualizar); // ← Para compatibilidad con _method
 
-router.delete('/:id/baja', controller.toggleBaja);     // DELETE /admin/profesionales/:id/baja
-router.post('/:id/baja', controller.toggleBaja);       // POST con _method=DELETE
+router.delete('/:id/baja', isAdmin, controller.toggleBaja);     // DELETE /admin/profesionales/:id/baja
+router.post('/:id/baja', isAdmin, controller.toggleBaja);       // POST con _method=DELETE
 
 module.exports = router;

@@ -270,7 +270,15 @@ async function login(req, res) {
         req.session.usuarioEmail = usuario.email;
         req.session.usuarioNombre = usuario.nombre;
 
+
+
         console.log('✅ Sesión guardada:', req.session.usuarioId);
+        // Determinar rol (admin o user)
+        let rol = 'user';
+        if (usuario.email === 'admin@ee.com') {
+            rol = 'admin';
+        }
+        req.session.rol = rol;
 
         console.log('✅ Login exitoso:', usuario.email);
 

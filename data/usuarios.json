@@ -80,7 +80,7 @@
       "telefono": "",
       "direccion": {
         "calle": "",
-        "numero": "",
+        "numero": "123",
         "piso": "",
         "depto": "",
         "ciudad": "",
@@ -90,7 +90,7 @@
       "aceptoTerminos": true,
       "activo": true,
       "fechaRegistro": "2026-04-14T13:39:45.892Z",
-      "fechaModificacion": "2026-04-17T16:25:39.220Z"
+      "fechaModificacion": "2026-04-18T02:58:36.307Z"
     },
     {
       "id": "usr_005",
@@ -116,6 +116,26 @@
       "id": "usr_006",
       "nombre": "Pablo Campazo",
       "email": "pablo@invento.com",
+      "passwordHash": "$2b$10$6knI.I0rKI0bhnnsHJ.jE.IH5Mqhfoq8sb863zJ68YephNnOVgP8K",
+      "telefono": "",
+      "direccion": {
+        "calle": "",
+        "numero": "",
+        "piso": "",
+        "depto": "",
+        "ciudad": "",
+        "provincia": "",
+        "codigoPostal": ""
+      },
+      "aceptoTerminos": true,
+      "activo": true,
+      "fechaRegistro": "2026-04-14T22:22:24.539Z",
+      "fechaModificacion": "2026-04-14T22:22:24.539Z"
+    },
+    {
+      "id": "usr_007",
+      "nombre": "James Bond",
+      "email": "admin@ee.com",
       "passwordHash": "$2b$10$6knI.I0rKI0bhnnsHJ.jE.IH5Mqhfoq8sb863zJ68YephNnOVgP8K",
       "telefono": "",
       "direccion": {

@@ -25,14 +25,14 @@
 
         </div>
 
-        <!-- Botón de perfil / login -->
-        <% if (usuario) { %>
-            <a href="/usuarios/perfil" class="boton-icono" aria-label="Mi perfil" title="Mi cuenta">
-                <span class="icono-perfil">👤</span>
+        <!-- Botón de perfil / login según rol -->
+        <% if (rol==='guest' ) { %>
+            <a href="/login" class="boton-icono" aria-label="Iniciar sesión" title="Iniciar sesión">
+                <span class="icono-perfil">🔐</span>
             </a>
             <% } else { %>
-                <a href="/login" class="boton-icono" aria-label="Iniciar sesión" title="Iniciar sesión">
-                    <span class="icono-perfil">🔐</span>
+                <a href="/usuarios/perfil" class="boton-icono" aria-label="Mi perfil" title="Mi cuenta">
+                    <span class="icono-perfil">👤</span>
                 </a>
                 <% } %>
 

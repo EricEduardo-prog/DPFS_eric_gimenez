@@ -16,16 +16,17 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/productoController');
+const { isAdmin } = require('../middlewares/authMiddleware');
 
 // Rutas estáticas primero
-router.get('/', controller.listar);
-router.get('/nuevo', controller.mostrarFormNuevo);
-router.post('/', controller.crear);
+router.get('/', isAdmin, controller.listar);
+router.get('/nuevo', isAdmin, controller.mostrarFormNuevo);
+router.post('/', isAdmin, controller.crear);
 
 // Rutas dinámicas
-router.get('/:id/editar', controller.mostrarFormEditar);
-router.get('/:id', controller.mostrarFormEditar); // Soporta /admin/productos/:id y /admin/productos/:id/
-router.put('/:id', controller.actualizar);
-router.post('/:id/baja', controller.toggleBaja);
+router.get('/:id/editar', isAdmin, controller.mostrarFormEditar);
+router.get('/:id', isAdmin, controller.mostrarFormEditar); // Soporta /admin/productos/:id y /admin/productos/:id/
+router.put('/:id', isAdmin, controller.actualizar);
+router.post('/:id/baja', isAdmin, controller.toggleBaja);
 
 module.exports = router;

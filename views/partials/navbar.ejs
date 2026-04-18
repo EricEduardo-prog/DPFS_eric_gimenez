@@ -36,28 +36,45 @@
         </div>
         <span class="texto-enlace">Carrito</span>
     </a>
-    <!-- Enlace Perfil/Login -->
-    <% if (usuario) { %>
-        <a href="/usuarios/perfil" class="enlace-navegacion <%= currentPage === 'perfil' ? 'activo' : '' %>"
-            title="Mi perfil">
+    <!-- Enlace Perfil/Login según rol -->
+    <% if (rol==='guest' ) { %>
+        <a href="/login" class="enlace-navegacion <%= currentPage === 'login' ? 'activo' : '' %>"
+            title="Iniciar sesión">
             <div class="contenedor-icono">
-                <span class="icono-nav">👤</span>
-                <% if (currentPage==='perfil' ) { %>
+                <span class="icono-nav">🔐</span>
+                <% if (currentPage==='login' ) { %>
                     <span class="indicador-activo"></span>
                     <% } %>
             </div>
-            <span class="texto-enlace">Mi Perfil</span>
+            <span class="texto-enlace">Ingresar</span>
         </a>
         <% } else { %>
-            <a href="/login" class="enlace-navegacion <%= currentPage === 'login' ? 'activo' : '' %>"
-                title="Iniciar sesión">
+            <a href="/usuarios/perfil" class="enlace-navegacion <%= currentPage === 'perfil' ? 'activo' : '' %>"
+                title="Mi perfil">
                 <div class="contenedor-icono">
-                    <span class="icono-nav">🔐</span>
-                    <% if (currentPage==='login' ) { %>
+                    <span class="icono-nav">👤</span>
+                    <% if (currentPage==='perfil' ) { %>
                         <span class="indicador-activo"></span>
                         <% } %>
                 </div>
-                <span class="texto-enlace">Ingresar</span>
+                <span class="texto-enlace">Mi Perfil</span>
+            </a>
+            <!-- Cerrar sesión -->
+            <a href="/logout" class="enlace-navegacion" title="Cerrar sesión">
+                <div class="contenedor-icono">
+                    <span class="icono-nav">🚪</span>
+                </div>
+                <span class="texto-enlace">Salir</span>
             </a>
             <% } %>
+
+                <!-- Enlaces de administración (solo para admin) -->
+                <% if (rol==='admin' ) { %>
+                    <a href="/admin" class="enlace-navegacion" title="Panel de administración">
+                        <div class="contenedor-icono">
+                            <span class="icono-nav">⚙️</span>
+                        </div>
+                        <span class="texto-enlace">Admin</span>
+                    </a>
+                    <% } %>
 </nav>

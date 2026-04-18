@@ -34,6 +34,8 @@
 const express = require('express');
 const usuarioController = require('../controllers/usuarioController');
 
+const { isGuest, isUser, isAdmin, redirectIfAuthenticated } = require('../middlewares/authMiddleware');
+
 // Router para rutas de administración
 const adminRouter = express.Router();
 
@@ -41,48 +43,48 @@ const adminRouter = express.Router();
 const publicRouter = express.Router();
 
 // ============================================================
-// RUTAS PÚBLICAS SIN AUTENTICACIÓN (registro)
+// RUTAS PÚBLICAS SIN AUTENTICACIÓN (INVITADOS)
 // ============================================================
 
 
 // GET /register - Mostrar formulario de registro
-publicRouter.get('/register', usuarioController.mostrarFormRegistro);
+publicRouter.get('/register', redirectIfAuthenticated, usuarioController.mostrarFormRegistro);
 
 // POST /register - Registro de nuevos usuarios
-publicRouter.post('/register', usuarioController.registrar);
+publicRouter.post('/register', redirectIfAuthenticated, usuarioController.registrar);
 
-publicRouter.get('/login', usuarioController.mostrarFormLogin);
+publicRouter.get('/login', redirectIfAuthenticated, usuarioController.mostrarFormLogin);
+
+publicRouter.post('/login', redirectIfAuthenticated, usuarioController.login);
 
 // ============================================================
 // RUTAS PÚBLICAS CON AUTENTICACIÓN (perfil del usuario logueado)
 // ============================================================
 
-publicRouter.post('/login', usuarioController.login);
-
-publicRouter.get('/logout', usuarioController.logout);
-publicRouter.post('/logout', usuarioController.logout);
-
 // GET /usuarios/perfil - Ver mi perfil
-publicRouter.get('/perfil', usuarioController.verMiPerfil);
+publicRouter.get('/perfil', isUser, usuarioController.verMiPerfil);
 
 // GET /usuarios/perfil/editar - Formulario para editar mi perfil
-publicRouter.get('/perfil/editar', usuarioController.editarMiPerfil);
+publicRouter.get('/perfil/editar', isUser, usuarioController.editarMiPerfil);
 
 // PUT /usuarios/perfil - Actualizar mi perfil (vía _method=PUT)
-publicRouter.put('/perfil', usuarioController.actualizarMiPerfil);
+publicRouter.put('/perfil', isUser, usuarioController.actualizarMiPerfil);
 
 // GET /usuarios/cambiar-password - Formulario para cambiar contraseña
-publicRouter.get('/cambiar-password', usuarioController.formCambiarPassword);
+publicRouter.get('/cambiar-password', isUser, usuarioController.formCambiarPassword);
 
 // PUT /usuarios/cambiar-password - Actualizar contraseña
-publicRouter.put('/cambiar-password', usuarioController.actualizarPassword);
+publicRouter.put('/cambiar-password', isUser, usuarioController.actualizarPassword);
 
 // GET /usuarios/pedidos - Historial de pedidos del usuario
-publicRouter.get('/pedidos', usuarioController.misPedidos);
+publicRouter.get('/pedidos', isUser, usuarioController.misPedidos);
 
 // GET /usuarios/pedidos/:id - Ver detalle de un pedido específico
-publicRouter.get('/pedidos/:id', usuarioController.detallePedido);
+publicRouter.get('/pedidos/:id', isUser, usuarioController.detallePedido);
 
+publicRouter.get('/logout', isUser, usuarioController.logout);
+
+publicRouter.post('/logout', isUser, usuarioController.logout);
 // ============================================================
 // RUTAS DE ADMINISTRACIÓN
 // ============================================================
@@ -90,26 +92,26 @@ publicRouter.get('/pedidos/:id', usuarioController.detallePedido);
 // ── Rutas estáticas primero (antes de /:id para evitar conflictos)
 
 // GET  /admin/usuarios
-adminRouter.get('/', usuarioController.listar);
+adminRouter.get('/', isAdmin, usuarioController.listar);
 
 // GET  /admin/usuarios/nuevo
-adminRouter.get('/nuevo', usuarioController.mostrarFormNuevo);
+adminRouter.get('/nuevo', isAdmin, usuarioController.mostrarFormNuevo);
 
 // POST /admin/usuarios
-adminRouter.post('/', usuarioController.crear);
+adminRouter.post('/', isAdmin, usuarioController.crear);
 
 // ── Rutas dinámicas con :id
 
 // GET  /admin/usuarios/:id/editar
-adminRouter.get('/:id/editar', usuarioController.mostrarFormEditar);
+adminRouter.get('/:id/editar', isAdmin, usuarioController.mostrarFormEditar);
 
 // POST /admin/usuarios/:id (actualizar, simula PUT)
-adminRouter.post('/:id', usuarioController.actualizar);
+adminRouter.post('/:id', isAdmin, usuarioController.actualizar);
 
-adminRouter.put('/:id', usuarioController.actualizar);
+adminRouter.put('/:id', isAdmin, usuarioController.actualizar);
 
 // POST /admin/usuarios/:id/baja (toggle activo, simula DELETE)
-adminRouter.post('/:id/baja', usuarioController.toggleBaja);
+adminRouter.post('/:id/baja', isAdmin, usuarioController.toggleBaja);
 
 // ============================================================
 // EXPORTS

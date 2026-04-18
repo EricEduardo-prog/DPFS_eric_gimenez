@@ -28,32 +28,33 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/categoriaController');
+const { isAdmin } = require('../middlewares/authMiddleware');
 
 // ── Rutas estáticas primero (antes de /:id para evitar conflictos) ────────────
 
 // GET  /admin/categorias
-router.get('/', controller.listar);
+router.get('/', isAdmin, controller.listar);
 
 // GET  /admin/categorias/nueva
-router.get('/nueva', controller.mostrarFormNueva);
+router.get('/nueva', isAdmin, controller.mostrarFormNueva);
 
 // POST /admin/categorias
-router.post('/', controller.crear);
+router.post('/', isAdmin, controller.crear);
 
 // GET  /admin/categorias/api/lista  → JSON para <select> de productos
-router.get('/api/lista', controller.apiLista);
+router.get('/api/lista', isAdmin, controller.apiLista);
 
 // ── Rutas dinámicas con :id ────────────────────────────────────────────────────
 
 // GET  /admin/categorias/:id/editar
-router.get('/:id/editar', controller.mostrarFormEditar);
+router.get('/:id/editar', isAdmin, controller.mostrarFormEditar);
 
 // PUT /admin/categorias/:id  (actualizar)
-router.put('/:id', controller.actualizar);
+router.put('/:id', isAdmin, controller.actualizar);
 
-router.post('/:id', controller.actualizar);   // POST con _method=PUT
+router.post('/:id', isAdmin, controller.actualizar);   // POST con _method=PUT
 
-router.delete('/:id/baja', controller.toggleBaja);  // DELETE /admin/categorias/:id/baja
-router.post('/:id/baja', controller.toggleBaja);    // POST con _method=DELETE
+router.delete('/:id/baja', isAdmin, controller.toggleBaja);  // DELETE /admin/categorias/:id/baja
+router.post('/:id/baja', isAdmin, controller.toggleBaja);    // POST con _method=DELETE
 
 module.exports = router;

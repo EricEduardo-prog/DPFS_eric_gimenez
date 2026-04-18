@@ -6,29 +6,7 @@ var logger = require('morgan');
 const methodOverride = require('method-override');
 const session = require('express-session');
 
-// Routers 
-var indexRouter = require('./routes/index');
-var categoriaRouter = require('./routes/categoriaRoutes');
-var productoRouter = require('./routes/productoRoutes');
-var profesionalesRouter = require('./routes/profesionalesRoutes');
-var usuarioRouter = require('./routes/usuarioRoutes');
-var servicioRouter = require('./routes/servicioRoutes');
-var validacionesRouter = require('./routes/validacionRoutes');
-
 var app = express();
-
-app.use(methodOverride('_method'));
-app.use(express.urlencoded({ extended: true })); // Asegurar que parsea bien el body
-
-// view engine 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-
-// Middlewares
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 
 // ============================================================
 // Configuración de sesión
@@ -43,6 +21,46 @@ app.use(session({
         maxAge: 24 * 60 * 60 * 1000  // 24 horas
     }
 }));
+
+// Middleware global para pasar rol a todas las vistas
+app.use((req, res, next) => {
+    if (req.session?.usuarioId) {
+        //comparar directamente con 'admin'
+        const esAdmin = req.session?.rol === 'admin';
+        res.locals.rol = esAdmin ? 'admin' : 'user';
+        res.locals.usuarioId = req.session.usuarioId;
+        res.locals.usuarioNombre = req.session.usuarioNombre;
+    } else {
+        res.locals.rol = 'guest';
+        res.locals.usuarioId = null;
+        res.locals.usuarioNombre = null;
+    }
+    next();
+});
+
+// Routers 
+var indexRouter = require('./routes/index');
+var categoriaRouter = require('./routes/categoriaRoutes');
+var productoRouter = require('./routes/productoRoutes');
+var profesionalesRouter = require('./routes/profesionalesRoutes');
+var usuarioRouter = require('./routes/usuarioRoutes');
+var servicioRouter = require('./routes/servicioRoutes');
+var validacionesRouter = require('./routes/validacionRoutes');
+
+
+app.use(methodOverride('_method'));
+app.use(express.urlencoded({ extended: true })); // Asegurar que parsea bien el body
+
+// view engine 
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+// Middlewares
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+
 
 //Archivos estaticos
 app.use(express.static(path.join(__dirname, 'public')));
