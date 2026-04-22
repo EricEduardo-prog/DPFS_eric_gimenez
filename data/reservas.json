@@ -1,0 +1,110 @@
+{
+  "_meta": {
+    "version": "1.0.0",
+    "descripcion": "Reservas de productos y servicios (pre-compra)",
+    "ultimaActualizacion": "2026-04-21T23:21:53.382Z"
+  },
+  "reservas": [
+    {
+      "id": "res_001",
+      "usuarioId": null,
+      "sessionId": "obhopuKGczM9xkdLHbx-YMqKOZ0dCFgf",
+      "items": [
+        {
+          "id": "item_1776781180643_ojvy",
+          "productoId": "prod_004",
+          "servicioId": null,
+          "cantidad": 1,
+          "precioUnitario": 149999,
+          "nombre": "Termotanque Eléctrico 80L"
+        }
+      ],
+      "createdAt": "2026-04-21T14:19:40.641Z",
+      "updatedAt": "2026-04-21T14:19:40.643Z"
+    },
+    {
+      "id": "res_002",
+      "usuarioId": "usr_007",
+      "sessionId": null,
+      "items": [
+        {
+          "id": "item_1776796900794_mp2t",
+          "productoId": "prod_001",
+          "servicioId": null,
+          "cantidad": 1,
+          "precioUnitario": 199999,
+          "nombre": "Aire Acondicionado Split 4500 Frigorías"
+        }
+      ],
+      "createdAt": "2026-04-21T18:41:40.790Z",
+      "updatedAt": "2026-04-21T18:41:40.794Z"
+    },
+    {
+      "id": "res_003",
+      "usuarioId": null,
+      "sessionId": "guest_1776786272517_j8logxj1",
+      "items": [
+        {
+          "id": "item_1776797904584_5u5e",
+          "productoId": "prod_004",
+          "servicioId": null,
+          "cantidad": 1,
+          "precioUnitario": 149999,
+          "nombre": "Termotanque Eléctrico 80L"
+        }
+      ],
+      "createdAt": "2026-04-21T18:41:42.940Z",
+      "updatedAt": "2026-04-21T19:10:11.253Z"
+    },
+    {
+      "id": "res_004",
+      "usuarioId": "usr_004",
+      "sessionId": null,
+      "items": [
+        {
+          "id": "item_1776813009597_jae0",
+          "productoId": "prod_002",
+          "servicioId": null,
+          "cantidad": 1,
+          "precioUnitario": 109999,
+          "nombre": "Taladro Percutor Inalámbrico 20V"
+        },
+        {
+          "id": "item_1776813174535_q98u",
+          "productoId": "prod_006",
+          "servicioId": null,
+          "cantidad": 3,
+          "precioUnitario": 425211,
+          "nombre": "Lampara Oveja"
+        },
+        {
+          "id": "item_1776813710679_js4l",
+          "productoId": "prod_001",
+          "servicioId": null,
+          "cantidad": 5,
+          "precioUnitario": 199999,
+          "nombre": "Aire Acondicionado Split 4500 Frigorías"
+        }
+      ],
+      "createdAt": "2026-04-21T18:58:11.788Z",
+      "updatedAt": "2026-04-21T23:21:53.382Z"
+    },
+    {
+      "id": "res_005",
+      "usuarioId": null,
+      "sessionId": "guest_1776799438287_cup1nsxe",
+      "items": [
+        {
+          "id": "item_1776809957078_hs84",
+          "productoId": "prod_002",
+          "servicioId": null,
+          "cantidad": 4,
+          "precioUnitario": 109999,
+          "nombre": "Taladro Percutor Inalámbrico 20V"
+        }
+      ],
+      "createdAt": "2026-04-21T19:23:58.291Z",
+      "updatedAt": "2026-04-21T22:19:24.849Z"
+    }
+  ]
+}

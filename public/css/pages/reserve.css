@@ -1,0 +1,436 @@
+/* ============================================================
+   reserve.css - Estilos para la vista de reserva (pre-compra)
+   Timeline paso a paso, acordeón colapsable
+   ============================================================ */
+
+.reserva-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--espacio-xl) var(--espacio-md);
+}
+
+/* Header */
+.reserva-header {
+    margin-bottom: var(--espacio-xl);
+}
+
+.reserva-titulo {
+    font-size: var(--fuente-tamano-xxl);
+    font-weight: var(--fuente-altura-l);
+    margin-bottom: var(--espacio-xs);
+}
+
+.reserva-subtitulo {
+    color: var(--color-texto-secundario);
+}
+
+/* Grid principal */
+.reserva-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: var(--espacio-xl);
+}
+
+@media (max-width: 768px) {
+    .reserva-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================================
+   ACORDEÓN
+   ============================================================ */
+.acordeon-seccion {
+    background: var(--color-fondo);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-borde-mediano);
+    margin-bottom: var(--espacio-md);
+    overflow: hidden;
+}
+
+.acordeon-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: var(--espacio-md) var(--espacio-lg);
+    background: var(--color-fondo-secundario);
+    border: none;
+    cursor: pointer;
+    font-weight: var(--fuente-altura);
+    transition: background var(--transicion-rapida);
+}
+
+.acordeon-header:hover {
+    background: var(--color-fondo-hover);
+}
+
+.acordeon-titulo {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-sm);
+}
+
+.acordeon-icono {
+    font-size: var(--fuente-tamano-lg);
+}
+
+.acordeon-conteo {
+    background: var(--color-primario);
+    color: var(--color-fondo);
+    padding: 2px 8px;
+    border-radius: var(--radio-borde-completo);
+    font-size: var(--fuente-tamano-xs);
+    margin-left: var(--espacio-sm);
+}
+
+.acordeon-chevron {
+    transition: transform var(--transicion-rapida);
+}
+
+.acordeon-abierto .acordeon-chevron {
+    transform: rotate(180deg);
+}
+
+.acordeon-contenido {
+    display: none;
+    padding: var(--espacio-lg);
+}
+
+.acordeon-abierto .acordeon-contenido {
+    display: block;
+}
+
+.seccion-vacia {
+    text-align: center;
+    padding: var(--espacio-lg);
+    color: var(--color-texto-terciario);
+}
+
+/* ============================================================
+   ITEM DE RESERVA
+   ============================================================ */
+.reserva-item {
+    display: flex;
+    gap: var(--espacio-md);
+    padding: var(--espacio-md) 0;
+    border-bottom: 1px solid var(--color-borde);
+}
+
+.reserva-item:last-child {
+    border-bottom: none;
+}
+
+.item-imagen {
+    width: 80px;
+    height: 80px;
+    background: var(--color-fondo-secundario);
+    border-radius: var(--radio-borde-pequeno);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.item-imagen-placeholder {
+    font-size: 32px;
+}
+
+.item-info {
+    flex: 1;
+}
+
+.item-nombre {
+    font-size: var(--fuente-tamano-base);
+    font-weight: var(--fuente-altura);
+    margin-bottom: var(--espacio-xs);
+}
+
+.item-sku {
+    font-size: var(--fuente-tamano-xs);
+    color: var(--color-texto-terciario);
+    margin-bottom: var(--espacio-sm);
+}
+
+.item-acciones {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-md);
+}
+
+/* Selector de cantidad */
+.selector-cantidad {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-borde-pequeno);
+    overflow: hidden;
+}
+
+.btn-cantidad {
+    width: 32px;
+    height: 32px;
+    background: var(--color-fondo);
+    border: none;
+    cursor: pointer;
+    font-size: var(--fuente-tamano-lg);
+    transition: background var(--transicion-rapida);
+}
+
+.btn-cantidad:hover {
+    background: var(--color-fondo-secundario);
+}
+
+.input-cantidad {
+    width: 50px;
+    text-align: center;
+    border: none;
+    border-left: 1px solid var(--color-borde);
+    border-right: 1px solid var(--color-borde);
+    background: var(--color-fondo);
+}
+
+.btn-eliminar {
+    background: none;
+    border: none;
+    color: var(--color-error);
+    cursor: pointer;
+    font-size: var(--fuente-tamano-sm);
+    padding: var(--espacio-xs) var(--espacio-sm);
+    border-radius: var(--radio-borde-pequeno);
+    transition: background var(--transicion-rapida);
+}
+
+.btn-eliminar:hover {
+    background: var(--color-error-suave);
+}
+
+/* Precios */
+.item-precio {
+    text-align: right;
+    flex-shrink: 0;
+    min-width: 120px;
+}
+
+.precio-unitario {
+    display: block;
+    font-size: var(--fuente-tamano-sm);
+    color: var(--color-texto-terciario);
+    text-decoration: line-through;
+}
+
+.precio-total {
+    display: block;
+    font-size: var(--fuente-tamano-lg);
+    font-weight: var(--fuente-altura);
+    color: var(--color-primario);
+}
+
+/* ============================================================
+   FECHA DE INSTALACIÓN
+   ============================================================ */
+.fecha-instalacion {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-md);
+}
+
+.fecha-info {
+    font-size: var(--fuente-tamano-sm);
+    color: var(--color-texto-secundario);
+}
+
+.selector-fecha {
+    display: flex;
+    gap: var(--espacio-md);
+}
+
+.input-fecha,
+.input-horario {
+    padding: var(--espacio-sm);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-borde-pequeno);
+    background: var(--color-fondo);
+}
+
+/* ============================================================
+   RESUMEN DEL PEDIDO
+   ============================================================ */
+.resumen-pedido {
+    background: var(--color-fondo);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-borde-mediano);
+    padding: var(--espacio-lg);
+    position: sticky;
+    top: var(--espacio-xl);
+}
+
+.resumen-titulo {
+    font-size: var(--fuente-tamano-lg);
+    margin-bottom: var(--espacio-lg);
+}
+
+.linea-resumen {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--espacio-sm) 0;
+    font-size: var(--fuente-tamano-sm);
+    color: var(--color-texto-secundario);
+}
+
+.monto {
+    font-weight: var(--fuente-altura);
+    color: var(--color-texto);
+}
+
+.monto.gratis {
+    color: var(--color-exito);
+}
+
+.separador {
+    height: 1px;
+    background: var(--color-borde);
+    margin: var(--espacio-md) 0;
+}
+
+.linea-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--fuente-tamano-lg);
+    font-weight: var(--fuente-altura-l);
+    margin-top: var(--espacio-md);
+}
+
+.monto-total {
+    color: var(--color-primario);
+}
+
+/* Opciones de pago */
+.opciones-pago {
+    margin: var(--espacio-lg) 0;
+    padding: var(--espacio-md);
+    background: var(--color-fondo-secundario);
+    border-radius: var(--radio-borde-pequeno);
+}
+
+.opcion-pago {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-sm);
+    font-size: var(--fuente-tamano-sm);
+}
+
+/* Botón finalizar */
+.btn-finalizar {
+    width: 100%;
+    padding: var(--espacio-md);
+    background: var(--color-primario);
+    color: var(--color-fondo);
+    border: none;
+    border-radius: var(--radio-borde-mediano);
+    font-size: var(--fuente-tamano-base);
+    font-weight: var(--fuente-altura);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--espacio-sm);
+    transition: background var(--transicion-rapida);
+}
+
+.btn-finalizar:hover {
+    background: var(--color-primario-hover);
+}
+
+/* Aviso login */
+.aviso-login {
+    text-align: center;
+    padding: var(--espacio-md);
+    background: var(--color-fondo-secundario);
+    border-radius: var(--radio-borde-pequeno);
+}
+
+.btn-login {
+    display: inline-block;
+    margin-top: var(--espacio-sm);
+    padding: var(--espacio-sm) var(--espacio-lg);
+    background: var(--color-primario);
+    color: var(--color-fondo);
+    border-radius: var(--radio-borde-pequeno);
+    text-decoration: none;
+}
+
+/* Beneficios */
+.beneficios {
+    display: flex;
+    justify-content: center;
+    gap: var(--espacio-lg);
+    margin-top: var(--espacio-lg);
+    padding-top: var(--espacio-md);
+    border-top: 1px solid var(--color-borde);
+}
+
+.beneficio-item {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-xs);
+    font-size: var(--fuente-tamano-xs);
+    color: var(--color-texto-secundario);
+}
+
+/* ============================================================
+   ESTADO VACÍO
+   ============================================================ */
+.reserva-vacio {
+    text-align: center;
+    padding: var(--espacio-xxl);
+    background: var(--color-fondo);
+    border-radius: var(--radio-borde-mediano);
+}
+
+.btn-volver-tienda {
+    display: inline-block;
+    margin-top: var(--espacio-lg);
+    padding: var(--espacio-sm) var(--espacio-lg);
+    background: var(--color-primario);
+    color: var(--color-fondo);
+    border-radius: var(--radio-borde-pequeno);
+    text-decoration: none;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+    .reserva-item {
+        flex-direction: column;
+    }
+
+    .item-precio {
+        text-align: left;
+    }
+
+    .selector-fecha {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .reserva-container {
+        padding: var(--espacio-lg) var(--espacio-sm);
+    }
+
+    .acordeon-header {
+        padding: var(--espacio-sm) var(--espacio-md);
+    }
+
+    .acordeon-contenido {
+        padding: var(--espacio-md);
+    }
+
+    .beneficios {
+        flex-direction: column;
+        align-items: center;
+        gap: var(--espacio-sm);
+    }
+}

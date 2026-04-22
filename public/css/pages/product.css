@@ -19,9 +19,11 @@
    sticky en desktop (1361px+)
 ------------------*/
 
+/*
 .carrusel-imagenes {
-  /* sin sticky por defecto — se activa en + de 1361px */
-}
+   sin sticky por defecto — se activa en + de 1361px 
+} 
+*/
 
 .imagen-principal {
   width: 100%;
@@ -240,6 +242,8 @@
   border: 2px solid var(--color-borde);
   border-radius: var(--radio-borde-mediano);
   overflow: hidden;
+  background: var(--color-fondo);
+  justify-content: space-evenly;
 }
 
 .boton-cantidad {
@@ -266,8 +270,15 @@
   font-size: var(--fuente-tamano-lg);
   font-weight: var(--fuente-altura);
   padding: var(--espacio-md);
+  background: var(--color-fondo);
 }
 
+/* Quitar flechas del input number */
+.input-cantidad::-webkit-inner-spin-button,
+.input-cantidad::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
 /* ------------------
    Integrador de servicio
@@ -733,6 +744,11 @@
   box-shadow: var(--sombra-media);
 }
 
+.boton-comprar.agregando {
+  background: var(--color-exito);
+  opacity: 0.8;
+  cursor: wait;
+}
 
 /* ------------------
    Responsive

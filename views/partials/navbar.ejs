@@ -22,19 +22,16 @@
     </a>
 
     <!-- Enlace Carrito -->
-    <a href="/cart" class="enlace-navegacion <%= currentPage === 'cart' ? 'activo' : '' %>"
-        title="Ver carrito de compras">
+    <a href="/reserva" class="enlace-navegacion <%= currentPage === 'reserve' ? 'activo' : '' %>" title="Ver reserva">
         <div class="contenedor-icono">
             <span class="icono-nav">🛒</span>
 
-            <span class="contador-notificacion">
-                +9 <!-- hardcodeado-->
-            </span>
-            <% if (currentPage==='cart' ) { %>
+            <span class="contador-notificacion" id="reservaContador" style="display: none;">0</span>
+            <% if (currentPage==='reserve' ) { %>
                 <span class="indicador-activo"></span>
                 <% } %>
         </div>
-        <span class="texto-enlace">Carrito</span>
+        <span class="texto-enlace">Reserva</span>
     </a>
     <!-- Enlace Perfil/Login según rol -->
     <% if (rol==='guest' ) { %>
@@ -78,3 +75,5 @@
                     </a>
                     <% } %>
 </nav>
+
+ <script src="/js/navBarCount.js"></script>

@@ -26,16 +26,6 @@ router.get('/categorias', indexController.listarCategorias);
 /* GET all products */
 router.get('/productos', indexController.listarProductos);
 
-/* GET cart page */
-router.get('/cart', function (req, res, next) {
-  res.render('layout', {
-    title: 'Carrito - E-E',
-    pageCss: 'cart',
-    currentPage: 'cart',
-    body: 'pages/products/cart'
-  });
-});
-
 /* GET productDetail page */
 router.get('/detail/:id?', indexController.verProducto);
 

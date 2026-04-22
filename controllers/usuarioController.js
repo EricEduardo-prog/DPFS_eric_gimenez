@@ -2,6 +2,7 @@
 
 const usuarioModel = require('../models/usuarioModel');
 const bcrypt = require('bcrypt');
+const reservaModel = require('../models/reservaModel');
 //const bcrypt = require('bcryptjs'); 
 
 const SALT_ROUNDS = 10;
@@ -285,6 +286,23 @@ async function login(req, res) {
         // Redirigir según opción "recordarme"
         if (recordarme === 'true') {
             req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000; // 30 días
+        }
+
+        // Fusionar reserva de guests con la del usuario logueado
+        const guestId = req.cookies?.guestId;
+
+        if (guestId) {
+            const reservaGuest = reservaModel.getBySessionId(guestId);
+            const reservaUser = reservaModel.getByUsuarioId(usuario.id);
+
+            if (reservaGuest && reservaUser) {
+                reservaModel.mergeReservas(reservaGuest.id, reservaUser.id);
+            } else if (reservaGuest && !reservaUser) {
+                reservaModel.actualizarUsuarioId(reservaGuest.id, usuario.id);
+            }
+
+            // Limpiar cookie guestId
+            res.clearCookie('guestId');
         }
 
         return res.redirect('/perfil?mensaje=Bienvenido de nuevo, ' + usuario.nombre + '!');

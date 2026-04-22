@@ -1,32 +1,42 @@
-<%
-  // Calcular descuento
-  const tieneDescuento = producto.precioOriginal && producto.precioOriginal > producto.precio;
-  const descuento = tieneDescuento ? Math.round(((producto.precioOriginal - producto.precio) / producto.precioOriginal) * 100) : 0;
-  
-  // Calcular rating
-  const ratingValor = producto.rating?.valor || 0;
-  const ratingEntero = Math.floor(ratingValor);
-  const tieneMedia = ratingValor - ratingEntero >= 0.5;
-  
-  // Normalizar arrays
-  const colores = Array.isArray(producto.colores) 
+<% 
+    // Calcular descuento
+    const tieneDescuento=producto.precioOriginal && producto.precioOriginal> producto.precio;
+    const descuento = tieneDescuento ? Math.round(((producto.precioOriginal - producto.precio) /
+    producto.precioOriginal) * 100) : 0;
+
+    // Calcular rating
+    const ratingValor = producto.rating?.valor || 0;
+    const ratingEntero = Math.floor(ratingValor);
+    const tieneMedia = ratingValor - ratingEntero >= 0.5;
+
+    // Normalizar arrays
+    const colores = Array.isArray(producto.colores)
     ? producto.colores.flatMap(c => String(c).split(',').map(s => s.trim()).filter(Boolean))
     : [];
-  const talles = Array.isArray(producto.talles) 
+    const talles = Array.isArray(producto.talles)
     ? producto.talles.flatMap(t => String(t).split(',').map(s => s.trim()).filter(Boolean))
     : [];
-  const caracteristicas = Array.isArray(producto.caracteristicas) 
-    ? producto.caracteristicas 
+    const caracteristicas = Array.isArray(producto.caracteristicas)
+    ? producto.caracteristicas
     : (producto.caracteristicas ? [producto.caracteristicas] : []);
-  
-  // Generar imágenes
-  const imagenes = [producto.imagen, ...(producto.imagenes || [])].filter(img => img && img !== '-' && img !== '.');
-  const imagenPrincipal = imagenes[0] || '/images/placeholder.png';
-  
-  // Instalación
-  const instalacionDisponible = producto.instalacion?.disponible || false;
-  const precioInstalacion = producto.instalacion?.precio || 0;
-%>
+
+    // Generar imágenes
+    const imagenes = [producto.imagen, ...(producto.imagenes || [])].filter(img => img && img !== '-' && img !== '.');
+    const imagenPrincipal = imagenes[0] || '/images/placeholder.png';
+
+    // Instalación
+    const instalacionDisponible = producto.instalacion?.disponible || false;
+    const precioInstalacion = producto.instalacion?.precio || 0;
+
+    // Pasar datos a JavaScript mediante data attributes
+    const dataProducto = {
+    id: producto.id,
+    nombre: producto.nombre.replace(/'/g, "\\'"),
+    precio: producto.precio,
+    precioInstalacion: precioInstalacion,
+    instalacionDisponible: instalacionDisponible
+    };
+    %>
 
     <div class="contenedor">
         <!-- Carrusel de imágenes -->
@@ -49,6 +59,7 @@
 
         <!-- Información del producto -->
         <section class="seccion-informacion">
+            <!-- Encabezado -->
             <div class="encabezado-producto">
                 <h1 class="nombre-producto">
                     <%= producto.nombre %>
@@ -98,7 +109,8 @@
             <!-- Precios -->
             <div class="seccion-precios">
                 <div class="precio-actual">
-                    <span class="monto">$<%= producto.precio.toLocaleString('es-AR') %></span>
+                    <span class="monto" data-precio="<%= producto.precio %>">$<%=
+                            producto.precio.toLocaleString('es-AR') %></span>
                     <% if (tieneDescuento) { %>
                         <span class="precio-anterior">$<%= producto.precioOriginal.toLocaleString('es-AR') %></span>
                         <span class="badge-descuento">-<%= descuento %>%</span>
@@ -122,35 +134,31 @@
                             <polyline points="22 4 12 14.01 9 11.01"></polyline>
                         </svg>
                         <span>Pago en efectivo: $<%= Math.round(producto.precio * 0.95).toLocaleString('es-AR') %>
-                                </span>
+                        </span>
                     </div>
                 </div>
             </div>
 
             <!-- Selector de cantidad -->
-            <div class="seccion-cantidad">
-                <label class="etiqueta-cantidad">Cantidad</label>
-                <div class="selector-cantidad">
-                    <button class="boton-cantidad" aria-label="Disminuir cantidad">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                        </svg>
-                    </button>
-                    <input type="number" value="1" min="1" max="10" class="input-cantidad" readonly>
-                    <button class="boton-cantidad" aria-label="Aumentar cantidad">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                        </svg>
-                    </button>
-                </div>
+            <div class="selector-cantidad">
+                <button type="button" class="boton-cantidad" aria-label="Disminuir cantidad">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                </button>
+                <input type="number" id="cantidadProducto" value="1" min="1" max="99" class="input-cantidad"
+                    aria-label="Cantidad">
+                <button type="button" class="boton-cantidad" aria-label="Aumentar cantidad">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                </button>
             </div>
 
-            <!-- Integración de servicio (solo si disponible) -->
+            <!-- Instalación (solo si disponible) -->
             <% if (instalacionDisponible) { %>
-                <div class="integracion-servicio">
+                <div class="integracion-servicio" id="integracionServicio">
                     <div class="encabezado-servicio">
                         <div class="icono-titulo">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -166,41 +174,28 @@
                     <div class="opcion-servicio opcion-activa">
                         <div class="contenido-opcion">
                             <div class="selector-opcion">
-                                <input type="checkbox" class="checkbox-servicio" checked>
+                                <input type="checkbox" id="checkboxInstalacion" class="checkbox-servicio" checked>
                                 <div class="info-opcion">
                                     <label class="etiqueta-opcion">
                                         <span class="titulo-opcion">Incluir instalación</span>
                                     </label>
                                     <p class="descripcion-opcion">Instalación profesional certificada</p>
                                     <div class="indicadores-calidad">
-                                        <span class="badge-calidad certificado">
-                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                                                stroke="currentColor" stroke-width="2">
-                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                            </svg>
-                                            Certificado
-                                        </span>
-                                        <span class="badge-calidad garantia">
-                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                                                stroke="currentColor" stroke-width="2">
-                                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                                            </svg>
-                                            6 meses garantía
-                                        </span>
+                                        <span class="badge-calidad certificado">✅ Certificado</span>
+                                        <span class="badge-calidad garantia">🔧 6 meses garantía</span>
                                     </div>
                                 </div>
                             </div>
                             <% if (precioInstalacion> 0) { %>
                                 <div class="precio-opcion">
-                                    <span class="precio-servicio">$<%= precioInstalacion.toLocaleString('es-AR') %>
-                                            </span>
+                                    <span class="precio-servicio" data-precio-instalacion="<%= precioInstalacion %>">$
+                                        <%= precioInstalacion.toLocaleString('es-AR') %>
+                                    </span>
                                 </div>
                                 <% } %>
                         </div>
                     </div>
 
-                    <!-- Selector de fecha -->
                     <div class="selector-fecha">
                         <div class="encabezado-fecha">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -212,7 +207,6 @@
                             </svg>
                             <h4 class="titulo-fecha">Fecha de instalación</h4>
                         </div>
-
                         <div class="fecha-seleccionada">
                             <div class="info-fecha">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -236,20 +230,23 @@
                     <!-- Total dinámico -->
                     <div class="seccion-total">
                         <div class="desglose-total">
-                            <div class="linea-desglose">
+                            <div class="linea-desglose" id="lineaProducto">
                                 <span>Producto (1 unidad)</span>
-                                <span class="monto">$<%= producto.precio.toLocaleString('es-AR') %></span>
+                                <span class="monto" id="montoProducto">$<%= producto.precio.toLocaleString('es-AR') %>
+                                </span>
                             </div>
                             <% if (instalacionDisponible && precioInstalacion> 0) { %>
-                                <div class="linea-desglose">
+                                <div class="linea-desglose" id="lineaInstalacion">
                                     <span>Instalación profesional</span>
-                                    <span class="monto">$<%= precioInstalacion.toLocaleString('es-AR') %></span>
+                                    <span class="monto" id="montoInstalacion">$<%=
+                                            precioInstalacion.toLocaleString('es-AR') %></span>
                                 </div>
                                 <% } %>
                                     <div class="linea-total">
                                         <span>Total a pagar</span>
-                                        <span class="monto-total">$<%= (producto.precio + (instalacionDisponible ?
-                                                precioInstalacion : 0)).toLocaleString('es-AR') %></span>
+                                        <span class="monto-total" id="montoTotal">$<%= (producto.precio +
+                                                (instalacionDisponible ? precioInstalacion : 0)).toLocaleString('es-AR')
+                                                %></span>
                                     </div>
                         </div>
                     </div>
@@ -315,37 +312,33 @@
     <div class="barra-acciones-producto">
         <div class="contenedor">
             <div class="contenido-barra-acciones">
-                <button class="boton-carrito">
+                <button class="boton-carrito" id="btnAgregarReserva">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="9" cy="21" r="1"></circle>
                         <circle cx="20" cy="21" r="1"></circle>
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                     </svg>
-                    <span>Agregar al carrito</span>
-                    <span class="total-carrito">$<%= (producto.precio + (instalacionDisponible ? precioInstalacion :
-                            0)).toLocaleString('es-AR') %></span>
+                    <span class="btn-texto">Agregar a reserva</span>
+                    <span class="total-carrito" id="totalCarrito">$<%= (producto.precio + (instalacionDisponible ?
+                            precioInstalacion : 0)).toLocaleString('es-AR') %></span>
                 </button>
-
-                <button class="boton-comprar">
-                    <span>Comprar ahora</span>
+                <button class="boton-comprar" id="btnVerReservas">
+                    <span>Ver reservas</span>
                 </button>
             </div>
         </div>
     </div>
 
+    <!-- Datos del producto para JavaScript -->
     <script>
-        // Miniaturas
-        const miniaturas = document.querySelectorAll('.miniatura');
-        const imagenPrincipal = document.querySelector('.imagen-principal img');
-
-        miniaturas.forEach(mini => {
-            mini.addEventListener('click', () => {
-                const nuevaImagen = mini.dataset.imagen;
-                if (nuevaImagen && imagenPrincipal) {
-                    imagenPrincipal.src = nuevaImagen;
-                    miniaturas.forEach(m => m.classList.remove('activa'));
-                    mini.classList.add('activa');
-                }
-            });
-        });
+        window.productoData = {
+            id: '<%= dataProducto.id %>',
+            nombre: '<%= dataProducto.nombre %>',
+            precio: parseInt('<%= dataProducto.precio %>'),
+            precioInstalacion: parseInt('<%= dataProducto.precioInstalacion %>'),
+            instalacionDisponible: '<%= dataProducto.instalacionDisponible %>' === 'true'
+        };
     </script>
+
+    <!-- JavaScript externo -->
+    <script src="/js/product-detail.js"></script>

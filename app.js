@@ -5,20 +5,45 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const methodOverride = require('method-override');
 const session = require('express-session');
+const FileStore = require('session-file-store')(session);
 
 var app = express();
 
-// ============================================================
-// Configuración de sesión
-// ============================================================
+// Routers 
+var indexRouter = require('./routes/index');
+var categoriaRouter = require('./routes/categoriaRoutes');
+var productoRouter = require('./routes/productoRoutes');
+var profesionalesRouter = require('./routes/profesionalesRoutes');
+var usuarioRouter = require('./routes/usuarioRoutes');
+var servicioRouter = require('./routes/servicioRoutes');
+var validacionesRouter = require('./routes/validacionRoutes');
+var reservaRouter = require('./routes/reservaRoutes');
+
+// Middlewares Basicos
+app.use(express.urlencoded({ extended: true })); // Asegurar que parsea bien el body
+app.use(express.json());
+app.use(cookieParser());
+
+// Crear carpeta sessions en el directorio del proyecto
+const sessionsDir = path.join(__dirname, 'sessions');
+
+// Configuración de sesión con persistencia en disco
 app.use(session({
+    store: new FileStore({
+        path: sessionsDir,
+        ttl: 86400,
+        reapInterval: 3600,
+        retries: 0,  // ← No reintentar
+        logFn: function () { }  // ← Silenciar logs de errores
+    }),
     secret: 'SHHHHHHHH! Es un secreto para la sesión en E-E',
     resave: false,
     saveUninitialized: false,
+    rolling: true,  // ← Renovar sesión en cada petición
     cookie: {
-        secure: false,        // true si usas HTTPS
+        secure: false,
         httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000  // 24 horas
+        maxAge: 24 * 60 * 60 * 1000
     }
 }));
 
@@ -38,28 +63,16 @@ app.use((req, res, next) => {
     next();
 });
 
-// Routers 
-var indexRouter = require('./routes/index');
-var categoriaRouter = require('./routes/categoriaRoutes');
-var productoRouter = require('./routes/productoRoutes');
-var profesionalesRouter = require('./routes/profesionalesRoutes');
-var usuarioRouter = require('./routes/usuarioRoutes');
-var servicioRouter = require('./routes/servicioRoutes');
-var validacionesRouter = require('./routes/validacionRoutes');
+
 
 
 app.use(methodOverride('_method'));
-app.use(express.urlencoded({ extended: true })); // Asegurar que parsea bien el body
+app.use(logger('dev'));
 
 // view engine 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// Middlewares
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 
 
 //Archivos estaticos
@@ -90,7 +103,12 @@ app.use('/', usuarioRouter.publicRouter); // POST /register
 
 app.use('/usuarios', usuarioRouter.publicRouter); // Rutas de perfil, login, logout, etc.
 
-app.use('/', indexRouter); // Home, cart, productDetail, etc.
+// Ruta de reservas
+app.use('/reserva', reservaRouter); // Rutas de reserva
+
+app.use('/', indexRouter); // Home, productDetail, etc.
+
+
 
 // Ruta admin dashboard
 app.get('/admin', (req, res) => res.redirect('/admin/productos'));
@@ -134,11 +152,14 @@ app.use(function (req, res, next) {
 
 // error handler
 app.use(function (err, req, res, next) {
-    // set locals, only providing error in development
+    // ✅ Si ya se enviaron los headers, no intentar enviar otra respuesta
+    if (res.headersSent) {
+        return next(err);
+    }
+
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-    // render the error page
     console.error('Error global:', err);
     res.status(err.status || 500).send(`
         <h1>Error del servidor</h1>

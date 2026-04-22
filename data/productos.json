@@ -218,7 +218,7 @@
       "talles": [
         "12.000Volts"
       ],
-      "precio": 425.211,
+      "precio": 425211,
       "precioOriginal": 1000,
       "instalacion": {
         "disponible": false,
@@ -240,7 +240,7 @@
       "categoriaId": "cat_011",
       "descripcion": "Descontracturante de espalda usando las manos u herramientas para la correcta y reconformante experiencia al usuario.",
       "imagen": ".",
-      "precio": 159.888,
+      "precio": 159888,
       "precioOriginal": 1000,
       "colores": [],
       "talles": [],
