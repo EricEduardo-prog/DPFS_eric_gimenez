@@ -1,22 +1,5 @@
 'use strict';
 
-/**
- * profesionalesController.js
- * Lógica de negocio para el módulo de Profesionales.
- *
- * Rutas que maneja (registradas en profesionalesRoutes.js):
- *  GET    /admin/profesionales               → listar
- *  GET    /admin/profesionales/nuevo         → formulario alta
- *  POST   /admin/profesionales               → crear
- *  GET    /admin/profesionales/:id/editar    → formulario edición
- *  POST   /admin/profesionales/:id           → actualizar
- *  POST   /admin/profesionales/:id/baja      → toggle activo
- *
- * Nota sobre campos de solo lectura:
- *   valoracion y trabajosCompletados no se incluyen en ningún body
- *   que se pase a model.update(). El modelo los ignora por diseño,
- *   pero el controller tampoco los expone.
- */
 
 const ProfesionalesModel = require('../models/profesionalesModel');
 const ServicioModel = require('../models/servicioModel');
@@ -25,6 +8,8 @@ const SolicitudModel = require('../models/solicitudServicioModel');
 const profesionalesModel = ProfesionalesModel;
 const servicioModel = ServicioModel;
 const solicitudModel = SolicitudModel;
+
+const { validationResult } = require('express-validator');
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers internos
@@ -54,47 +39,6 @@ function _getServicioNombre(profesional, servicios) {
     return 'No especificado';
 }
 
-function _validar(body) {
-    const errores = [];
-
-    if (!body.nombre?.trim())
-        errores.push('El nombre es obligatorio.');
-
-    if (!body.matricula?.trim())
-        errores.push('La matrícula es obligatoria.');
-    else if (!/^(MP|MN)-\d{4,6}$/i.test(body.matricula.trim()))
-        errores.push('La matrícula debe tener el formato MP-NNNNN o MN-NNNNN.');
-
-    // ✅ Validar servicio
-    if (body.tipoServicio === 'existente') {
-        if (!body.servicioId) {
-            errores.push('Debe seleccionar un servicio.');
-        }
-    } else if (body.tipoServicio === 'otro') {
-        if (!body.nuevoServicio?.trim()) {
-            errores.push('Debe especificar el nombre del servicio.');
-        } else if (body.nuevoServicio.trim().length > 80) {
-            errores.push('El nombre del servicio no puede superar los 80 caracteres.');
-        }
-    } else {
-        errores.push('Debe seleccionar un servicio o solicitar uno nuevo.');
-    }
-
-    // Validar experiencia
-    if (body.experienciaAnios !== undefined && body.experienciaAnios !== '') {
-        const exp = Number(body.experienciaAnios);
-        if (isNaN(exp) || exp < 0 || exp > 50) {
-            errores.push('La experiencia debe ser un número entre 0 y 50 años.');
-        }
-    }
-
-    if (!body.email?.trim())
-        errores.push('El email es obligatorio.');
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email.trim()))
-        errores.push('El email no tiene un formato válido.');
-
-    return errores;
-}
 
 function _optsForm(titulo, profesional, errores, formData = null) {
     return {
@@ -141,110 +85,6 @@ function _normalizarDisponibilidad(body) {
     return disponibilidad;
 }
 
-/**
- * Valida los datos de un profesional
- * @param {Object} body - req.body
- * @param {boolean} esEdicion - Indica si es una edición (true) o creación (false)
- * @param {Array} serviciosExistentes - Lista de servicios para validar IDs (opcional)
- * @returns {Array} Array de mensajes de error (vacío si todo es válido)
- */
-function _validarProfesional(body, esEdicion = false, serviciosExistentes = []) {
-    const errores = [];
-
-    // ============================================================
-    // 1. VALIDAR NOMBRE
-    // ============================================================
-    if (!body.nombre?.trim()) {
-        errores.push('El nombre completo es obligatorio.');
-    } else if (body.nombre.trim().length > 100) {
-        errores.push('El nombre no puede superar los 100 caracteres.');
-    } else if (!/^[a-zA-ZáéíóúñÁÉÍÓÚÑ\s]+$/.test(body.nombre.trim())) {
-        errores.push('El nombre solo puede contener letras y espacios.');
-    }
-
-    // ============================================================
-    // 2. VALIDAR MATRÍCULA
-    // ============================================================
-    if (!body.matricula?.trim()) {
-        errores.push('La matrícula es obligatoria.');
-    } else {
-        const matricula = body.matricula.trim().toUpperCase();
-        // Formato: MP-12345 o MN-12345 (4-6 dígitos)
-        const matriculaRegex = /^(MP|MN)-\d{4,6}$/i;
-        if (!matriculaRegex.test(matricula)) {
-            errores.push('La matrícula debe tener el formato MP-12345 o MN-12345 (4-6 dígitos).');
-        }
-    }
-
-    // ============================================================
-    // 3. VALIDAR SERVICIO
-    // ============================================================
-    if (body.tipoServicio === 'existente') {
-        if (!body.servicioId) {
-            errores.push('Debe seleccionar un servicio.');
-        } else if (serviciosExistentes.length > 0) {
-            // Validar que el servicio ID existe en la lista de servicios
-            const servicioExiste = serviciosExistentes.some(s => s.id === body.servicioId);
-            if (!servicioExiste) {
-                errores.push('El servicio seleccionado no es válido.');
-            }
-        }
-    } else if (body.tipoServicio === 'otro') {
-        if (!body.nuevoServicio?.trim()) {
-            errores.push('Debe especificar el nombre del nuevo servicio.');
-        } else if (body.nuevoServicio.trim().length > 80) {
-            errores.push('El nombre del servicio no puede superar los 80 caracteres.');
-        } else if (body.nuevoServicio.trim().length < 3) {
-            errores.push('El nombre del servicio debe tener al menos 3 caracteres.');
-        }
-    } else {
-        errores.push('Debe seleccionar un servicio o solicitar uno nuevo.');
-    }
-
-    // ============================================================
-    // 4. VALIDAR EXPERIENCIA (años)
-    // ============================================================
-    if (body.experienciaAnios !== undefined && body.experienciaAnios !== '') {
-        const experiencia = Number(body.experienciaAnios);
-        if (isNaN(experiencia)) {
-            errores.push('La experiencia debe ser un número válido.');
-        } else if (experiencia < 0) {
-            errores.push('La experiencia no puede ser negativa.');
-        } else if (experiencia > 50) {
-            errores.push('La experiencia no puede superar los 50 años.');
-        }
-    }
-
-    // ============================================================
-    // 5. VALIDAR EMAIL
-    // ============================================================
-    if (!body.email?.trim()) {
-        errores.push('El email es obligatorio.');
-    } else {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(body.email.trim())) {
-            errores.push('El email no tiene un formato válido.');
-        }
-        // Validar longitud máxima
-        if (body.email.trim().length > 100) {
-            errores.push('El email no puede superar los 100 caracteres.');
-        }
-    }
-
-    // ============================================================
-    // 6. VALIDAR TELÉFONO 
-    // ============================================================
-    if (body.telefono?.trim()) {
-        // Formato: +54 9 223 456-7890 o similar
-        const telefonoRegex = /^[\+\d\s\-\(\)]{8,20}$/;
-        if (!telefonoRegex.test(body.telefono.trim())) {
-            errores.push('El teléfono no tiene un formato válido. Ej: +54 9 223 456-7890');
-        }
-    }
-
-
-    return errores;
-}
 // ─────────────────────────────────────────────────────────────────────────────
 // Controladores
 // ─────────────────────────────────────────────────────────────────────────────
@@ -306,9 +146,9 @@ async function crear(req, res, next) {
 
     const serviciosActivos = _getServiciosActivos();
 
-    const errores = _validarProfesional(req.body, false, serviciosActivos);
+    const errores = validationResult(req);
 
-    if (errores.length > 0) {
+    if (!errores.isEmpty()) {
         return res.render('layout', {
             title: 'Nuevo Profesional — E-E Admin',
             pageCss: 'admin_form',
@@ -316,7 +156,7 @@ async function crear(req, res, next) {
             body: 'pages/admin/professionals/form',
             profesional: null,
             servicios: serviciosActivos,
-            errores: errores,
+            errores: errores.array().map(e => e.msg),
             formData: req.body
         });
     }
@@ -378,7 +218,7 @@ async function crear(req, res, next) {
             body: 'pages/admin/professionals/form',
             profesional: null,
             servicios: _getServiciosActivos(),
-            errores: [err.message],
+            errores: errores.array().map(e => e.msg).concat([err.message]),
             formData: req.body
         });
     }
@@ -419,9 +259,9 @@ function actualizar(req, res, next) {
     const serviciosActivos = _getServiciosActivos();
 
     // Validar datos (esEdicion = true)
-    const errores = _validarProfesional(req.body, true, serviciosActivos);
+    const errores = validationResult(req);
 
-    if (errores.length > 0) {
+    if (!errores.isEmpty()) {
         const profesional = profesionalesModel.getById(req.params.id);
         return res.render('layout', {
             title: 'Editar Profesional — E-E Admin',
@@ -430,7 +270,7 @@ function actualizar(req, res, next) {
             body: 'pages/admin/professionals/form',
             profesional: profesional,
             servicios: serviciosActivos,
-            errores: errores,
+            errores: errores.array().map(e => e.msg),
             formData: req.body
         });
     }
@@ -476,7 +316,7 @@ function actualizar(req, res, next) {
             body: 'pages/admin/professionals/form',
             profesional: profesional,
             servicios: _getServiciosActivos(),
-            errores: [err.message],
+            errores: errores.array().map(e => e.msg).concat([err.message]),
             formData: req.body
         });
     }

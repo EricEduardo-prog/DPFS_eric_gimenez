@@ -8,6 +8,8 @@ const ReservaModel = require('../models/reservaModel');
 const usuarioModel = UsuarioModel;
 const reservaModel = ReservaModel;
 
+const { validationResult } = require('express-validator');
+
 const SALT_ROUNDS = 10;
 
 // Las funciones auxiliares como _normalizarDireccion también deben estar definidas
@@ -59,48 +61,17 @@ async function registrar(req, res) {
     });
 
     // Validar datos
-    const errores = [];
+    const errores = validationResult(req);
 
-    // Nombre
-    if (!req.body.nombre?.trim()) {
-        errores.push('El nombre es obligatorio.');
-    } else if (req.body.nombre.trim().length > 100) {
-        errores.push('El nombre no puede superar los 100 caracteres.');
-    }
-
-    // Email
-    if (!req.body.email?.trim()) {
-        errores.push('El email es obligatorio.');
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.body.email.trim())) {
-        errores.push('El email no tiene un formato válido.');
-    }
-
-    // Contraseña
-    if (!req.body.password?.trim()) {
-        errores.push('La contraseña es obligatoria.');
-    } else if (req.body.password.trim().length < 6) {
-        errores.push('La contraseña debe tener al menos 6 caracteres.');
-    }
-
-    // Confirmar contraseña
-    if (req.body.password !== req.body.confirmPassword) {
-        errores.push('Las contraseñas no coinciden.');
-    }
-
-    // Términos
-    if (req.body.aceptoTerminos !== 'true' && req.body.aceptoTerminos !== true) {
-        errores.push('Debes aceptar los términos y condiciones.');
-    }
-
-    if (errores.length > 0) {
-        console.log('⚠️ Errores de validación:', errores);
+    if (!errores.isEmpty()) {
+        console.log('⚠️ Errores de validación:', errores.array().map(e => e.msg));
         return res.render('layout-auth', {
             title: 'Registro - E-E',
             body: 'pages/users/register-content',
             authScript: 'register',
             currentPage: 'register',
             pageCss: [],
-            errores: errores,
+            errores: errores.array().map(e => e.msg),
             formData: req.body
         });
     }
@@ -155,7 +126,7 @@ async function registrar(req, res) {
             authScript: 'register',
             currentPage: 'register',
             pageCss: [],
-            errores: ['Ocurrió un error al procesar el registro. Por favor, intentá nuevamente.'],
+            errores: errores.array().map(e => e.msg).concat(['Ocurrió un error al procesar el registro. Por favor, intentá nuevamente.']),
             formData: req.body
         });
     }
@@ -193,25 +164,16 @@ async function login(req, res) {
     console.log('🔵 POST /login - Body:', req.body);
 
     const { email, password, recordarme } = req.body;
-    const errores = [];
+    const errores = validationResult(req);
 
-    // Validaciones
-    if (!email?.trim()) {
-        errores.push('El email es obligatorio.');
-    }
-
-    if (!password?.trim()) {
-        errores.push('La contraseña es obligatoria.');
-    }
-
-    if (errores.length > 0) {
+    if (!errores.isEmpty()) {
         return res.render('layout-auth', {
             title: 'Iniciar Sesión - E-E',
             body: 'pages/users/login-content',
             authScript: 'login',
             currentPage: 'login',
             pageCss: [],
-            errores: errores,
+            errores: errores.array().map(e => e.msg),
             formData: { email },
             mensaje: null
         });
@@ -229,7 +191,7 @@ async function login(req, res) {
                 authScript: 'login',
                 currentPage: 'login',
                 pageCss: [],
-                errores: ['Email o contraseña incorrectos.'],
+                errores: errores.array().map(e => e.msg).concat(['Email o contraseña incorrectos.']),
                 formData: { email },
                 mensaje: null
             });
@@ -246,7 +208,7 @@ async function login(req, res) {
                 body: 'pages/users/login-content',
                 authScript: 'login',
                 pageCss: [],
-                errores: ['Tu cuenta está desactivada. Contacta al administrador.'],
+                errores: errores.array().map(e => e.msg).concat(['Tu cuenta está desactivada. Contacta al administrador.']),
                 formData: { email },
                 mensaje: null
             });
@@ -263,7 +225,7 @@ async function login(req, res) {
                 authScript: 'login',
                 currentPage: 'login',
                 pageCss: [],
-                errores: ['Email o contraseña incorrectos.'],
+                errores: errores.array().map(e => e.msg).concat(['Email o contraseña incorrectos.']),
                 formData: { email },
                 mensaje: null
             });
@@ -413,26 +375,16 @@ function actualizarMiPerfil(req, res, next) {
     }
 
     // Validar solo los campos editables por el usuario
-    const errores = [];
+    const errores = validationResult(req);
 
-    if (!req.body.nombre?.trim()) {
-        errores.push('El nombre es obligatorio.');
-    } else if (req.body.nombre.trim().length > 100) {
-        errores.push('El nombre no puede superar los 100 caracteres.');
-    }
-
-    if (req.body.telefono?.trim() && !/^[\+\d\s\-\(\)]{8,20}$/.test(req.body.telefono.trim())) {
-        errores.push('El teléfono no tiene un formato válido.');
-    }
-
-    if (errores.length > 0) {
+    if (!errores.isEmpty()) {
         return res.render('layout', {
             title: 'Editar Perfil - E-E',
             body: 'pages/users/profile-edit',
             currentPage: 'profile',
             pageCss: ['admin_form', 'admin_list', 'user_profile'],
             usuario: usuarioExistente,
-            errores: errores,
+            errores: errores.array().map(e => e.msg),
             formData: req.body
         });
     }
@@ -458,7 +410,7 @@ function actualizarMiPerfil(req, res, next) {
             currentPage: 'profile',
             pageCss: ['admin_form', 'admin_list', 'user_profile'],
             usuario: usuarioExistente,
-            errores: [err.message],
+            errores: errores.array().map(e => e.msg).concat(['Ocurrió un error al actualizar el perfil.']),
             formData: req.body
         });
     }
@@ -510,30 +462,15 @@ async function actualizarPassword(req, res, next) {
     console.log('✅ Tiene passwordHash:', !!usuario.passwordHash);
 
     const { passwordActual, passwordNuevo, passwordConfirmar } = req.body;
-    const errores = [];
+    const errores = validationResult(req);
 
-    // Validar campos
-    if (!passwordActual?.trim()) {
-        errores.push('La contraseña actual es obligatoria.');
-    }
-
-    if (!passwordNuevo?.trim()) {
-        errores.push('La nueva contraseña es obligatoria.');
-    } else if (passwordNuevo.trim().length < 6) {
-        errores.push('La nueva contraseña debe tener al menos 6 caracteres.');
-    }
-
-    if (passwordNuevo !== passwordConfirmar) {
-        errores.push('Las contraseñas no coinciden.');
-    }
-
-    if (errores.length > 0) {
+    if (!errores.isEmpty()) {
         return res.render('layout', {
             title: 'Cambiar Contraseña - E-E',
             pageCss: ['user_profile', 'admin_form'],
             currentPage: 'cambiar-password',
             body: 'pages/users/change-password',
-            errores: errores,
+            errores: errores.array().map(e => e.msg),
             mensaje: null
         });
     }
@@ -550,7 +487,7 @@ async function actualizarPassword(req, res, next) {
                 pageCss: ['user-profile', 'admin_form'],
                 currentPage: 'cambiar-password',
                 body: 'pages/users/change-password',
-                errores: errores,
+                errores: errores.array().map(e => e.msg),
                 mensaje: null
             });
         }
@@ -715,21 +652,17 @@ function mostrarFormNuevo(req, res, next) {
 async function crear(req, res, next) {
     console.log('🔵 POST /admin/usuarios - Body:', req.body);
 
-    const errores = [];
+    const errores = validationResult(req);
 
-    if (!req.body.nombre?.trim()) errores.push('El nombre es obligatorio.');
-    if (!req.body.email?.trim()) errores.push('El email es obligatorio.');
-    if (!req.body.password?.trim()) errores.push('La contraseña es obligatoria.');
-    else if (req.body.password.trim().length < 6) errores.push('La contraseña debe tener al menos 6 caracteres.');
 
-    if (errores.length > 0) {
+    if (!errores.isEmpty()) {
         return res.render('layout', {
             title: 'Nuevo Usuario — E-E Admin',
             pageCss: 'admin_form',
             currentPage: 'admin',
             body: 'pages/admin/users/form',
             usuario: null,
-            errores: errores,
+            errores: errores.array().map(e => e.msg),
             formData: req.body
         });
     }
@@ -796,18 +729,17 @@ async function actualizar(req, res, next) {
         return res.redirect('/admin/usuarios?error=Usuario no encontrado.');
     }
 
-    const errores = [];
+    const errores = validationResult(req);
 
-    if (!req.body.nombre?.trim()) errores.push('El nombre es obligatorio.');
 
-    if (errores.length > 0) {
+    if (!errores.isEmpty()) {
         return res.render('layout', {
             title: 'Editar Usuario — E-E Admin',
             pageCss: 'admin_form',
             currentPage: 'admin',
             body: 'pages/admin/users/form',
             usuario: usuarioExistente,
-            errores: errores,
+            errores: errores.array().map(e => e.msg),
             formData: req.body
         });
     }

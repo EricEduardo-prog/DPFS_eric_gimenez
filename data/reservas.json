@@ -2,7 +2,7 @@
   "_meta": {
     "version": "1.0.0",
     "descripcion": "Reservas de productos y servicios (pre-compra)",
-    "ultimaActualizacion": "2026-04-25T19:53:39.062Z"
+    "ultimaActualizacion": "2026-04-27T15:37:44.091Z"
   },
   "reservas": [
     {
@@ -26,9 +26,29 @@
       "id": "res_002",
       "usuarioId": "usr_007",
       "sessionId": null,
-      "items": [],
+      "items": [
+        {
+          "id": "item_1777304072011_aema",
+          "productoId": "prod_012",
+          "servicioId": "serv_002",
+          "cantidad": 2,
+          "precioUnitario": 0,
+          "nombre": "Plomero / Gasista",
+          "profesionalId": "prof_006",
+          "fechaInstalacion": "2026-04-22",
+          "horarioInstalacion": "manana"
+        },
+        {
+          "id": "item_1777304224015_j5to",
+          "productoId": "prod_006",
+          "servicioId": null,
+          "cantidad": 1,
+          "precioUnitario": 425211,
+          "nombre": "Lampara Oveja"
+        }
+      ],
       "createdAt": "2026-04-21T18:41:40.790Z",
-      "updatedAt": "2026-04-25T19:53:39.062Z"
+      "updatedAt": "2026-04-27T15:37:04.015Z"
     },
     {
       "id": "res_003",
@@ -104,6 +124,26 @@
       "items": [],
       "createdAt": "2026-04-22T15:40:13.908Z",
       "updatedAt": "2026-04-22T17:40:18.211Z"
+    },
+    {
+      "id": "res_007",
+      "usuarioId": null,
+      "sessionId": "guest_1777304246315_0e1r9q5q",
+      "items": [
+        {
+          "id": "item_1777304264091_q5nu",
+          "productoId": "prod_012",
+          "servicioId": "serv_002",
+          "cantidad": 1,
+          "precioUnitario": 0,
+          "nombre": "Plomero / Gasista",
+          "profesionalId": "prof_003",
+          "fechaInstalacion": "2026-04-16",
+          "horarioInstalacion": "manana"
+        }
+      ],
+      "createdAt": "2026-04-27T15:37:44.090Z",
+      "updatedAt": "2026-04-27T15:37:44.091Z"
     }
   ]
 }

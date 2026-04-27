@@ -403,7 +403,7 @@
 
         //  Determinar el tipo según lo que se está agregando
         const esProductoConServicio = (servicioId && profesionalSeleccionado); // Si hay servicio y profesional, es servicio
-        
+
         const esProducto = (productoId && !esProductoConServicio); // Si no es servicio, es producto
 
 

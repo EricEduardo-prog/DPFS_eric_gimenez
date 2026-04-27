@@ -1,58 +1,9 @@
 'use strict';
 
-/**
- * categoriaController.js
- * Lógica de negocio para el módulo de Categorías.
- *
- * Responsabilidades:
- *  - Recibir req/res de Express
- *  - Validar los datos del body antes de llamar al modelo
- *  - Llamar al modelo y manejar sus errores
- *  - Renderizar vistas o redirigir con mensajes de feedback
- *
- * Rutas que maneja (registradas en categoriaRoutes.js):
- *  GET    /admin/categorias              → listar
- *  GET    /admin/categorias/nueva        → formulario alta
- *  POST   /admin/categorias              → crear
- *  GET    /admin/categorias/:id/editar   → formulario edición
- *  POST   /admin/categorias/:id          → actualizar (_method=PUT)
- *  POST   /admin/categorias/:id/baja     → toggle activo (_method=DELETE)
- *  GET    /admin/categorias/api/lista    → JSON para <select> de otros formularios
- */
-
 const CategoriaModel = require('../models/categoriaModel');
 const categoriaModel = CategoriaModel;  // alias para mantener consistencia con otros controladores
-// ─────────────────────────────────────────────────────────────────────────────
-// Helpers internos
-// ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * Valida los campos requeridos del formulario de categoría.
- * @param {Object} body - req.body
- * @returns {string[]} Array de mensajes de error. Vacío si todo es válido.
- */
-function _validar(body) {
-    const errores = [];
-
-    if (!body.nombre || !String(body.nombre).trim()) {
-        errores.push('El nombre es obligatorio.');
-    } else if (String(body.nombre).trim().length > 80) {
-        errores.push('El nombre no puede superar los 80 caracteres.');
-    }
-
-    if (body.descripcion && String(body.descripcion).trim().length > 200) {
-        errores.push('La descripción no puede superar los 200 caracteres.');
-    }
-
-    if (body.orden !== undefined && body.orden !== '') {
-        const orden = Number(body.orden);
-        if (isNaN(orden) || orden < 1) {
-            errores.push('El orden debe ser un número mayor a 0.');
-        }
-    }
-
-    return errores;
-}
+const { validationResult } = require('express-validator');
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Controladores
@@ -103,17 +54,17 @@ function mostrarFormNueva(req, res, next) {
 function crear(req, res, next) { 
     console.log('🔵 POST /admin/categorias - Body recibido:', req.body);
     
-    const errores = _validar(req.body);
+    const errores = validationResult(req);
 
-    if (errores.length > 0) {
-        console.log('⚠️ Errores de validación:', errores);
+    if (!errores.isEmpty()) {
+        console.log('⚠️ Errores de validación:', errores.array());
         return res.render('layout', {
             title: 'Nueva Categoría — E-E Admin',
-            pageCss: 'admin_forms_list',
+            pageCss: [ 'admin_form' , 'admin_list' ],  // ambos estilos para mostrar errores
             currentPage: 'admin',
             body: 'pages/admin/category/form',
             categoria: null,
-            errores,
+            errores: errores.array().map(e => e.msg),  // extraemos solo los mensajes de error
             formData: req.body,
         });
     }
@@ -130,11 +81,11 @@ function crear(req, res, next) {
         // Renderizar el formulario con el error
         res.render('layout', {
             title: 'Nueva Categoría — E-E Admin',
-            pageCss: 'admin_forms_list',
+            pageCss: ['admin_form' , 'admin_list'],  // ambos estilos para mostrar errores
             currentPage: 'admin',
             body: 'pages/admin/category/form',
             categoria: null,
-            errores: [err.message],
+            errores: errores.array().map(e => e.msg),
             formData: req.body,
         });
     }
@@ -171,18 +122,18 @@ function mostrarFormEditar(req, res, next) {
  * Procesa el formulario de edición.
  */
 function actualizar(req, res, next) {
-    const errores = _validar(req.body);
+    const errores = validationResult(req);
 
-    if (errores.length > 0) {
+    if (!errores.isEmpty()) {
         // Necesitamos el objeto original para pre-cargar el form con el id correcto
         const categoria = categoriaModel.getById(req.params.id);
         return res.render('layout', {
             title: 'Editar Categoría — E-E Admin',
-            pageCss: '  admin_forms_list',
+            pageCss: ['admin_form' , 'admin_list'],  // ambos estilos para mostrar errores
             currentPage: 'admin',
             body: 'pages/admin/category/form',
             categoria,
-            errores,
+            errores: errores.array().map(e => e.msg),
             formData: req.body,
         });
     }
@@ -194,11 +145,11 @@ function actualizar(req, res, next) {
         const categoria = categoriaModel.getById(req.params.id);
         res.render('layout', {
             title: 'Editar Categoría — E-E Admin',
-            pageCss: '  admin_forms_list',
+            pageCss: ['admin_form' , 'admin_list'],  // ambos estilos para mostrar errores
             currentPage: 'admin',
             body: 'pages/admin/category/form',
             categoria,
-            errores: [err.message],
+            errores: errores.array().map(e => e.msg),
             formData: req.body,
         });
     }

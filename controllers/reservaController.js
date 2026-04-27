@@ -6,11 +6,12 @@ const ServicioModel = require('../models/servicioModel');
 const ProfesionalesModel = require('../models/profesionalesModel');
 const createError = require('http-errors');
 
-const reservaModel = ReservaModel; 
+const reservaModel = ReservaModel;
 const productoModel = ProductoModel;
 const servicioModel = ServicioModel;
 const profesionalesModel = ProfesionalesModel;
 
+const { validationResult } = require('express-validator');
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers internos
 // ─────────────────────────────────────────────────────────────────────────────
@@ -54,6 +55,10 @@ async function _getOrCreateReserva(req, res) {
  * POST /reserva/agregar - Agregar item a la reserva
  */
 async function agregarItem(req, res, next) {
+    const errores = validationResult(req);
+    if (!errores.isEmpty()) {
+        return next(createError(400, 'Datos inválidos', { errors: errores.array() }));
+    }
     console.log('🔍 usuarioId en sesión:', req.session?.usuarioId);
     console.log('🔍 sessionId:', req.session?.id);
 
@@ -81,7 +86,7 @@ async function agregarItem(req, res, next) {
                 return next(createError(404, 'Servicio no encontrado'));
             }
             nombre = servicio.nombre;
-            precioBase = servicio.precio || 0;
+            let precioBase = servicio.precio || 0;
         } else {
             return next(createError(400, 'Debe especificar productoId o servicioId'));
         }
@@ -192,12 +197,12 @@ async function verReserva(req, res, next) {
         } else {
             reserva = await reservaModel.getBySessionId(sessionId);
         }
-        
+
         const items = reserva?.items || [];
 
         //  ENRIQUECER ITEMS CON DATOS DEL PROFESIONAL (si tienen profesionalId)
         // Esto permite mostrar nombre, rating y trabajos completados del profesional en la vista
-        
+
         const itemsEnriquecidos = await Promise.all(items.map(async (item) => {
             if (item.profesionalId) {
                 const profesional = profesionalesModel.getById(item.profesionalId);
@@ -262,6 +267,10 @@ async function verReserva(req, res, next) {
  * PUT /reserva/item/:itemId - Actualizar cantidad de un item
  */
 async function actualizarItem(req, res, next) {
+    const errores = validationResult(req);
+    if (!errores.isEmpty()) {
+        return next(createError(400, 'Datos inválidos', { errors: errores.array() }));
+    }
     try {
         const { itemId } = req.params;
         const { cantidad } = req.body;
@@ -341,6 +350,11 @@ async function contarItems(req, res, next) {
  * DELETE /reserva/item/:itemId - Eliminar un item
  */
 async function eliminarItem(req, res, next) {
+    const errores = validationResult(req);
+    if (!errores.isEmpty()) {
+        return next(createError(400, 'Datos inválidos', { errors: errores.array() }));
+    }
+
     try {
         const { itemId } = req.params;
 
