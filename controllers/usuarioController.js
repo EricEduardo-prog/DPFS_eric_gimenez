@@ -1,9 +1,12 @@
 'use strict';
 
-const usuarioModel = require('../models/usuarioModel');
+const UsuarioModel = require('../models/usuarioModel');
 const bcrypt = require('bcrypt');
-const reservaModel = require('../models/reservaModel');
+const ReservaModel = require('../models/reservaModel');
 //const bcrypt = require('bcryptjs'); 
+
+const usuarioModel = UsuarioModel;
+const reservaModel = ReservaModel;
 
 const SALT_ROUNDS = 10;
 

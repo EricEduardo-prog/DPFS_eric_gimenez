@@ -1,143 +1,115 @@
+// models/solicitudServicioModel.js
 'use strict';
-/**
- * solicitudServicioModel.js
- * Capa de persistencia para /data/solicitudes_servicios.json
- * Gestiona las solicitudes de nuevos servicios por parte de profesionales
- */
-const fs = require('fs');
+
 const path = require('path');
+const BaseModel = require('./BaseModel');
 
-const DATA_PATH = path.join(__dirname, '..', 'data', 'solicitudes_servicios.json');
+class SolicitudServicioModel extends BaseModel {
+    static DATA_PATH = path.join(__dirname, '..', 'data', 'solicitudes_servicios.json');
+    static COLECCION = 'solicitudes';
+    static PREFIJO_ID = 'sol_';
+    static PADDING_ID = 3;
 
-function _leerDatos() {
-    try {
-        const raw = fs.readFileSync(DATA_PATH, 'utf8');
-        const json = JSON.parse(raw);
-        if (!json.solicitudes) json.solicitudes = [];
-        return json;
-    } catch (err) {
-        return { solicitudes: [] };
+    /**
+     * Obtiene todas las solicitudes, opcionalmente filtradas por estado.
+     * @param {Object} opciones
+     * @param {string} [opciones.estado] - 'pendiente', 'aprobado', 'rechazado'
+     * @returns {Array}
+     */
+    static getAll({ estado = null } = {}) {
+        const datos = this._leerDatos(this.DATA_PATH, this.COLECCION);
+        let solicitudes = datos[this.COLECCION];
+        if (estado) {
+            solicitudes = solicitudes.filter(s => s.estado === estado);
+        }
+        // Ordenar por fechaSolicitud descendente (más recientes primero)
+        return solicitudes.sort((a, b) => new Date(b.fechaSolicitud) - new Date(a.fechaSolicitud));
+    }
+
+    /**
+     * Obtiene una solicitud por ID.
+     * @param {string} id
+     * @returns {Object|null}
+     */
+    static getById(id) {
+        const datos = this._leerDatos(this.DATA_PATH, this.COLECCION);
+        return datos[this.COLECCION].find(s => s.id === id) || null;
+    }
+
+    /**
+     * Obtiene todas las solicitudes de un profesional específico.
+     * @param {string} profesionalId
+     * @returns {Array}
+     */
+    static getByProfesionalId(profesionalId) {
+        const datos = this._leerDatos(this.DATA_PATH, this.COLECCION);
+        return datos[this.COLECCION].filter(s => s.profesionalId === profesionalId);
+    }
+
+    /**
+     * Crea una nueva solicitud de servicio.
+     * @param {Object} data
+     * @param {string|null} data.profesionalId
+     * @param {string} data.servicioSolicitado
+     * @param {string} [data.descripcion]
+     * @param {string} [data.estado] - 'pendiente' por defecto
+     * @returns {Object}
+     */
+    static create(data) {
+        const datos = this._leerDatos(this.DATA_PATH, this.COLECCION);
+        const solicitudes = datos[this.COLECCION];
+        const nueva = {
+            id: this._generarId(solicitudes, this.PREFIJO_ID, this.PADDING_ID),
+            profesionalId: data.profesionalId || null,
+            servicioSolicitado: String(data.servicioSolicitado).trim(),
+            descripcion: data.descripcion ? String(data.descripcion).trim() : '',
+            estado: data.estado || 'pendiente',
+            fechaSolicitud: new Date().toISOString(),
+            fechaRespuesta: null,
+            respuestaAdmin: null,
+        };
+        solicitudes.push(nueva);
+        this._escribirDatos(this.DATA_PATH, datos);
+        return nueva;
+    }
+
+    /**
+     * Actualiza el estado de una solicitud.
+     * @param {string} id
+     * @param {string} estado - 'aprobado' o 'rechazado'
+     * @param {string} respuestaAdmin
+     * @returns {Object}
+     */
+    static actualizarEstado(id, estado, respuestaAdmin) {
+        const datos = this._leerDatos(this.DATA_PATH, this.COLECCION);
+        const indice = datos[this.COLECCION].findIndex(s => s.id === id);
+        if (indice === -1) {
+            throw new Error(`No se encontró la solicitud con id "${id}".`);
+        }
+        datos[this.COLECCION][indice].estado = estado;
+        datos[this.COLECCION][indice].fechaRespuesta = new Date().toISOString();
+        datos[this.COLECCION][indice].respuestaAdmin = respuestaAdmin;
+        this._escribirDatos(this.DATA_PATH, datos);
+        return datos[this.COLECCION][indice];
+    }
+
+    /**
+     * Asigna el ID de un profesional a la primera solicitud pendiente que coincida con el servicio solicitado.
+     * Se usa cuando un profesional se registra con un servicio personalizado y luego se crea el profesional.
+     * @param {string} profesionalId
+     * @param {string} servicioSolicitado
+     * @returns {Object|null}
+     */
+    static actualizarProfesionalId(profesionalId, servicioSolicitado) {
+        const datos = this._leerDatos(this.DATA_PATH, this.COLECCION);
+        const indice = datos[this.COLECCION].findIndex(
+            s => s.servicioSolicitado === servicioSolicitado && s.profesionalId === null
+        );
+        if (indice === -1) return null;
+        datos[this.COLECCION][indice].profesionalId = profesionalId;
+        this._escribirDatos(this.DATA_PATH, datos);
+        return datos[this.COLECCION][indice];
     }
 }
 
-function _escribirDatos(json) {
-    fs.writeFileSync(DATA_PATH, JSON.stringify(json, null, 2), 'utf8');
-}
-
-function _generarId(solicitudes) {
-    if (!solicitudes || solicitudes.length === 0) return 'sol_001';
-    const nums = solicitudes.map(s => {
-        const match = String(s.id).match(/^sol_(\d+)$/);
-        return match ? parseInt(match[1], 10) : 0;
-    }).filter(n => !isNaN(n) && n > 0);
-    const maxNum = Math.max(...nums);
-    const siguiente = maxNum + 1;
-    return `sol_${String(siguiente).padStart(3, '0')}`;
-}
-
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Operaciones públicas
-// ─────────────────────────────────────────────────────────────────────────────
-
-/**
- * Obtiene todas las solicitudes
- * @param {Object} opciones
- * @param {string} [opciones.estado] - Filtrar por estado (pendiente, aprobado, rechazado)
- * @returns {Array}
- */
-function getAll({ estado = null } = {}) {
-    const { solicitudes } = _leerDatos();
-    let resultado = [...solicitudes];
-    if (estado) {
-        resultado = resultado.filter(s => s.estado === estado);
-    }
-    return resultado.sort((a, b) => new Date(b.fechaSolicitud) - new Date(a.fechaSolicitud));
-}
-
-/**
- * Obtiene una solicitud por ID
- * @param {string} id
- * @returns {Object|null}
- */
-function getById(id) {
-    const { solicitudes } = _leerDatos();
-    return solicitudes.find(s => s.id === id) || null;
-}
-
-/**
- * Obtiene solicitudes por profesionalId
- * @param {string} profesionalId
- * @returns {Array}
- */
-function getByProfesionalId(profesionalId) {
-    const { solicitudes } = _leerDatos();
-    return solicitudes.filter(s => s.profesionalId === profesionalId);
-}
-
-function create(data) {
-    const json = _leerDatos();
-    const solicitudes = json.solicitudes;
-    const nueva = {
-        id: _generarId(solicitudes),
-        profesionalId: data.profesionalId,
-        servicioSolicitado: data.servicioSolicitado,
-        descripcion: data.descripcion || '',
-        estado: data.estado || 'pendiente',
-        fechaSolicitud: new Date().toISOString(),
-        fechaRespuesta: null,
-        respuestaAdmin: null
-    };
-    json.solicitudes.push(nueva);
-    _escribirDatos(json);
-    return nueva;
-}
-
-/**
- * Actualiza el estado de una solicitud
- * @param {string} id
- * @param {string} estado
- * @param {string} respuestaAdmin
- * @returns {Object}
- */
-function actualizarEstado(id, estado, respuestaAdmin) {
-    console.log(`🔧 MODEL.solicitud.actualizarEstado - ID: ${id} -> ${estado}`);
-
-    const json = _leerDatos();
-    const indice = json.solicitudes.findIndex(s => s.id === id);
-
-    if (indice === -1) {
-        throw new Error(`No se encontró la solicitud con id "${id}".`);
-    }
-
-    json.solicitudes[indice].estado = estado;
-    json.solicitudes[indice].fechaRespuesta = new Date().toISOString();
-    json.solicitudes[indice].respuestaAdmin = respuestaAdmin;
-
-    _escribirDatos(json);
-
-    return json.solicitudes[indice];
-}
-
-/**
- * Actualiza el profesionalId de una solicitud (para cuando se crea el profesional)
- * @param {string} profesionalId
- * @param {string} servicioSolicitado
- * @returns {Object|null}
- */
-function actualizarProfesionalId(profesionalId, servicioSolicitado) {
-    console.log(`🔧 MODEL.solicitud.actualizarProfesionalId - Prof: ${profesionalId}`);
-
-    const json = _leerDatos();
-    const indice = json.solicitudes.findIndex(
-        s => s.servicioSolicitado === servicioSolicitado && s.profesionalId === null
-    );
-
-    if (indice === -1) return null;
-
-    json.solicitudes[indice].profesionalId = profesionalId;
-    _escribirDatos(json);
-
-    return json.solicitudes[indice];
-}
-module.exports = { create, actualizarEstado, getAll, getById, getByProfesionalId, actualizarProfesionalId };
+module.exports = SolicitudServicioModel;

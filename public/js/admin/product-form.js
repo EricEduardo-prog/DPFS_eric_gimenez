@@ -34,6 +34,8 @@
         const contenedor = document.getElementById(contenedorId);
         const input = document.getElementById(inputId);
         const hidden = document.getElementById(hiddenId);
+
+        // Si no se encuentran los elementos necesarios, salir sin hacer nada
         if (!contenedor || !input || !hidden) return;
 
         function getValues() {
@@ -42,6 +44,7 @@
         function updateHidden() {
             hidden.value = getValues().join(',');
         }
+
         function addChip(val) {
             val = val.trim();
             if (!val) return;
@@ -58,14 +61,14 @@
             updateHidden();
         }
 
-        // Bind existing delete buttons
+        // Permitir eliminar chips existentes (en caso de edición)
         contenedor.querySelectorAll('.chip__eliminar').forEach(btn => {
             btn.addEventListener('click', function () {
                 this.closest('.chip').remove();
                 updateHidden();
             });
         });
-
+        // Manejar entrada de nuevas chips
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ',') {
                 e.preventDefault();
@@ -77,6 +80,7 @@
                 updateHidden();
             }
         });
+        // Manejar pérdida de foco para agregar chip si hay texto
         input.addEventListener('blur', () => {
             if (input.value.trim()) {
                 addChip(input.value);
@@ -87,18 +91,38 @@
 
     // Inicializar toggle de instalación
     function initInstalacionToggle() {
-        const toggle = document.getElementById('instalacionDisponible');
-        const panel = document.getElementById('instalacionPanel');
-        if (toggle && panel) {
-            toggle.addEventListener('change', () => {
-                panel.classList.toggle('hidden', !toggle.checked);
-            });
+        const toggleInstalacion = document.getElementById('instalacionDisponible');
+        const selectServicio = document.getElementById('instalacionServicioId');
+        const panelInstalacion = document.getElementById('instalacionPanel');
+
+        if (!toggleInstalacion) return;
+
+        function actualizarEstado() {
+            const estaActivado = toggleInstalacion.checked;
+
+            if (panelInstalacion) {
+                if (estaActivado) {
+                    panelInstalacion.classList.remove('oculto');
+                } else {
+                    panelInstalacion.classList.add('oculto');
+                }
+            }
+
+            if (selectServicio) {
+                selectServicio.disabled = !estaActivado;
+                if (!estaActivado) {
+                    selectServicio.value = '';
+                }
+            }
         }
+
+        toggleInstalacion.addEventListener('change', actualizarEstado);
+        actualizarEstado(); // Estado inicial
     }
 
     // Calcular descuento
     function initDescuentoPreview() {
-        const precio = document.getElementById('precio');
+        const precio = document.getElementById('precioInstalacion');
         const original = document.getElementById('precioOriginal');
         const preview = document.getElementById('descuentoPreview');
         const badge = document.getElementById('descuentoBadge');

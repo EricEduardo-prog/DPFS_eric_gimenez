@@ -24,9 +24,19 @@
     const imagenes = [producto.imagen, ...(producto.imagenes || [])].filter(img => img && img !== '-' && img !== '.');
     const imagenPrincipal = imagenes[0] || '/images/placeholder.png';
 
-    // Instalación
+    // Datos de instalacion
     const instalacionDisponible = producto.instalacion?.disponible || false;
-    const precioInstalacion = producto.instalacion?.precio || 0;
+    // id del servicio de instalación (si existe)
+    const servicioId = producto.instalacion?.servicioId || null;
+
+    // Obtener precio de instalación si el servicio existe y tiene precio base
+    let precioInstalacion = 0;
+    if (instalacionDisponible && servicioId) {
+        const servicio = servicios.find(s => s.id === servicioId);
+        if (servicio && servicio.precioBase) {
+            precioInstalacion = servicio.precioBase;
+        }
+    }
 
     // Pasar datos a JavaScript mediante data attributes
     const dataProducto = {
@@ -36,8 +46,9 @@
     precioInstalacion: precioInstalacion,
     instalacionDisponible: instalacionDisponible
     };
-    %>
 
+    %>
+ 
     <div class="contenedor">
         <!-- Carrusel de imágenes -->
         <section class="carrusel-imagenes">
@@ -156,8 +167,8 @@
                 </button>
             </div>
 
-            <!-- Instalación (solo si disponible) -->
-            <% if (instalacionDisponible) { %>
+            <!-- Servicio (solo si disponible) -->
+            <% if (instalacionDisponible && precioInstalacion > 0) { %>
                 <div class="integracion-servicio" id="integracionServicio">
                     <div class="encabezado-servicio">
                         <div class="icono-titulo">
@@ -167,35 +178,33 @@
                                     d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z">
                                 </path>
                             </svg>
-                            <h3 class="titulo-servicio">Instalación profesional</h3>
+                            <h3 class="titulo-servicio">Servicio profesional</h3>
                         </div>
                     </div>
 
                     <div class="opcion-servicio opcion-activa">
                         <div class="contenido-opcion">
                             <div class="selector-opcion">
-                                <input type="checkbox" id="checkboxInstalacion" class="checkbox-servicio" checked>
+                                <input type="checkbox" id="checkboxInstalacion" class="checkbox-servicio" >
                                 <div class="info-opcion">
                                     <label class="etiqueta-opcion">
-                                        <span class="titulo-opcion">Incluir instalación</span>
+                                        <span class="titulo-opcion">Incluir Servicio</span>
                                     </label>
-                                    <p class="descripcion-opcion">Instalación profesional certificada</p>
+                                    <p class="descripcion-opcion">Servicio profesional certificado</p>
                                     <div class="indicadores-calidad">
                                         <span class="badge-calidad certificado">✅ Certificado</span>
                                         <span class="badge-calidad garantia">🔧 6 meses garantía</span>
                                     </div>
                                 </div>
                             </div>
-                            <% if (precioInstalacion> 0) { %>
-                                <div class="precio-opcion">
-                                    <span class="precio-servicio" data-precio-instalacion="<%= precioInstalacion %>">$
-                                        <%= precioInstalacion.toLocaleString('es-AR') %>
-                                    </span>
-                                </div>
-                                <% } %>
+                            <div class="precio-opcion">
+                                <span class="precio-servicio" data-precio-instalacion="0">A cotizar según
+                                    profesional</span>
+                            </div>
                         </div>
                     </div>
 
+                    <!-- Selector de fecha -->
                     <div class="selector-fecha">
                         <div class="encabezado-fecha">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -217,12 +226,27 @@
                                     <line x1="3" y1="10" x2="21" y2="10"></line>
                                 </svg>
                                 <div>
-                                    <span class="dia-fecha">Próxima fecha disponible</span>
-                                    <span class="horario-fecha">Consultar disponibilidad</span>
+                                    <input type="date" id="fechaInstalacion" class="input-fecha" value="">
+                                    <select id="horarioInstalacion" class="input-horario">
+                                        <option value="">Seleccionar horario</option>
+                                        <option value="manana">Mañana (08:00 - 13:00)</option>
+                                        <option value="tarde">Tarde (13:00 - 18:00)</option>
+                                    </select>
                                 </div>
                             </div>
-                            <button class="boton-cambiar-fecha">Cambiar</button>
                         </div>
+                    </div>
+
+                    <!-- Selector de profesional (se carga dinámicamente según fecha y horario) -->
+                    <div class="selector-profesional" id="selectorProfesional" style="display: none;">
+                        <h4 class="titulo-profesional">👨‍🔧 Elegir profesional</h4>
+                        <!-- Aquí se cargarán los profesionales disponibles mediante JavaScript -->
+                        <div class="grid-profesionales" id="gridProfesionales">
+                            <div class="cargando">Cargando profesionales disponibles...</div>
+                        </div>
+
+                        <input type="hidden" id="profesionalSeleccionado" name="profesionalId" value="">
+                        <p class="campo-formulario__ayuda">Seleccioná el profesional que realizará el servicio.</p>
                     </div>
                 </div>
                 <% } %>
@@ -235,7 +259,7 @@
                                 <span class="monto" id="montoProducto">$<%= producto.precio.toLocaleString('es-AR') %>
                                 </span>
                             </div>
-                            <% if (instalacionDisponible && precioInstalacion> 0) { %>
+                            <% if (instalacionDisponible && precioInstalacion > 0) { %>
                                 <div class="linea-desglose" id="lineaInstalacion">
                                     <span>Instalación profesional</span>
                                     <span class="monto" id="montoInstalacion">$<%=
@@ -319,8 +343,7 @@
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                     </svg>
                     <span class="btn-texto">Agregar a reserva</span>
-                    <span class="total-carrito" id="totalCarrito">$<%= (producto.precio + (instalacionDisponible ?
-                            precioInstalacion : 0)).toLocaleString('es-AR') %></span>
+                    <span class="total-carrito" id="totalReserva"></span>
                 </button>
                 <button class="boton-comprar" id="btnVerReservas">
                     <span>Ver reservas</span>
@@ -335,8 +358,9 @@
             id: '<%= dataProducto.id %>',
             nombre: '<%= dataProducto.nombre %>',
             precio: parseInt('<%= dataProducto.precio %>'),
-            precioInstalacion: parseInt('<%= dataProducto.precioInstalacion %>'),
-            instalacionDisponible: '<%= dataProducto.instalacionDisponible %>' === 'true'
+            precioInstalacion: parseInt('<%= precioInstalacion %>'),
+            instalacionDisponible: '<%= instalacionDisponible %>' === 'true',
+            servicioId: '<%= servicioId %>'
         };
     </script>
 

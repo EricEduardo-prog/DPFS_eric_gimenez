@@ -2,7 +2,7 @@
   "_meta": {
     "version": "1.0.0",
     "descripcion": "Reservas de productos y servicios (pre-compra)",
-    "ultimaActualizacion": "2026-04-21T23:21:53.382Z"
+    "ultimaActualizacion": "2026-04-25T19:53:39.062Z"
   },
   "reservas": [
     {
@@ -26,18 +26,9 @@
       "id": "res_002",
       "usuarioId": "usr_007",
       "sessionId": null,
-      "items": [
-        {
-          "id": "item_1776796900794_mp2t",
-          "productoId": "prod_001",
-          "servicioId": null,
-          "cantidad": 1,
-          "precioUnitario": 199999,
-          "nombre": "Aire Acondicionado Split 4500 Frigorías"
-        }
-      ],
+      "items": [],
       "createdAt": "2026-04-21T18:41:40.790Z",
-      "updatedAt": "2026-04-21T18:41:40.794Z"
+      "updatedAt": "2026-04-25T19:53:39.062Z"
     },
     {
       "id": "res_003",
@@ -105,6 +96,14 @@
       ],
       "createdAt": "2026-04-21T19:23:58.291Z",
       "updatedAt": "2026-04-21T22:19:24.849Z"
+    },
+    {
+      "id": "res_006",
+      "usuarioId": null,
+      "sessionId": "guest_1776872269571_opmc6am2",
+      "items": [],
+      "createdAt": "2026-04-22T15:40:13.908Z",
+      "updatedAt": "2026-04-22T17:40:18.211Z"
     }
   ]
 }

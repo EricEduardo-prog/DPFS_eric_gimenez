@@ -1,7 +1,12 @@
 'use strict';
 
-const productoModel = require('../models/productoModel');
-const categoriaModel = require('../models/categoriaModel');
+const ProductoModel = require('../models/productoModel');
+const CategoriaModel = require('../models/categoriaModel');
+const ServicioModel = require('../models/servicioModel');
+
+const productoModel = ProductoModel;  // alias para mantener consistencia con otros controladores
+const categoriaModel = CategoriaModel;  // alias para mantener consistencia con otros controladores
+const servicioModel = ServicioModel;  // alias para mantener consistencia con otros controladores
 
 /**
  * GET / - Página principal
@@ -10,10 +15,9 @@ function home(req, res, next) {
     try {
         const productos = productoModel.getAll({ soloActivos: true });
         const categorias = categoriaModel.getAll({ soloActivas: true });
-
         res.render('layout', {
             title: 'E-E - Todo para tu hogar',
-            pageCss: 'index',
+            pageCss: ['index', 'products_list'],
             currentPage: 'index',
             body: 'pages/index',
             query: '',
@@ -123,14 +127,16 @@ function verProducto(req, res, next) {
 
         const categorias = categoriaModel.getAll({ soloActivas: true });
         const categoria = categorias.find(c => c.id === producto.categoriaId);
+        const servicios = servicioModel.getAll({ soloActivos: true });
 
         res.render('layout', {
             title: `${producto.nombre} - E-E`,
-            pageCss: 'product',
+            pageCss: ['product', 'reserve'],
             currentPage: 'product',
             body: 'pages/products/detail',
             producto: producto,
-            categoria: categoria
+            categoria: categoria,
+            servicios: servicios
         });
     } catch (err) {
         next(err);

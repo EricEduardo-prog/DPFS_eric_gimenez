@@ -1,8 +1,12 @@
 'use strict';
 
-const profesionalModel = require('../models/profesionalesModel');
-const solicitudModel = require('../models/solicitudServicioModel');
-const servicioModel = require('../models/servicioModel');
+const ProfesionalModel = require('../models/profesionalesModel');
+const SolicitudModel = require('../models/solicitudServicioModel');
+const ServicioModel = require('../models/servicioModel');
+
+const profesionalModel = ProfesionalModel;
+const solicitudModel = SolicitudModel;
+const servicioModel = ServicioModel;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers internos

@@ -17,6 +17,7 @@ var profesionalesRouter = require('./routes/profesionalesRoutes');
 var usuarioRouter = require('./routes/usuarioRoutes');
 var servicioRouter = require('./routes/servicioRoutes');
 var validacionesRouter = require('./routes/validacionRoutes');
+var disponibilidadRouter = require('./routes/disponibilidadRoutes');
 var reservaRouter = require('./routes/reservaRoutes');
 
 // Middlewares Basicos
@@ -105,6 +106,11 @@ app.use('/usuarios', usuarioRouter.publicRouter); // Rutas de perfil, login, log
 
 // Ruta de reservas
 app.use('/reserva', reservaRouter); // Rutas de reserva
+
+// Ruta de disponibilidad
+app.use('/disponibilidad', disponibilidadRouter); // Rutas de disponibilidad
+
+
 
 app.use('/', indexRouter); // Home, productDetail, etc.
 

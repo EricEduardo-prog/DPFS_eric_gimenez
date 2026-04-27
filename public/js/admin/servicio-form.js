@@ -68,9 +68,11 @@
             // Cambiar color si se excede el límite
             if (len > maxLength) {
                 counter.style.color = 'var(--color-error)';
+                // Agregar clase de error al textarea
                 textarea.classList.add('entrada-error');
             } else {
                 counter.style.color = '';
+                // Solo quitar clase de error si no hay otros errores (ej. validación al enviar)
                 textarea.classList.remove('entrada-error');
             }
         }
@@ -135,7 +137,25 @@
             if (descripcion && descripcion.value.trim().length > 500) {
                 showError('error-descripcion', 'La descripción no puede superar los 500 caracteres.');
             }
+/*
+            // ============================================
+            // Validar precio base 
+            //============================================
 
+            // Validar precio base (solo si el campo existe en el formulario)
+            const precioBase = document.getElementById('precioBase');
+            console.log('Validando precioBase:', precioBase ? precioBase.value : 'Campo no encontrado');
+            if (!precioBase.value.trim()) {
+                showError('error-precioBase', 'El precio base es obligatorio.');
+            } else if ( precioBase.value.trim() && (isNaN(precioBase.value) || parseFloat(precioBase.value) <= 0)) {
+                showError('error-precioBase', 'El precio base debe ser un número mayor a 0.');
+            }
+
+            // Validar precio por hora (solo si el campo existe)
+            const precioPorHora = document.getElementById('precioPorHora');
+            if (precioPorHora && precioPorHora.value.trim() && parseFloat(precioPorHora.value) < 0) {
+                showError('error-precioPorHora', 'El precio por hora no puede ser negativo.');
+            }*/
             // ============================================
             // Si no es válido, prevenir el envío
             // ============================================

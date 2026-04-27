@@ -1,6 +1,8 @@
 'use strict';
 
-const servicioModel = require('../models/servicioModel');
+const ServicioModel = require('../models/servicioModel');
+
+const servicioModel = ServicioModel;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers internos

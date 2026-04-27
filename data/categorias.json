@@ -9,7 +9,7 @@
     "nota": "El campo 'id' es la clave foránea usada en productos.json. Si se cambia un id, actualizar todos los productos que lo referencian.",
     "nota_id": "El id es autoincremental. El próximo id se calcula como max(id numérico) + 1 en _generarId().",
     "nota_cantidad": "cantidadProductos es calculado. Se actualiza con recalcularCantidadProductos() al crear/editar/eliminar productos.",
-    "ultimaActualizacion": "2026-04-17T23:49:43.457Z"
+    "ultimaActualizacion": "2026-04-27T15:02:07.727Z"
   },
   "categorias": [
     {
@@ -21,7 +21,7 @@
       "activo": true,
       "orden": 1,
       "fechaCreacion": "2025-01-01T00:00:00.000Z",
-      "fechaModificacion": "2026-04-17T23:49:43.431Z",
+      "fechaModificacion": "2026-04-27T15:02:07.720Z",
       "cantidadProductos": 1
     },
     {
@@ -33,7 +33,7 @@
       "activo": true,
       "orden": 2,
       "fechaCreacion": "2025-01-01T00:00:00.000Z",
-      "fechaModificacion": "2026-04-17T23:49:43.433Z",
+      "fechaModificacion": "2026-04-27T15:02:07.720Z",
       "cantidadProductos": 1
     },
     {
@@ -45,7 +45,7 @@
       "activo": true,
       "orden": 3,
       "fechaCreacion": "2025-01-01T00:00:00.000Z",
-      "fechaModificacion": "2026-04-17T23:49:43.435Z",
+      "fechaModificacion": "2026-04-27T15:02:07.721Z",
       "cantidadProductos": 0
     },
     {
@@ -57,7 +57,7 @@
       "activo": true,
       "orden": 4,
       "fechaCreacion": "2025-01-01T00:00:00.000Z",
-      "fechaModificacion": "2026-04-17T23:49:43.436Z",
+      "fechaModificacion": "2026-04-27T15:02:07.722Z",
       "cantidadProductos": 2
     },
     {
@@ -69,8 +69,8 @@
       "activo": true,
       "orden": 5,
       "fechaCreacion": "2025-01-01T00:00:00.000Z",
-      "fechaModificacion": "2026-04-17T23:49:43.438Z",
-      "cantidadProductos": 1
+      "fechaModificacion": "2026-04-27T15:02:07.722Z",
+      "cantidadProductos": 4
     },
     {
       "id": "cat_006",
@@ -81,7 +81,7 @@
       "activo": true,
       "orden": 6,
       "fechaCreacion": "2025-01-01T00:00:00.000Z",
-      "fechaModificacion": "2026-04-17T23:49:43.440Z",
+      "fechaModificacion": "2026-04-27T15:02:07.723Z",
       "cantidadProductos": 0
     },
     {
@@ -93,7 +93,7 @@
       "activo": true,
       "orden": 7,
       "fechaCreacion": "2025-01-01T00:00:00.000Z",
-      "fechaModificacion": "2026-04-17T23:49:43.442Z",
+      "fechaModificacion": "2026-04-27T15:02:07.723Z",
       "cantidadProductos": 0
     },
     {
@@ -105,7 +105,7 @@
       "activo": true,
       "orden": 8,
       "fechaCreacion": "2025-01-01T00:00:00.000Z",
-      "fechaModificacion": "2026-04-17T23:49:43.449Z",
+      "fechaModificacion": "2026-04-27T15:02:07.724Z",
       "cantidadProductos": 1
     },
     {
@@ -118,7 +118,7 @@
       "activo": true,
       "orden": 9,
       "fechaCreacion": "2026-04-08T22:44:58.299Z",
-      "fechaModificacion": "2026-04-17T23:49:43.451Z"
+      "fechaModificacion": "2026-04-27T15:02:07.725Z"
     },
     {
       "id": "cat_010",
@@ -130,18 +130,18 @@
       "activo": true,
       "orden": 10,
       "fechaCreacion": "2026-04-08T22:44:58.301Z",
-      "fechaModificacion": "2026-04-17T23:49:43.453Z"
+      "fechaModificacion": "2026-04-27T15:02:07.726Z"
     },
     {
       "id": "cat_011",
       "slug": "masajista",
       "nombre": "Masajista",
-      "descripcion": "Profesionales con titulos habilitantes para desarrollar terapias corporales.",
+      "descripcion": "Profesionales con titulos habilitantes para desarrollar terapias corporales. Relax asegurado.",
       "icono": "💆",
       "activo": true,
       "orden": 11,
       "fechaCreacion": "2026-04-10T15:46:41.341Z",
-      "fechaModificacion": "2026-04-17T23:49:43.455Z",
+      "fechaModificacion": "2026-04-27T15:02:07.726Z",
       "cantidadProductos": 1
     },
     {
@@ -153,8 +153,20 @@
       "activo": true,
       "orden": 12,
       "fechaCreacion": "2026-04-14T21:54:08.267Z",
-      "fechaModificacion": "2026-04-17T23:49:43.457Z",
+      "fechaModificacion": "2026-04-27T15:02:07.727Z",
       "cantidadProductos": 1
+    },
+    {
+      "id": "cat_013",
+      "slug": "motores",
+      "nombre": "Motores",
+      "descripcion": "Motores",
+      "icono": "🃏",
+      "activo": true,
+      "orden": 13,
+      "fechaCreacion": "2026-04-27T14:58:17.100Z",
+      "fechaModificacion": "2026-04-27T15:02:07.727Z",
+      "cantidadProductos": 0
     }
   ]
 }

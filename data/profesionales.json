@@ -11,7 +11,8 @@
     ],
     "nota_valoracion": "El campo valoracion.valor y trabajosCompletados son de solo lectura desde el CRUD de instaladores. Se actualizan únicamente desde el módulo de órdenes/trabajos.",
     "nota_disponibilidad": "La grilla disponibilidad usa días en español sin tildes como clave. Turnos: manana (08:00-13:00) y tarde (13:00-18:00).",
-    "nota_validacion": "Los campos servicioId, servicioPersonalizado, estadoServicio, certificacionUrl, certificacionVerificada, fechaValidacion, validadoPor y observacionAdmin son para el sistema de validación de profesionales."
+    "nota_validacion": "Los campos servicioId, servicioPersonalizado, estadoServicio, certificacionUrl, certificacionVerificada, fechaValidacion, validadoPor y observacionAdmin son para el sistema de validación de profesionales.",
+    "ultimaActualizacion": "2026-04-27T15:04:08.506Z"
   },
   "profesionales": [
     {
@@ -32,23 +33,23 @@
       "telefono": "+54 9 223 456-7890",
       "disponibilidad": {
         "lunes": {
-          "manana": false,
+          "manana": true,
           "tarde": true
         },
         "martes": {
-          "manana": false,
+          "manana": true,
           "tarde": true
         },
         "miercoles": {
-          "manana": false,
+          "manana": true,
           "tarde": true
         },
         "jueves": {
-          "manana": false,
+          "manana": true,
           "tarde": true
         },
         "viernes": {
-          "manana": false,
+          "manana": true,
           "tarde": true
         }
       },
@@ -72,9 +73,9 @@
       "experienciaAnios": 5,
       "certificacionUrl": "/uploads/certificados/mn-12345_electricista.pdf",
       "certificacionVerificada": true,
-      "fechaValidacion": "2025-01-20T11:00:00.000Z",
+      "fechaValidacion": "2026-04-27T15:04:08.506Z",
       "validadoPor": "admin@ee.com",
-      "observacionAdmin": "Documentación completa y en regla.",
+      "observacionAdmin": null,
       "email": "roberto.sanchez@outlook.com",
       "telefono": "+54 9 223 567-8901",
       "disponibilidad": {
@@ -83,7 +84,7 @@
           "tarde": true
         },
         "martes": {
-          "manana": false,
+          "manana": true,
           "tarde": true
         },
         "miercoles": {
@@ -91,8 +92,8 @@
           "tarde": true
         },
         "jueves": {
-          "manana": false,
-          "tarde": false
+          "manana": true,
+          "tarde": true
         },
         "viernes": {
           "manana": true,
@@ -106,7 +107,7 @@
       "trabajosCompletados": 15,
       "activo": true,
       "fechaAlta": "2025-01-18T10:00:00.000Z",
-      "fechaModificacion": "2025-01-18T10:00:00.000Z"
+      "fechaModificacion": "2026-04-27T15:04:08.506Z"
     },
     {
       "id": "prof_003",
@@ -116,33 +117,33 @@
       "servicioId": "serv_002",
       "servicioPersonalizado": null,
       "estadoServicio": "aprobado",
-      "experienciaAnios": 12,
+      "experienciaAnios": 11,
       "certificacionUrl": "/uploads/certificados/mp-09871_plomeria.pdf",
       "certificacionVerificada": true,
-      "fechaValidacion": "2025-01-05T09:00:00.000Z",
+      "fechaValidacion": "2026-04-23T00:59:31.643Z",
       "validadoPor": "admin@ee.com",
-      "observacionAdmin": "Profesional con amplia experiencia.",
+      "observacionAdmin": null,
       "email": "alopez.plomeria@gmail.com",
       "telefono": "+54 9 223 678-9012",
       "disponibilidad": {
         "lunes": {
-          "manana": false,
-          "tarde": false
+          "manana": true,
+          "tarde": true
         },
         "martes": {
           "manana": true,
           "tarde": true
         },
         "miercoles": {
-          "manana": false,
-          "tarde": false
+          "manana": true,
+          "tarde": true
         },
         "jueves": {
-          "manana": false,
-          "tarde": false
+          "manana": true,
+          "tarde": true
         },
         "viernes": {
-          "manana": false,
+          "manana": true,
           "tarde": true
         }
       },
@@ -153,7 +154,7 @@
       "trabajosCompletados": 38,
       "activo": true,
       "fechaAlta": "2024-12-01T08:00:00.000Z",
-      "fechaModificacion": "2026-04-14T23:01:54.961Z"
+      "fechaModificacion": "2026-04-23T00:59:31.643Z"
     },
     {
       "id": "prof_004",
@@ -285,15 +286,15 @@
       "trabajosCompletados": 0,
       "activo": true,
       "fechaAlta": "2026-04-15T15:31:21.851Z",
-      "fechaModificacion": "2026-04-17T14:47:45.169Z",
+      "fechaModificacion": "2026-04-24T22:53:56.502Z",
       "servicioId": "serv_002",
       "servicioPersonalizado": null,
-      "estadoServicio": "rechazado",
+      "estadoServicio": "aprobado",
       "experienciaAnios": 3,
-      "certificacionVerificada": false,
-      "fechaValidacion": "2026-04-17T14:47:45.169Z",
+      "certificacionVerificada": true,
+      "fechaValidacion": "2026-04-24T22:53:56.502Z",
       "validadoPor": "admin@ee.com",
-      "observacionAdmin": "Profesional genero solicitud de servicio incorrecta"
+      "observacionAdmin": null
     },
     {
       "id": "prof_007",
@@ -304,23 +305,23 @@
       "telefono": "",
       "disponibilidad": {
         "lunes": {
-          "manana": false,
-          "tarde": false
+          "manana": true,
+          "tarde": true
         },
         "martes": {
-          "manana": false,
-          "tarde": false
+          "manana": true,
+          "tarde": true
         },
         "miercoles": {
-          "manana": false,
-          "tarde": false
+          "manana": true,
+          "tarde": true
         },
         "jueves": {
-          "manana": false,
-          "tarde": false
+          "manana": true,
+          "tarde": true
         },
         "viernes": {
-          "manana": false,
+          "manana": true,
           "tarde": true
         }
       },
@@ -331,15 +332,103 @@
       "trabajosCompletados": 0,
       "activo": true,
       "fechaAlta": "2026-04-17T15:14:47.719Z",
-      "fechaModificacion": "2026-04-17T15:26:13.002Z",
+      "fechaModificacion": "2026-04-24T22:41:07.320Z",
       "servicioId": "serv_010",
       "servicioPersonalizado": null,
       "estadoServicio": "aprobado",
       "experienciaAnios": 16,
       "certificacionVerificada": true,
-      "fechaValidacion": "2026-04-17T15:26:13.002Z",
+      "fechaValidacion": "2026-04-24T22:41:07.320Z",
       "validadoPor": "admin@ee.com",
-      "observacionAdmin": "Correcto, es un crack."
+      "observacionAdmin": null
+    },
+    {
+      "id": "prof_008",
+      "nombre": "Mario Pergolini",
+      "matricula": "MP-541232",
+      "profesion": "",
+      "email": "marito@hmotm.com",
+      "telefono": "",
+      "disponibilidad": {
+        "lunes": {
+          "manana": true,
+          "tarde": true
+        },
+        "martes": {
+          "manana": true,
+          "tarde": true
+        },
+        "miercoles": {
+          "manana": true,
+          "tarde": true
+        },
+        "jueves": {
+          "manana": true,
+          "tarde": true
+        },
+        "viernes": {
+          "manana": true,
+          "tarde": true
+        }
+      },
+      "valoracion": {
+        "valor": 0,
+        "cantidad": 0
+      },
+      "trabajosCompletados": 0,
+      "activo": true,
+      "fechaAlta": "2026-04-24T22:45:05.354Z",
+      "fechaModificacion": "2026-04-24T22:53:36.340Z",
+      "servicioId": "serv_001",
+      "servicioPersonalizado": null,
+      "estadoServicio": "aprobado",
+      "experienciaAnios": 5,
+      "certificacionVerificada": true,
+      "fechaValidacion": "2026-04-24T22:53:36.340Z",
+      "validadoPor": "admin@ee.com",
+      "observacionAdmin": null
+    },
+    {
+      "id": "prof_009",
+      "nombre": "Jorge Castro",
+      "matricula": "MN-02931",
+      "profesion": "",
+      "email": "castro@gmail.com",
+      "telefono": "",
+      "disponibilidad": {
+        "lunes": {
+          "manana": true,
+          "tarde": false
+        },
+        "martes": {
+          "manana": true,
+          "tarde": false
+        },
+        "miercoles": {
+          "manana": true,
+          "tarde": false
+        },
+        "jueves": {
+          "manana": true,
+          "tarde": false
+        },
+        "viernes": {
+          "manana": true,
+          "tarde": false
+        }
+      },
+      "servicioId": "serv_011",
+      "servicioPersonalizado": null,
+      "estadoServicio": "aprobado",
+      "experienciaAnios": 4,
+      "valoracion": {
+        "valor": 0,
+        "cantidad": 0
+      },
+      "trabajosCompletados": 0,
+      "activo": true,
+      "fechaAlta": "2026-04-27T15:03:47.534Z",
+      "fechaModificacion": "2026-04-27T15:03:47.534Z"
     }
   ]
 }

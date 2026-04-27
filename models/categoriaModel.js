@@ -1,176 +1,119 @@
 'use strict';
 
-const fs = require('fs');
 const path = require('path');
+const BaseModel = require('./BaseModel');
 
-const DATA_PATH = path.join(__dirname, '..', 'data', 'categorias.json');
+class CategoriaModel extends BaseModel {
+    static DATA_PATH = path.join(__dirname, '..', 'data', 'categorias.json');
+    static COLECCION = 'categorias';
+    static PREFIJO_ID = 'cat_';
+    static PADDING_ID = 3;
 
-// ──────────────── HELPERS CORREGIDOS ────────────────
-
-function _leerArchivoCompleto() {
-    try {
-        const raw = fs.readFileSync(DATA_PATH, 'utf8');
-        return JSON.parse(raw);
-    } catch (err) {
-        if (err.code === 'ENOENT') {
-            const estructuraBase = {
-                _meta: { version: "1.0.0", ultimaActualizacion: new Date().toISOString() },
-                categorias: []
-            };
-            fs.writeFileSync(DATA_PATH, JSON.stringify(estructuraBase, null, 2), 'utf8');
-            return estructuraBase;
+    // Obtener todas las categorías (con opción de solo activas)
+    static getAll({ soloActivas = false } = {}) {
+        const datos = this._leerDatos(this.DATA_PATH, this.COLECCION);
+        let categorias = datos[this.COLECCION];
+        if (soloActivas) {
+            categorias = categorias.filter(c => c.activo === true);
         }
-        throw err;
+        // Ordenar por orden (ascendente)
+        return categorias.sort((a, b) => (a.orden || 0) - (b.orden || 0));
+    }
+
+    static getById(id) {
+        const datos = this._leerDatos(this.DATA_PATH, this.COLECCION);
+        return datos[this.COLECCION].find(c => c.id === id) || null;
+    }
+
+    static create(data) {
+        const datos = this._leerDatos(this.DATA_PATH, this.COLECCION);
+        const categorias = datos[this.COLECCION];
+
+        // Generar slug
+        const slug = this._generarSlug(data.nombre);
+        if (categorias.some(c => c.slug === slug)) {
+            throw new Error(`Ya existe una categoría con el slug "${slug}".`);
+        }
+
+        const ahora = new Date().toISOString();
+        const nuevaCategoria = {
+            id: this._generarId(categorias, this.PREFIJO_ID, this.PADDING_ID),
+            slug,
+            nombre: String(data.nombre).trim(),
+            descripcion: data.descripcion ? String(data.descripcion).trim() : '',
+            icono: data.icono ? String(data.icono).trim() : '',
+            activo: data.activo === 'true' || data.activo === true,
+            orden: data.orden ? Number(data.orden) : categorias.length + 1,
+            fechaCreacion: ahora,
+            fechaModificacion: ahora,
+            cantidadProductos: 0,
+        };
+
+        categorias.push(nuevaCategoria);
+        this._escribirDatos(this.DATA_PATH, datos);
+        return nuevaCategoria;
+    }
+
+    static update(id, data) {
+        const datos = this._leerDatos(this.DATA_PATH, this.COLECCION);
+        const indice = datos[this.COLECCION].findIndex(c => c.id === id);
+        if (indice === -1) throw new Error(`Categoría con id "${id}" no encontrada.`);
+
+        const actual = datos[this.COLECCION][indice];
+        const nuevoSlug = this._generarSlug(data.nombre || actual.nombre);
+        // Verificar colisión de slug
+        if (nuevoSlug !== actual.slug && datos[this.COLECCION].some(c => c.slug === nuevoSlug && c.id !== id)) {
+            throw new Error(`Ya existe otra categoría con el slug "${nuevoSlug}".`);
+        }
+
+        const actualizada = {
+            ...actual,
+            slug: nuevoSlug,
+            nombre: data.nombre ? String(data.nombre).trim() : actual.nombre,
+            descripcion: data.descripcion !== undefined ? String(data.descripcion).trim() : actual.descripcion,
+            icono: data.icono !== undefined ? String(data.icono).trim() : actual.icono,
+            activo: data.activo === 'true' || data.activo === true,
+            orden: data.orden ? Number(data.orden) : actual.orden,
+            fechaModificacion: new Date().toISOString(),
+        };
+
+        datos[this.COLECCION][indice] = actualizada;
+        this._escribirDatos(this.DATA_PATH, datos);
+        return actualizada;
+    }
+
+    static toggleActivo(id) {
+        const datos = this._leerDatos(this.DATA_PATH, this.COLECCION);
+        const indice = datos[this.COLECCION].findIndex(c => c.id === id);
+        if (indice === -1) throw new Error(`Categoría con id "${id}" no encontrada.`);
+
+        datos[this.COLECCION][indice].activo = !datos[this.COLECCION][indice].activo;
+        datos[this.COLECCION][indice].fechaModificacion = new Date().toISOString();
+        this._escribirDatos(this.DATA_PATH, datos);
+        return datos[this.COLECCION][indice];
+    }
+
+    static setCantidadProductos(id, cantidad) {
+        const datos = this._leerDatos(this.DATA_PATH, this.COLECCION);
+        const indice = datos[this.COLECCION].findIndex(c => c.id === id);
+        if (indice === -1) throw new Error(`Categoría con id "${id}" no encontrada.`);
+
+        datos[this.COLECCION][indice].cantidadProductos = Number(cantidad) || 0;
+        datos[this.COLECCION][indice].fechaModificacion = new Date().toISOString();
+        this._escribirDatos(this.DATA_PATH, datos);
+        return datos[this.COLECCION][indice];
+    }
+
+    // Helper privado
+    static _generarSlug(nombre) {
+        return nombre
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9\s-]/g, '')
+            .trim()
+            .replace(/\s+/g, '-');
     }
 }
 
-function _escribirArchivoCompleto(jsonCompleto) {
-    jsonCompleto._meta.ultimaActualizacion = new Date().toISOString();
-    fs.writeFileSync(DATA_PATH, JSON.stringify(jsonCompleto, null, 2), 'utf8');
-}
-
-function _leerDatos() {
-    return _leerArchivoCompleto().categorias;
-}
-
-function _generarId(categorias) {
-    if (!categorias || categorias.length === 0) return 'cat_001';
-    const nums = categorias
-        .map(c => {
-            const m = String(c.id).match(/^cat_(\d+)$/);
-            return m ? parseInt(m[1], 10) : 0;
-        })
-        .filter(n => !isNaN(n));
-    const siguiente = nums.length > 0 ? Math.max(...nums) + 1 : 1;
-    return `cat_${String(siguiente).padStart(3, '0')}`;
-}
-
-function _generarSlug(nombre) {
-    return nombre
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/[^a-z0-9\s-]/g, '')
-        .trim()
-        .replace(/\s+/g, '-');
-}
-
-// ──────────────── MÉTODOS PÚBLICOS ────────────────
-
-function getAll({ soloActivas = false } = {}) {
-    const categorias = _leerDatos();
-    const resultado = soloActivas ? categorias.filter(c => c.activo) : categorias;
-    return resultado.sort((a, b) => (a.orden || 0) - (b.orden || 0));
-}
-
-function getById(id) {
-    const categorias = _leerDatos();
-    return categorias.find(c => c.id === id) || null;
-}
-
-function create(data) {
-    console.log('🔧 create() - Iniciando...');
-    const jsonCompleto = _leerArchivoCompleto();
-    const categorias = jsonCompleto.categorias;
-    
-    const slug = _generarSlug(data.nombre);
-    console.log(`📌 Slug generado: ${slug}`);
-    
-    // Verificar slug único
-    const slugExistente = categorias.find(c => c.slug === slug);
-    if (slugExistente) {
-        throw new Error(`Ya existe una categoría con el slug "${slug}".`);
-    }
-    
-    const ahora = new Date().toISOString();
-    const nuevaCategoria = {
-        id: _generarId(categorias),
-        slug: slug,
-        nombre: String(data.nombre).trim(),
-        descripcion: data.descripcion ? String(data.descripcion).trim() : '',
-        icono: data.icono ? String(data.icono).trim() : '',
-        activo: data.activo === 'true' || data.activo === true,
-        orden: data.orden ? Number(data.orden) : categorias.length + 1,
-        fechaCreacion: ahora,
-        fechaModificacion: ahora,
-        cantidadProductos: 0
-    };
-    
-    console.log('✅ Nueva categoría:', nuevaCategoria);
-    
-    jsonCompleto.categorias.push(nuevaCategoria);
-    _escribirArchivoCompleto(jsonCompleto);
-    
-    return nuevaCategoria;
-}
-
-function update(id, data) {
-    const jsonCompleto = _leerArchivoCompleto();
-    const indice = jsonCompleto.categorias.findIndex(c => c.id === id);
-    
-    if (indice === -1) {
-        throw new Error(`No se encontró la categoría con id "${id}".`);
-    }
-    
-    const actual = jsonCompleto.categorias[indice];
-    const nuevoSlug = _generarSlug(data.nombre || actual.nombre);
-    
-    // Verificar colisión
-    const colision = jsonCompleto.categorias.find(c => c.slug === nuevoSlug && c.id !== id);
-    if (colision) {
-        throw new Error(`Ya existe otra categoría con el slug "${nuevoSlug}".`);
-    }
-    
-    jsonCompleto.categorias[indice] = {
-        ...actual,
-        slug: nuevoSlug,
-        nombre: data.nombre ? String(data.nombre).trim() : actual.nombre,
-        descripcion: data.descripcion !== undefined ? String(data.descripcion).trim() : actual.descripcion,
-        icono: data.icono !== undefined ? String(data.icono).trim() : actual.icono,
-        activo: data.activo === 'true' || data.activo === true,
-        orden: data.orden ? Number(data.orden) : actual.orden,
-        fechaModificacion: new Date().toISOString()
-    };
-    
-    _escribirArchivoCompleto(jsonCompleto);
-    return jsonCompleto.categorias[indice];
-}
-
-function toggleActivo(id) {
-    const jsonCompleto = _leerArchivoCompleto();
-    const indice = jsonCompleto.categorias.findIndex(c => c.id === id);
-    
-    if (indice === -1) {
-        throw new Error(`No se encontró la categoría con id "${id}".`);
-    }
-    
-    jsonCompleto.categorias[indice].activo = !jsonCompleto.categorias[indice].activo;
-    jsonCompleto.categorias[indice].fechaModificacion = new Date().toISOString();
-    
-    _escribirArchivoCompleto(jsonCompleto);
-    return jsonCompleto.categorias[indice];
-}
-
-function setCantidadProductos(id, cantidad) {
-    const jsonCompleto = _leerArchivoCompleto();
-    const indice = jsonCompleto.categorias.findIndex(c => c.id === id);
-
-    if (indice === -1) {
-        throw new Error(`No se encontró la categoría con id "${id}".`);
-    }
-
-    jsonCompleto.categorias[indice].cantidadProductos = Number(cantidad) || 0;
-    jsonCompleto.categorias[indice].fechaModificacion = new Date().toISOString();
-
-    _escribirArchivoCompleto(jsonCompleto);
-    return jsonCompleto.categorias[indice];
-}
-
-module.exports = {
-    getAll,
-    getById,
-    create,
-    update,
-    toggleActivo,
-    setCantidadProductos
-};
+module.exports = CategoriaModel;

@@ -2,7 +2,7 @@
   "_meta": {
     "version": "1.0.0",
     "descripcion": "Catálogo de servicios/profesiones disponibles en la plataforma",
-    "ultimaActualizacion": "2026-04-17T15:26:23.309Z"
+    "ultimaActualizacion": "2026-04-27T15:05:15.862Z"
   },
   "servicios": [
     {
@@ -97,7 +97,9 @@
       "destacado": true,
       "activo": true,
       "fechaCreacion": "2026-01-01T00:00:00.000Z",
-      "fechaModificacion": "2026-01-01T00:00:00.000Z"
+      "fechaModificacion": "2026-04-23T21:36:33.593Z",
+      "precioBase": 200000,
+      "precioPorHora": 50000
     },
     {
       "id": "serv_003",
@@ -144,7 +146,9 @@
       "destacado": true,
       "activo": true,
       "fechaCreacion": "2026-01-01T00:00:00.000Z",
-      "fechaModificacion": "2026-01-01T00:00:00.000Z"
+      "fechaModificacion": "2026-04-23T23:49:41.078Z",
+      "precioBase": 250000,
+      "precioPorHora": 50000
     },
     {
       "id": "serv_004",
@@ -191,7 +195,9 @@
       "destacado": false,
       "activo": true,
       "fechaCreacion": "2026-01-01T00:00:00.000Z",
-      "fechaModificacion": "2026-01-01T00:00:00.000Z"
+      "fechaModificacion": "2026-04-23T21:49:10.052Z",
+      "precioBase": null,
+      "precioPorHora": null
     },
     {
       "id": "serv_005",
@@ -235,10 +241,12 @@
         }
       ],
       "certificacionRequerida": true,
-      "destacado": false,
+      "destacado": true,
       "activo": true,
       "fechaCreacion": "2026-01-01T00:00:00.000Z",
-      "fechaModificacion": "2026-01-01T00:00:00.000Z"
+      "fechaModificacion": "2026-04-23T21:37:34.063Z",
+      "precioBase": 250000,
+      "precioPorHora": 25000
     },
     {
       "id": "serv_006",
@@ -285,7 +293,9 @@
       "destacado": false,
       "activo": true,
       "fechaCreacion": "2026-01-01T00:00:00.000Z",
-      "fechaModificacion": "2026-04-15T15:44:27.791Z"
+      "fechaModificacion": "2026-04-23T23:48:43.275Z",
+      "precioBase": 100000,
+      "precioPorHora": 40000
     },
     {
       "id": "serv_007",
@@ -328,11 +338,13 @@
           ]
         }
       ],
-      "certificacionRequerida": false,
+      "certificacionRequerida": true,
       "destacado": false,
       "activo": true,
       "fechaCreacion": "2026-01-01T00:00:00.000Z",
-      "fechaModificacion": "2026-01-01T00:00:00.000Z"
+      "fechaModificacion": "2026-04-23T21:35:44.466Z",
+      "precioBase": 200000,
+      "precioPorHora": 50000
     },
     {
       "id": "serv_008",
@@ -365,7 +377,9 @@
       "destacado": true,
       "activo": true,
       "fechaCreacion": "2026-04-15T01:40:35.857Z",
-      "fechaModificacion": "2026-04-15T01:40:35.857Z"
+      "fechaModificacion": "2026-04-23T21:36:23.958Z",
+      "precioBase": 80000,
+      "precioPorHora": 80000
     },
     {
       "id": "serv_009",
@@ -394,6 +408,8 @@
           "requisitos": []
         }
       ],
+      "precioBase": 400000,
+      "precioPorHora": 50000,
       "certificacionRequerida": true,
       "destacado": true,
       "activo": true,
@@ -431,7 +447,44 @@
       "destacado": true,
       "activo": true,
       "fechaCreacion": "2026-04-17T15:26:12.998Z",
-      "fechaModificacion": "2026-04-17T15:26:23.309Z"
+      "fechaModificacion": "2026-04-23T21:36:13.025Z",
+      "precioBase": 299999.99,
+      "precioPorHora": 80000
+    },
+    {
+      "id": "serv_011",
+      "nombre": "Tecnico mecanico",
+      "slug": "tecnico-mecanico",
+      "descripcion": "Arreglo de motores y instalaciones motorizadas.",
+      "nivelesExperiencia": [
+        {
+          "nivel": "Sin experiencia",
+          "requisitos": []
+        },
+        {
+          "nivel": "1-2 años",
+          "requisitos": []
+        },
+        {
+          "nivel": "3-5 años",
+          "requisitos": []
+        },
+        {
+          "nivel": "6-10 años",
+          "requisitos": []
+        },
+        {
+          "nivel": "+10 años",
+          "requisitos": []
+        }
+      ],
+      "certificacionRequerida": true,
+      "destacado": true,
+      "precioBase": 300000,
+      "precioPorHora": 20000,
+      "activo": true,
+      "fechaCreacion": "2026-04-23T23:50:09.654Z",
+      "fechaModificacion": "2026-04-27T15:05:15.862Z"
     }
   ]
 }

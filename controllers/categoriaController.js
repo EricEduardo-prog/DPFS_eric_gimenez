@@ -20,8 +20,8 @@
  *  GET    /admin/categorias/api/lista    → JSON para <select> de otros formularios
  */
 
-const categoriaModel = require('../models/categoriaModel');
-
+const CategoriaModel = require('../models/categoriaModel');
+const categoriaModel = CategoriaModel;  // alias para mantener consistencia con otros controladores
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers internos
 // ─────────────────────────────────────────────────────────────────────────────

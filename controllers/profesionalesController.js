@@ -18,9 +18,13 @@
  *   pero el controller tampoco los expone.
  */
 
-const profesionalesModel = require('../models/profesionalesModel');
-const servicioModel = require('../models/servicioModel');
-const solicitudModel = require('../models/solicitudServicioModel');
+const ProfesionalesModel = require('../models/profesionalesModel');
+const ServicioModel = require('../models/servicioModel');
+const SolicitudModel = require('../models/solicitudServicioModel');
+
+const profesionalesModel = ProfesionalesModel;
+const servicioModel = ServicioModel;
+const solicitudModel = SolicitudModel;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers internos
@@ -117,7 +121,7 @@ function _normalizarDisponibilidad(body) {
     };
 
     Object.keys(body).forEach(key => {
-        // ✅ Ignorar campos ocultos (terminan en _hidden)
+        //  Ignorar campos ocultos (terminan en _hidden)
         if (key.startsWith('disponibilidad_') && !key.endsWith('_hidden')) {
             const parts = key.split('_');
             if (parts.length === 3) {
@@ -128,7 +132,6 @@ function _normalizarDisponibilidad(body) {
 
                 if (disponibilidad[dia] && disponibilidad[dia][turno] !== undefined) {
                     disponibilidad[dia][turno] = valor;
-                    console.log(`✅ ${dia}.${turno} = ${valor}`);
                 }
             }
         }
@@ -265,7 +268,7 @@ function listar(req, res, next) {
 
         res.render('layout', {
             title: 'Profesionales — E-E Admin',
-            pageCss: 'admin_list',  // ← CSS para listados
+            pageCss: 'admin_list',  
             currentPage: 'admin',
             body: 'pages/admin/professionals/list',
             profesionales: profesionalesConServicio,
@@ -284,7 +287,7 @@ function mostrarFormNuevo(req, res, next) {
     try {
         res.render('layout', {
             title: 'Nuevo Profesional — E-E Admin',
-            pageCss: 'admin_form',  // ← CSS para formularios
+            pageCss: 'admin_form',  
             currentPage: 'admin',
             body: 'pages/admin/professionals/form',
             profesional: null,

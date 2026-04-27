@@ -1,9 +1,15 @@
 'use strict';
 
-const reservaModel = require('../models/reservaModel');
-const productoModel = require('../models/productoModel');
-const servicioModel = require('../models/servicioModel');
+const ReservaModel = require('../models/reservaModel');
+const ProductoModel = require('../models/productoModel');
+const ServicioModel = require('../models/servicioModel');
+const ProfesionalesModel = require('../models/profesionalesModel');
 const createError = require('http-errors');
+
+const reservaModel = ReservaModel; 
+const productoModel = ProductoModel;
+const servicioModel = ServicioModel;
+const profesionalesModel = ProfesionalesModel;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers internos
@@ -52,8 +58,9 @@ async function agregarItem(req, res, next) {
     console.log('🔍 sessionId:', req.session?.id);
 
     try {
-        const { productoId, servicioId, cantidad, tipo } = req.body;
-
+        const { productoId, servicioId, cantidad, tipo, profesionalId, fechaInstalacion, horarioInstalacion } = req.body;
+        console.log('🔍 Tipo recibido:', tipo);
+        console.log('🔍 servicioId recibido:', servicioId);
         if (!cantidad || cantidad < 1) {
             return next(createError(400, 'La cantidad debe ser mayor a 0'));
         }
@@ -74,23 +81,49 @@ async function agregarItem(req, res, next) {
                 return next(createError(404, 'Servicio no encontrado'));
             }
             nombre = servicio.nombre;
-            precioUnitario = 0;
+            precioBase = servicio.precio || 0;
         } else {
             return next(createError(400, 'Debe especificar productoId o servicioId'));
         }
 
         const reserva = await _getOrCreateReserva(req, res);
-        
-        const itemExistenteAntes = reserva.items.find(item => item.productoId === productoId);
+
+        const itemExistenteAntes = reserva.items.find(item =>
+            (productoId && item.productoId === productoId) ||
+            (servicioId && item.servicioId === servicioId)
+        );
+
         const cantidadAnterior = itemExistenteAntes?.cantidad || 0;
+
+
+
+        //  Preparar datos adicionales para el item
+        const itemData = {
+            cantidad: parseInt(cantidad),
+            precioUnitario: precioUnitario,
+            nombre: nombre
+        };
+
+        //  Agregar profesional si viene en la petición
+        if (profesionalId) {
+            itemData.profesionalId = profesionalId;
+        }
+
+        //  Agregar fecha de instalación si viene
+        if (fechaInstalacion) {
+            itemData.fechaInstalacion = fechaInstalacion;
+        }
+
+        //  Agregar horario de instalación si viene
+        if (horarioInstalacion) {
+            itemData.horarioInstalacion = horarioInstalacion;
+        }
 
         const resultado = reservaModel.addItem(
             reserva.id,
             productoId || null,
             servicioId || null,
-            parseInt(cantidad),
-            precioUnitario,
-            nombre
+            itemData
         );
 
         const nuevaCantidadTotal = cantidadAnterior + parseInt(cantidad);
@@ -100,7 +133,7 @@ async function agregarItem(req, res, next) {
             item: resultado,
             cantidadAnterior: cantidadAnterior,
             nuevaCantidad: nuevaCantidadTotal,
-            totalItems: reserva.items?.reduce((sum, item) => sum + item.cantidad, 0) || 0,
+            totalItems: reserva.items?.reduce((sum, item) => sum + (item.cantidad || 1), 0) || 0,
             reservaId: reserva.id
         });
 
@@ -121,7 +154,7 @@ async function detectoProductoEnReserva(req, res, next) {
         const sessionId = _getSessionId(req, res);
 
         let reserva = null;
-        
+
         if (usuarioId) {
             reserva = await reservaModel.getByUsuarioId(usuarioId);
         } else {
@@ -145,7 +178,7 @@ async function detectoProductoEnReserva(req, res, next) {
 }
 
 /**
- * GET /reserva - Ver carrito
+ * GET /reserva - Ver reserva actual
  */
 async function verReserva(req, res, next) {
     try {
@@ -153,22 +186,50 @@ async function verReserva(req, res, next) {
         const sessionId = _getSessionId(req, res);
 
         let reserva = null;
+        // Obtener reserva según usuario o sesión
         if (usuarioId) {
             reserva = await reservaModel.getByUsuarioId(usuarioId);
         } else {
             reserva = await reservaModel.getBySessionId(sessionId);
         }
-
+        
         const items = reserva?.items || [];
 
+        //  ENRIQUECER ITEMS CON DATOS DEL PROFESIONAL (si tienen profesionalId)
+        // Esto permite mostrar nombre, rating y trabajos completados del profesional en la vista
+        
+        const itemsEnriquecidos = await Promise.all(items.map(async (item) => {
+            if (item.profesionalId) {
+                const profesional = profesionalesModel.getById(item.profesionalId);
+                if (profesional) {
+                    return {
+                        ...item,
+                        profesionalNombre: profesional.nombre,
+                        profesionalRating: profesional.valoracion?.valor || 0,
+                        profesionalTrabajos: profesional.trabajosCompletados || 0
+                    };
+                }
+            }
+            return item;
+        }));
+
+        // Separar productos y servicios
+        const productosItems = itemsEnriquecidos.filter(item => item.productoId && !item.servicioId);
+        const serviciosItems = itemsEnriquecidos.filter(item => item.servicioId && !item.productoId);
+
+        // Calcular totales
         let subtotal = 0;
-        for (const item of items) {
-            subtotal += (item.precioUnitario || 0) * item.cantidad;
+        for (const item of itemsEnriquecidos) {
+            subtotal += (item.precioUnitario || 0) * (item.cantidad || 1);
         }
 
-        console.log('🔍 verReserva - usuarioId:', req.session?.usuarioId);
-        console.log('🔍 verReserva - sessionId:', req.session?.id);
-        console.log('🔍 verReserva - reserva encontrada:', reserva);
+        // Calcular total de servicios (si tienen precio)
+        let totalServicios = 0;
+        for (const item of serviciosItems) {
+            totalServicios += (item.precioUnitario || 0);
+        }
+
+        const total = subtotal + totalServicios;
 
         res.render('layout', {
             title: 'Mi Reserva - E-E',
@@ -176,13 +237,20 @@ async function verReserva(req, res, next) {
             currentPage: 'reserve',
             body: 'pages/products/reserve',
             reserva: reserva,
-            items: reserva?.items || [],
+            items: itemsEnriquecidos,
+            productosItems: productosItems,
+            serviciosItems: serviciosItems,
             subtotal: subtotal,
-            total: subtotal,
+            totalServicios: totalServicios,
+            total: total,
             esUsuario: !!usuarioId,
             mensaje: req.query.mensaje || null,
             error: req.query.error || null
         });
+
+        console.log('🔍 verReserva - usuarioId:', req.session?.usuarioId);
+        console.log('🔍 verReserva - reserva encontrada:', reserva?.id);
+        console.log('🔍 verReserva - servicios con profesional:', serviciosItems.filter(s => s.profesionalId).length);
 
     } catch (err) {
         console.error('❌ Error en verReserva:', err.message);

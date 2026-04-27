@@ -254,6 +254,52 @@
 }
 
 /* ============================================================
+   SELECTOR DE PROFESIONALES
+   ============================================================ */
+.selector-profesional {
+    margin-top: var(--espacio-lg);
+    padding: var(--espacio-md);
+    background: var(--color-fondo-secundario);
+    border-radius: var(--radio-borde-mediano);
+}
+
+.grid-profesionales {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--espacio-md);
+    margin-top: var(--espacio-md);
+}
+
+.tarjeta-profesional {
+    background: var(--color-fondo);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-borde-pequeno);
+    padding: var(--espacio-md);
+    cursor: pointer;
+    transition: all var(--transicion-rapida);
+}
+
+.tarjeta-profesional:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-media);
+}
+
+.tarjeta-profesional.seleccionado {
+    border-color: var(--color-primario);
+    background: var(--color-opcion-activa);
+}
+
+.nombre-profesional {
+    font-weight: var(--fuente-altura);
+    margin-bottom: var(--espacio-xs);
+}
+
+.precio-profesional {
+    color: var(--color-primario);
+    font-weight: var(--fuente-altura);
+}
+
+/* ============================================================
    RESUMEN DEL PEDIDO
    ============================================================ */
 .resumen-pedido {

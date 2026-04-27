@@ -1,17 +1,29 @@
 {
   "_meta": {
     "descripcion": "Catálogo de productos E-E",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "campos_requeridos": [
       "id",
       "nombre",
       "sku",
       "categoriaId",
       "descripcion",
+      "caracteristicas",
       "imagen",
-      "precio"
+      "imagenes",
+      "colores",
+      "talles",
+      "precio",
+      "precioOriginal",
+      "instalacion.disponible",
+      "instalacion.servicioId",
+      "rating",
+      "activo",
+      "fechaCreacion",
+      "fechaModificacion"
     ],
-    "nota_categoria": "categoriaId referencia el campo 'id' de categorias.json. Usar el slug solo para URLs amigables."
+    "nota_categoria": "categoriaId referencia el campo 'id' de categorias.json. Usar el slug solo para URLs amigables.",
+    "ultimaActualizacion": "2026-04-27T15:02:07.718Z"
   },
   "productos": [
     {
@@ -33,8 +45,7 @@
       "precioOriginal": 235000,
       "instalacion": {
         "disponible": true,
-        "precio": 0,
-        "profesionalesDisponibles": false
+        "servicioId": "serv_003"
       },
       "rating": {
         "valor": 4.5,
@@ -42,7 +53,7 @@
       },
       "activo": true,
       "fechaCreacion": "2025-01-15T10:00:00.000Z",
-      "fechaModificacion": "2026-04-17T23:49:43.424Z"
+      "fechaModificacion": "2026-04-24T04:30:25.135Z"
     },
     {
       "id": "prod_002",
@@ -72,8 +83,7 @@
       "precioOriginal": 110000,
       "instalacion": {
         "disponible": false,
-        "precio": 0,
-        "profesionalesDisponibles": false
+        "servicioId": null
       },
       "rating": {
         "valor": 4.8,
@@ -105,15 +115,13 @@
       ],
       "colores": [],
       "talles": [
-        "3000K cálida",
-        "6500K fría"
+        "3000K cálida,6500K fría"
       ],
       "precio": 12999,
       "precioOriginal": 0,
       "instalacion": {
-        "disponible": false,
-        "precio": 0,
-        "profesionalesDisponibles": false
+        "disponible": true,
+        "servicioId": "serv_001"
       },
       "rating": {
         "valor": 4.2,
@@ -121,7 +129,7 @@
       },
       "activo": true,
       "fechaCreacion": "2025-02-01T08:30:00.000Z",
-      "fechaModificacion": "2025-02-01T08:30:00.000Z"
+      "fechaModificacion": "2026-04-24T04:31:04.740Z"
     },
     {
       "id": "prod_004",
@@ -147,16 +155,13 @@
         "Blanco"
       ],
       "talles": [
-        "50L",
-        "80L",
-        "100L"
+        "50L,80L,100L"
       ],
       "precio": 149999,
       "precioOriginal": 175000,
       "instalacion": {
         "disponible": true,
-        "precio": 25000,
-        "profesionalesDisponibles": true
+        "servicioId": "serv_002"
       },
       "rating": {
         "valor": 4.6,
@@ -164,7 +169,7 @@
       },
       "activo": true,
       "fechaCreacion": "2025-02-10T13:00:00.000Z",
-      "fechaModificacion": "2025-03-01T10:00:00.000Z"
+      "fechaModificacion": "2026-04-24T04:30:52.981Z"
     },
     {
       "id": "prod_005",
@@ -176,20 +181,16 @@
       "imagen": "-",
       "imagenes": [],
       "colores": [
-        "Rojo y Negro",
-        "Negro y Rojo",
-        "Celeste y Blanco"
+        "Rojo y Negro,Negro y Rojo,Celeste y Blanco"
       ],
       "talles": [
-        "x100Unidades",
-        "x500Unidades"
+        "x100Unidades,x500Unidades"
       ],
       "precio": 1000,
       "precioOriginal": 5000,
       "instalacion": {
         "disponible": true,
-        "precio": 1000,
-        "profesionalesDisponibles": false
+        "servicioId": "serv_006"
       },
       "activo": true,
       "rating": {
@@ -197,7 +198,7 @@
         "cantidad": 0
       },
       "fechaCreacion": "2026-04-10T21:59:36.953Z",
-      "fechaModificacion": "2026-04-10T21:59:36.953Z"
+      "fechaModificacion": "2026-04-24T04:31:15.158Z"
     },
     {
       "id": "prod_006",
@@ -222,8 +223,7 @@
       "precioOriginal": 1000,
       "instalacion": {
         "disponible": false,
-        "precio": 0,
-        "profesionalesDisponibles": false
+        "servicioId": null
       },
       "activo": true,
       "rating": {
@@ -240,14 +240,13 @@
       "categoriaId": "cat_011",
       "descripcion": "Descontracturante de espalda usando las manos u herramientas para la correcta y reconformante experiencia al usuario.",
       "imagen": ".",
-      "precio": 159888,
-      "precioOriginal": 1000,
+      "precio": 150000,
+      "precioOriginal": 0,
       "colores": [],
       "talles": [],
       "instalacion": {
         "disponible": true,
-        "precio": 0,
-        "profesionalesDisponibles": false
+        "servicioId": "serv_008"
       },
       "activo": true,
       "rating": {
@@ -255,7 +254,7 @@
         "cantidad": 0
       },
       "fechaCreacion": "2026-04-12T05:45:21.471Z",
-      "fechaModificacion": "2026-04-12T05:45:21.471Z"
+      "fechaModificacion": "2026-04-24T04:32:09.728Z"
     },
     {
       "id": "prod_008",
@@ -270,8 +269,7 @@
       "talles": [],
       "instalacion": {
         "disponible": true,
-        "precio": 0,
-        "profesionalesDisponibles": false
+        "servicioId": "serv_010"
       },
       "activo": true,
       "rating": {
@@ -279,7 +277,7 @@
         "cantidad": 0
       },
       "fechaCreacion": "2026-04-12T05:49:31.217Z",
-      "fechaModificacion": "2026-04-14T22:54:59.258Z"
+      "fechaModificacion": "2026-04-24T04:32:29.925Z"
     },
     {
       "id": "prod_009",
@@ -292,13 +290,90 @@
       "precioOriginal": 100000,
       "colores": [],
       "talles": [],
+      "instalacion": {
+        "disponible": false,
+        "servicioId": null
+      },
       "activo": true,
       "rating": {
         "valor": 0,
         "cantidad": 0
       },
       "fechaCreacion": "2026-04-14T22:56:11.002Z",
-      "fechaModificacion": "2026-04-14T22:56:28.133Z"
+      "fechaModificacion": "2026-04-24T03:04:50.316Z"
+    },
+    {
+      "id": "prod_010",
+      "nombre": "Inodoro Bari Largo",
+      "sku": "AK-12-12331",
+      "categoriaId": "cat_005",
+      "descripcion": "Elegí el Inodoro Bari Largo de Ferrum y transformá tu baño en un espacio elegante y funcional. Su diseño moderno y sus características te brindan la comodidad y el estilo que buscás en tu casa.",
+      "imagen": "https://blaistenio.vtexassets.com/arquivos/ids/155598-1600-1600?v=638342802419600000&width=1600&height=1600&aspect=true",
+      "precio": 1890.09,
+      "precioOriginal": 25000,
+      "colores": [
+        "Blanco"
+      ],
+      "talles": [
+        "S"
+      ],
+      "instalacion": {
+        "disponible": true,
+        "servicioId": "serv_002"
+      },
+      "activo": true,
+      "rating": {
+        "valor": 0,
+        "cantidad": 0
+      },
+      "fechaCreacion": "2026-04-23T20:47:09.069Z",
+      "fechaModificacion": "2026-04-27T14:59:50.154Z"
+    },
+    {
+      "id": "prod_011",
+      "nombre": "Ferrum ECO - Bacha Persis con esmalte reciclado",
+      "sku": "PRS-BH-022-12",
+      "categoriaId": "cat_005",
+      "descripcion": "Innovación en la utilización de esmalte reciclado. Se recomienda el uso de griferías FV.",
+      "imagen": "https://ferrum.com/pub/media/catalog/product/cache/723de03bc8ecfa836485d5b2e3f2ed4a/b/a/bacha-apoyo-persis-ferrum-bacha-esmalte-reciclado-satinado-prs-bh-022-vp-b_copia_1.jpg",
+      "precio": 124000,
+      "precioOriginal": 200000,
+      "colores": [],
+      "talles": [],
+      "instalacion": {
+        "disponible": true,
+        "servicioId": "serv_002"
+      },
+      "activo": true,
+      "rating": {
+        "valor": 0,
+        "cantidad": 0
+      },
+      "fechaCreacion": "2026-04-24T02:57:42.745Z",
+      "fechaModificacion": "2026-04-24T04:32:48.036Z"
+    },
+    {
+      "id": "prod_012",
+      "nombre": "Calefactor Coppens",
+      "sku": "ED6346",
+      "categoriaId": "cat_005",
+      "descripcion": "Calefactor Coppens C40BIPAM 4000TB 4000Kcal para espacios de hasta 30 m², con salida lateral izquierda, combina rendimiento y eficiencia para mantener el ambiente cálido de forma constante.",
+      "imagen": "https://cetrogar.vtexassets.com/arquivos/ids/163439-768-auto/Calefactor-C40BIPAM-4000TB-4000Kcal-30m2-izquierda.webp?v=639113902119800000&quality=8",
+      "precio": 309.999,
+      "precioOriginal": 327.999,
+      "colores": [],
+      "talles": [],
+      "activo": true,
+      "rating": {
+        "valor": 0,
+        "cantidad": 0
+      },
+      "fechaCreacion": "2026-04-27T15:01:34.927Z",
+      "fechaModificacion": "2026-04-27T15:02:07.718Z",
+      "instalacion": {
+        "disponible": true,
+        "servicioId": "serv_002"
+      }
     }
   ]
 }
