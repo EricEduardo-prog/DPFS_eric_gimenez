@@ -1,40 +1,11 @@
 'use strict';
 
-/**
- * usuarioRoutes.js
- * Define los endpoints HTTP del módulo Usuarios
- * y los conecta con sus controladores.
- *
- * Se monta en app.js como:
- *   app.use('/admin/usuarios', usuarioRouter.adminRouter);  // Rutas admin
- *   app.use('/usuarios', usuarioRouter.publicRouter);       // Rutas públicas
- *
- * Rutas resultantes:
- *
- * ADMIN (requieren autenticación de admin):
- *   GET    /admin/usuarios              → listar
- *   GET    /admin/usuarios/nuevo        → mostrarFormNuevo
- *   POST   /admin/usuarios              → crear
- *   GET    /admin/usuarios/:id/editar   → mostrarFormEditar
- *   POST   /admin/usuarios/:id          → actualizar
- *   POST   /admin/usuarios/:id/baja     → toggleBaja
- *
- * PÚBLICAS (requieren autenticación de usuario):
- *   GET    /usuarios/perfil             → verMiPerfil
- *   GET    /usuarios/perfil/editar      → editarMiPerfil
- *   PUT    /usuarios/perfil             → actualizarMiPerfil (vía _method)
- *   GET    /usuarios/cambiar-password   → formCambiarPassword
- *   PUT    /usuarios/cambiar-password   → actualizarPassword
- *   GET    /usuarios/pedidos            → misPedidos (si aplica)
- *
- * PÚBLICAS SIN AUTENTICACIÓN:
- *   POST   /register                    → registrar (crear cuenta nueva)
- */
 
 const express = require('express');
 const usuarioController = require('../controllers/usuarioController');
 
 const { isGuest, isUser, isAdmin, redirectIfAuthenticated } = require('../middlewares/authMiddleware');
+const { validarRegistro, validarLogin, validarPerfil, validarCambioPassword } = require('../validations/usuarioValidation');
 
 // Router para rutas de administración
 const adminRouter = express.Router();
@@ -51,11 +22,11 @@ const publicRouter = express.Router();
 publicRouter.get('/register', redirectIfAuthenticated, usuarioController.mostrarFormRegistro);
 
 // POST /register - Registro de nuevos usuarios
-publicRouter.post('/register', redirectIfAuthenticated, usuarioController.registrar);
+publicRouter.post('/register', redirectIfAuthenticated, validarRegistro, usuarioController.registrar);
 
 publicRouter.get('/login', redirectIfAuthenticated, usuarioController.mostrarFormLogin);
 
-publicRouter.post('/login', redirectIfAuthenticated, usuarioController.login);
+publicRouter.post('/login', redirectIfAuthenticated, validarLogin, usuarioController.login);
 
 // ============================================================
 // RUTAS PÚBLICAS CON AUTENTICACIÓN (perfil del usuario logueado)
@@ -68,13 +39,13 @@ publicRouter.get('/perfil', isUser, usuarioController.verMiPerfil);
 publicRouter.get('/perfil/editar', isUser, usuarioController.editarMiPerfil);
 
 // PUT /usuarios/perfil - Actualizar mi perfil (vía _method=PUT)
-publicRouter.put('/perfil', isUser, usuarioController.actualizarMiPerfil);
+publicRouter.put('/perfil', isUser, validarPerfil, usuarioController.actualizarMiPerfil);
 
 // GET /usuarios/cambiar-password - Formulario para cambiar contraseña
 publicRouter.get('/cambiar-password', isUser, usuarioController.formCambiarPassword);
 
 // PUT /usuarios/cambiar-password - Actualizar contraseña
-publicRouter.put('/cambiar-password', isUser, usuarioController.actualizarPassword);
+publicRouter.put('/cambiar-password', isUser, validarCambioPassword, usuarioController.actualizarPassword);
 
 // GET /usuarios/pedidos - Historial de pedidos del usuario
 publicRouter.get('/pedidos', isUser, usuarioController.misPedidos);
@@ -88,6 +59,7 @@ publicRouter.post('/logout', isUser, usuarioController.logout);
 // ============================================================
 // RUTAS DE ADMINISTRACIÓN
 // ============================================================
+const { validarUsuarioAdmin } = require('../validations/usuarioValidation');
 
 // ── Rutas estáticas primero (antes de /:id para evitar conflictos)
 
@@ -98,7 +70,7 @@ adminRouter.get('/', isAdmin, usuarioController.listar);
 adminRouter.get('/nuevo', isAdmin, usuarioController.mostrarFormNuevo);
 
 // POST /admin/usuarios
-adminRouter.post('/', isAdmin, usuarioController.crear);
+adminRouter.post('/', isAdmin, validarUsuarioAdmin, usuarioController.crear);
 
 // ── Rutas dinámicas con :id
 
@@ -106,12 +78,12 @@ adminRouter.post('/', isAdmin, usuarioController.crear);
 adminRouter.get('/:id/editar', isAdmin, usuarioController.mostrarFormEditar);
 
 // POST /admin/usuarios/:id (actualizar, simula PUT)
-adminRouter.post('/:id', isAdmin, usuarioController.actualizar);
+adminRouter.post('/:id', isAdmin, validarUsuarioAdmin, usuarioController.actualizar);
 
-adminRouter.put('/:id', isAdmin, usuarioController.actualizar);
+adminRouter.put('/:id', isAdmin, validarUsuarioAdmin, usuarioController.actualizar);
 
 // POST /admin/usuarios/:id/baja (toggle activo, simula DELETE)
-adminRouter.post('/:id/baja', isAdmin, usuarioController.toggleBaja);
+adminRouter.post('/:id/baja', isAdmin, validarUsuarioAdmin, usuarioController.toggleBaja);
 
 // ============================================================
 // EXPORTS

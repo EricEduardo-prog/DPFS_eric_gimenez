@@ -447,16 +447,10 @@ async function actualizarPassword(req, res, next) {
 
     const usuarioId = req.session?.usuarioId;
 
-    if (!usuarioId) {
-        return res.redirect('/login?error=Debes iniciar sesión.');
-    }
 
     // ✅ Usar getByIdWithHash para obtener el passwordHash actual
     const usuario = usuarioModel.getByIdWithHash(usuarioId);
 
-    if (!usuario) {
-        return res.redirect('/login?error=Usuario no encontrado.');
-    }
 
     console.log('✅ Usuario encontrado:', usuario.email);
     console.log('✅ Tiene passwordHash:', !!usuario.passwordHash);
@@ -739,7 +733,7 @@ async function actualizar(req, res, next) {
             currentPage: 'admin',
             body: 'pages/admin/users/form',
             usuario: usuarioExistente,
-            errores: errores.array().map(e => e.msg),
+            errores: errores,
             formData: req.body
         });
     }

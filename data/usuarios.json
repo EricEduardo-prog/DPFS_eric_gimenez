@@ -9,7 +9,8 @@
       "passwordHash",
       "aceptoTerminos"
     ],
-    "nota_seguridad": "passwordHash generado con bcrypt (cost factor 10). Nunca almacenar password en texto plano."
+    "nota_seguridad": "passwordHash generado con bcrypt (cost factor 10). Nunca almacenar password en texto plano.",
+    "ultimaActualizacion": "2026-04-27T18:53:06.863Z"
   },
   "usuarios": [
     {
@@ -137,7 +138,7 @@
       "nombre": "James Bond",
       "email": "admin@ee.com",
       "passwordHash": "$2b$10$6knI.I0rKI0bhnnsHJ.jE.IH5Mqhfoq8sb863zJ68YephNnOVgP8K",
-      "telefono": "",
+      "telefono": "123123123",
       "direccion": {
         "calle": "",
         "numero": "",
@@ -150,7 +151,7 @@
       "aceptoTerminos": true,
       "activo": true,
       "fechaRegistro": "2026-04-14T22:22:24.539Z",
-      "fechaModificacion": "2026-04-14T22:22:24.539Z"
+      "fechaModificacion": "2026-04-27T18:53:06.863Z"
     }
   ]
 }
