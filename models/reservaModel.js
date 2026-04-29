@@ -62,28 +62,34 @@ class ReservaModel extends BaseModel {
         if (indice === -1) throw new Error(`Reserva con id "${reservaId}" no encontrada.`);
 
         const reserva = datos[this.COLECCION][indice];
+        const tipo = itemData.tipo || (productoId && servicioId ? 'combo' : productoId ? 'producto' : 'servicio');
+
+        // Buscar ítem idéntico (mismo combo o mismo producto o mismo servicio)
         const itemExistente = reserva.items.find(item =>
-            (productoId && item.productoId === productoId) ||
-            (servicioId && item.servicioId === servicioId)
+            item.tipo === tipo &&
+            item.productoId === productoId &&
+            item.servicioId === servicioId
         );
 
         if (itemExistente) {
-            itemExistente.cantidad = (itemExistente.cantidad || 1) + (itemData.cantidad || 1);
+            itemExistente.cantidad += (itemData.cantidad || 1);
+            // Actualizar profesional/fecha si es necesario
             if (itemData.profesionalId) itemExistente.profesionalId = itemData.profesionalId;
             if (itemData.fechaInstalacion) itemExistente.fechaInstalacion = itemData.fechaInstalacion;
             if (itemData.horarioInstalacion) itemExistente.horarioInstalacion = itemData.horarioInstalacion;
         } else {
             const nuevoItem = {
                 id: this._generarItemId(),
+                tipo: tipo,                     // 'producto', 'servicio', 'combo'
                 productoId: productoId || null,
                 servicioId: servicioId || null,
                 cantidad: itemData.cantidad || 1,
-                precioUnitario: itemData.precioUnitario,
+                precioUnitario: itemData.precioUnitario,   // Precio total del combo (producto + servicio) o individual
                 nombre: itemData.nombre,
+                profesionalId: itemData.profesionalId || null,
+                fechaInstalacion: itemData.fechaInstalacion || null,
+                horarioInstalacion: itemData.horarioInstalacion || null
             };
-            if (itemData.profesionalId) nuevoItem.profesionalId = itemData.profesionalId;
-            if (itemData.fechaInstalacion) nuevoItem.fechaInstalacion = itemData.fechaInstalacion;
-            if (itemData.horarioInstalacion) nuevoItem.horarioInstalacion = itemData.horarioInstalacion;
             reserva.items.push(nuevoItem);
         }
         reserva.updatedAt = new Date().toISOString();

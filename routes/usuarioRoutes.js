@@ -13,6 +13,8 @@ const adminRouter = express.Router();
 // Router para rutas públicas
 const publicRouter = express.Router();
 
+const AuthService = require('../services/authService');
+
 // ============================================================
 // RUTAS PÚBLICAS SIN AUTENTICACIÓN (INVITADOS)
 // ============================================================
@@ -22,11 +24,11 @@ const publicRouter = express.Router();
 publicRouter.get('/register', redirectIfAuthenticated, usuarioController.mostrarFormRegistro);
 
 // POST /register - Registro de nuevos usuarios
-publicRouter.post('/register', redirectIfAuthenticated, validarRegistro, usuarioController.registrar);
+publicRouter.post('/register', redirectIfAuthenticated, validarRegistro, AuthService.registrar);
 
 publicRouter.get('/login', redirectIfAuthenticated, usuarioController.mostrarFormLogin);
 
-publicRouter.post('/login', redirectIfAuthenticated, validarLogin, usuarioController.login);
+publicRouter.post('/login', redirectIfAuthenticated, validarLogin, usuarioController.login, AuthService.login);
 
 // ============================================================
 // RUTAS PÚBLICAS CON AUTENTICACIÓN (perfil del usuario logueado)
@@ -45,7 +47,7 @@ publicRouter.put('/perfil', isUser, validarPerfil, usuarioController.actualizarM
 publicRouter.get('/cambiar-password', isUser, usuarioController.formCambiarPassword);
 
 // PUT /usuarios/cambiar-password - Actualizar contraseña
-publicRouter.put('/cambiar-password', isUser, validarCambioPassword, usuarioController.actualizarPassword);
+publicRouter.put('/cambiar-password', isUser, validarCambioPassword, AuthService.cambiarPassword);
 
 // GET /usuarios/pedidos - Historial de pedidos del usuario
 publicRouter.get('/pedidos', isUser, usuarioController.misPedidos);

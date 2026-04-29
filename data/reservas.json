@@ -2,7 +2,7 @@
   "_meta": {
     "version": "1.0.0",
     "descripcion": "Reservas de productos y servicios (pre-compra)",
-    "ultimaActualizacion": "2026-04-27T18:52:44.890Z"
+    "ultimaActualizacion": "2026-04-29T17:39:35.775Z"
   },
   "reservas": [
     {
@@ -40,82 +40,28 @@
         }
       ],
       "createdAt": "2026-04-21T18:41:40.790Z",
-      "updatedAt": "2026-04-27T18:52:44.890Z"
+      "updatedAt": "2026-04-28T16:57:47.584Z"
     },
     {
       "id": "res_003",
-      "usuarioId": null,
-      "sessionId": "guest_1776786272517_j8logxj1",
-      "items": [
-        {
-          "id": "item_1776797904584_5u5e",
-          "productoId": "prod_004",
-          "servicioId": null,
-          "cantidad": 1,
-          "precioUnitario": 149999,
-          "nombre": "Termotanque Eléctrico 80L"
-        }
-      ],
-      "createdAt": "2026-04-21T18:41:42.940Z",
-      "updatedAt": "2026-04-21T19:10:11.253Z"
-    },
-    {
-      "id": "res_004",
       "usuarioId": "usr_004",
       "sessionId": null,
       "items": [
         {
-          "id": "item_1776813009597_jae0",
-          "productoId": "prod_002",
-          "servicioId": null,
-          "cantidad": 1,
-          "precioUnitario": 109999,
-          "nombre": "Taladro Percutor Inalámbrico 20V"
-        },
-        {
-          "id": "item_1776813174535_q98u",
-          "productoId": "prod_006",
-          "servicioId": null,
-          "cantidad": 3,
-          "precioUnitario": 425211,
-          "nombre": "Lampara Oveja"
-        },
-        {
-          "id": "item_1776813710679_js4l",
+          "id": "item_1777484375775_dgt3",
+          "tipo": "combo",
           "productoId": "prod_001",
-          "servicioId": null,
-          "cantidad": 5,
-          "precioUnitario": 199999,
-          "nombre": "Aire Acondicionado Split 4500 Frigorías"
+          "servicioId": "serv_003",
+          "cantidad": 1,
+          "precioUnitario": 449999,
+          "nombre": "Aire Acondicionado Split 4500 Frigorías + Servicio (Técnico en climatización)",
+          "profesionalId": "prof_001",
+          "fechaInstalacion": "2026-04-30",
+          "horarioInstalacion": "manana"
         }
       ],
-      "createdAt": "2026-04-21T18:58:11.788Z",
-      "updatedAt": "2026-04-21T23:21:53.382Z"
-    },
-    {
-      "id": "res_005",
-      "usuarioId": null,
-      "sessionId": "guest_1776799438287_cup1nsxe",
-      "items": [
-        {
-          "id": "item_1776809957078_hs84",
-          "productoId": "prod_002",
-          "servicioId": null,
-          "cantidad": 4,
-          "precioUnitario": 109999,
-          "nombre": "Taladro Percutor Inalámbrico 20V"
-        }
-      ],
-      "createdAt": "2026-04-21T19:23:58.291Z",
-      "updatedAt": "2026-04-21T22:19:24.849Z"
-    },
-    {
-      "id": "res_006",
-      "usuarioId": null,
-      "sessionId": "guest_1776872269571_opmc6am2",
-      "items": [],
-      "createdAt": "2026-04-22T15:40:13.908Z",
-      "updatedAt": "2026-04-22T17:40:18.211Z"
+      "createdAt": "2026-04-29T11:55:39.116Z",
+      "updatedAt": "2026-04-29T17:39:35.775Z"
     }
   ]
 }

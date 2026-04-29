@@ -35,7 +35,8 @@ class UsuarioModel extends BaseModel {
 
     static getByEmailConHash(email) {
         const datos = this._leerDatos(this.DATA_PATH, this.COLECCION);
-        return datos[this.COLECCION].find(u => u.email === email.toLowerCase().trim()) || null;
+        const usuario = datos[this.COLECCION].find(u => u.email === email.toLowerCase().trim()) || null;
+        return usuario; // sin sanitizar para incluir passwordHash
     }
 
     static create(data) {

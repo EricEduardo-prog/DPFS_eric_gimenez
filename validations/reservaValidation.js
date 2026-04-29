@@ -14,7 +14,7 @@ const validarAgregarItem = [
 
     body('tipo')
         .notEmpty().withMessage('El tipo (producto o servicio) es obligatorio.')
-        .isIn(['producto', 'servicio']).withMessage('Tipo inválido.'),
+        .isIn(['producto', 'servicio', 'combo']).withMessage('Tipo inválido.'),
 
     body('cantidad')
         .notEmpty().withMessage('La cantidad es obligatoria.')
@@ -40,6 +40,9 @@ const validarAgregarItem = [
         }
         if (req.body.tipo === 'servicio' && !req.body.servicioId) {
             throw new Error('Debe especificar servicioId para tipo servicio.');
+        }
+        if (req.body.tipo === 'combo' && (!req.body.productoId || !req.body.servicioId)) {
+            throw new Error('Un combo debe tener productoId y servicioId.');
         }
         return true;
     }),

@@ -8,13 +8,14 @@ const productoModel = ProductoModel;  // alias para mantener consistencia con ot
 const categoriaModel = CategoriaModel;  // alias para mantener consistencia con otros controladores
 const servicioModel = ServicioModel;  // alias para mantener consistencia con otros controladores
 
+const InventoryService = require('../services/InventoryService'); // Importar el servicio de inventario
+const { validationResult } = require('express-validator');
 /**
  * GET / - Página principal
  */
 function home(req, res, next) {
     try {
-        const productos = productoModel.getAll({ soloActivos: true });
-        const categorias = categoriaModel.getAll({ soloActivas: true });
+        const { productos, categorias } = InventoryService.getHomeData(); // Usar el servicio para obtener datos para el home
         res.render('layout', {
             title: 'E-E - Todo para tu hogar',
             pageCss: ['index', 'products_list'],
@@ -34,21 +35,12 @@ function home(req, res, next) {
  */
 function buscar(req, res, next) {
     try {
-        const query = req.query.q || '';
-        let productos = [];
-
-        if (query.trim()) {
-            const todos = productoModel.getAll({ soloActivos: true });
-            const term = query.toLowerCase().trim();
-            productos = todos.filter(p =>
-                p.nombre.toLowerCase().includes(term) ||
-                p.sku.toLowerCase().includes(term) ||
-                (p.descripcion && p.descripcion.toLowerCase().includes(term))
-            );
-        }
+        const errores = validationResult(req);
+        if (!errores.isEmpty()) {
+        let productos = InventoryService.buscarProductos(req.query); // Usar el servicio para buscar productos
 
         res.render('layout', {
-            title: `Resultados: ${query} - E-E`,
+            title: `Resultados: ${req.query} - E-E`,
             pageCss: 'products_list',
             currentPage: 'search',
             body: 'pages/search/results',
@@ -56,6 +48,7 @@ function buscar(req, res, next) {
             query: query,
             total: productos.length
         });
+         }
     } catch (err) {
         next(err);
     }

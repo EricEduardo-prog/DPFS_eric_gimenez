@@ -5,7 +5,7 @@
 
   //  Separar items en productos y servicios para mostrar en secciones distintas
   const productosItems = (items || []).filter(item => item.productoId && !item.servicioId);
-  const serviciosItems = (items || []).filter(item => item.servicioId && !item.productoId);
+  const serviciosItems = (items || []).filter(item => item.servicioId && item.productoId);
 
   //  Calcular subtotal de productos
   for (const item of items || []) {

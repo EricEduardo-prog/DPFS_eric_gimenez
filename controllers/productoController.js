@@ -47,19 +47,6 @@ function _getServiciosInstalacion() {
     }
 }
 
-function _recalcularCantidadProductos() {
-    try {
-        const productos = productoModel.getAll();
-        const categorias = categoriaModel.getAll();
-
-        categorias.forEach(cat => {
-            const cantidad = productos.filter(p => p.categoriaId === cat.id).length;
-            categoriaModel.setCantidadProductos(cat.id, cantidad);
-        });
-    } catch (err) {
-        console.error('Error recalculando cantidadProductos:', err.message);
-    }
-}
 
 /**
  * Obtiene el último producto creado (por fechaCreación o por ID)
@@ -165,7 +152,6 @@ function crear(req, res, next) {
         const ultimoProducto = _getUltimoProducto();
         console.log(`📌 Último producto creado: ${ultimoProducto?.id} - ${ultimoProducto?.nombre}`);
 
-        _recalcularCantidadProductos();
 
         return res.redirect('/admin/productos?mensaje=Producto creado correctamente.' + nuevoProducto.id);
     } catch (err) {
@@ -202,7 +188,7 @@ function actualizar(req, res, next) {
     try {
         const productoActualizado = productoModel.update(req.params.id, req.body);
         console.log('✅ Producto actualizado:', productoActualizado.id);
-        _recalcularCantidadProductos();
+        //_recalcularCantidadProductos();
 
         return res.redirect('/admin/productos?mensaje=Producto actualizado correctamente.');
     } catch (err) {
@@ -217,7 +203,7 @@ function toggleBaja(req, res, next) {
     try {
         const producto = productoModel.toggleActivo(req.params.id);
         const estado = producto.activo ? 'activado' : 'desactivado';
-        _recalcularCantidadProductos();
+        //_recalcularCantidadProductos();
         res.redirect(`/admin/productos?mensaje=Producto ${estado} correctamente.`);
     } catch (err) {
         res.redirect(`/admin/productos?error=${encodeURIComponent(err.message)}`);

@@ -9,6 +9,7 @@ const usuarioModel = UsuarioModel;
 const reservaModel = ReservaModel;
 
 const { validationResult } = require('express-validator');
+const AuthService = require('../services/authService');
 
 const SALT_ROUNDS = 10;
 
@@ -50,88 +51,6 @@ function mostrarFormRegistro(req, res) {
         mensaje: null
     });
 }
-/**
- * POST /register - Registrar nuevo usuario
- */
-async function registrar(req, res) {
-    console.log('🔵 POST /register - Body:', {
-        nombre: req.body.nombre,
-        email: req.body.email,
-        telefono: req.body.telefono
-    });
-
-    // Validar datos
-    const errores = validationResult(req);
-
-    if (!errores.isEmpty()) {
-        console.log('⚠️ Errores de validación:', errores.array().map(e => e.msg));
-        return res.render('layout-auth', {
-            title: 'Registro - E-E',
-            body: 'pages/users/register-content',
-            authScript: 'register',
-            currentPage: 'register',
-            pageCss: [],
-            errores: errores.array().map(e => e.msg),
-            formData: req.body
-        });
-    }
-
-    try {
-        // Verificar si el email ya existe
-        const usuarioExistente = usuarioModel.getByEmail(req.body.email);
-
-        if (usuarioExistente) {
-            return res.render('layout-auth', {
-                title: 'Registro - E-E',
-                body: 'pages/users/register-content',
-                authScript: 'register',
-                currentPage: 'register',
-                pageCss: [],
-                errores: ['El email ya está registrado. Por favor, inicia sesión.'],
-                formData: req.body
-            });
-        }
-
-        // ✅ Verificar que la contraseña existe antes de hashear
-        const password = req.body.password?.trim();
-        if (!password) {
-            throw new Error('La contraseña no puede estar vacía');
-        }
-
-        // Hash de la contraseña
-        const hashedPassword = await bcrypt.hash(req.body.password, SALT_ROUNDS);
-
-        // Normalizar dirección
-        const direccion = _normalizarDireccion(req.body);
-
-        // Crear usuario
-        const nuevoUsuario = usuarioModel.create({
-            nombre: req.body.nombre.trim(),
-            email: req.body.email.trim().toLowerCase(),
-            passwordHash: hashedPassword,
-            telefono: req.body.telefono?.trim() || '',
-            direccion: direccion,
-            aceptoTerminos: true,
-            activo: true
-        });
-
-        console.log('✅ Usuario registrado:', nuevoUsuario.id);
-        res.redirect('/login?mensaje=Registro exitoso. Ahora puedes iniciar sesión.');
-
-    } catch (err) {
-        console.error('❌ Error en registro:', err.message);
-        res.render('layout-auth', {
-            title: 'Registro - E-E',
-            body: 'pages/users/register-content',
-            authScript: 'register',
-            currentPage: 'register',
-            pageCss: [],
-            errores: errores.array().map(e => e.msg).concat(['Ocurrió un error al procesar el registro. Por favor, intentá nuevamente.']),
-            formData: req.body
-        });
-    }
-}
-
 
 /**
  * GET /login - Mostrar formulario de login
@@ -156,14 +75,9 @@ function mostrarFormLogin(req, res) {
     });
 }
 
-/**
- * POST /login - Autenticar usuario
- */
-
 async function login(req, res) {
     console.log('🔵 POST /login - Body:', req.body);
 
-    const { email, password, recordarme } = req.body;
     const errores = validationResult(req);
 
     if (!errores.isEmpty()) {
@@ -172,117 +86,44 @@ async function login(req, res) {
             body: 'pages/users/login-content',
             authScript: 'login',
             currentPage: 'login',
-            pageCss: [],
+            pageCss: 'login_register',
             errores: errores.array().map(e => e.msg),
-            formData: { email },
+            formData: req.body,
             mensaje: null
         });
     }
 
     try {
-        // CORREGIDO: Usar getByEmailConHash para obtener el passwordHash
-        const usuario = usuarioModel.getByEmailConHash(email.trim().toLowerCase());
+        const { email, password, recordarme } = req.body;
+        const usuario = await AuthService.login(email, password);
 
-        if (!usuario) {
-            console.log('⚠️ Usuario no encontrado:', email);
-            return res.render('layout-auth', {
-                title: 'Iniciar Sesión - E-E',
-                body: 'pages/users/login-content',
-                authScript: 'login',
-                currentPage: 'login',
-                pageCss: [],
-                errores: errores.array().map(e => e.msg).concat(['Email o contraseña incorrectos.']),
-                formData: { email },
-                mensaje: null
-            });
-        }
-
-        console.log('✅ Usuario encontrado:', usuario.email);
-        console.log('✅ PasswordHash existe:', !!usuario.passwordHash);
-
-        // Verificar si el usuario está activo
-        if (!usuario.activo) {
-            console.log('⚠️ Usuario inactivo:', usuario.email);
-            return res.render('layout-auth', {
-                title: 'Iniciar Sesión - E-E',
-                body: 'pages/users/login-content',
-                authScript: 'login',
-                pageCss: [],
-                errores: errores.array().map(e => e.msg).concat(['Tu cuenta está desactivada. Contacta al administrador.']),
-                formData: { email },
-                mensaje: null
-            });
-        }
-
-        // Verificar contraseña
-        const passwordValida = await bcrypt.compare(password, usuario.passwordHash);
-
-        if (!passwordValida) {
-            console.log('⚠️ Contraseña incorrecta para:', usuario.email);
-            return res.render('layout-auth', {
-                title: 'Iniciar Sesión - E-E',
-                body: 'pages/users/login-content',
-                authScript: 'login',
-                currentPage: 'login',
-                pageCss: [],
-                errores: errores.array().map(e => e.msg).concat(['Email o contraseña incorrectos.']),
-                formData: { email },
-                mensaje: null
-            });
-        }
-
-        // Guardar usuario en sesión
         req.session.usuarioId = usuario.id;
         req.session.usuarioEmail = usuario.email;
         req.session.usuarioNombre = usuario.nombre;
+        req.session.rol = usuario.rol;
 
-
-
-        console.log('✅ Sesión guardada:', req.session.usuarioId);
-        // Determinar rol (admin o user)
-        let rol = 'user';
-        if (usuario.email === 'admin@ee.com') {
-            rol = 'admin';
+        if (recordarme) {
+            res.cookie('userEmail', usuario.email, { maxAge: 1000 * 60 * 60 * 24 * 30 }); // 30 días
         }
-        req.session.rol = rol;
+
+        // Fusionar reserva guest
+        await AuthService.fusionarReservaGuest(req.cookies?.guestId, usuario.id);
 
         console.log('✅ Login exitoso:', usuario.email);
 
-        // Redirigir según opción "recordarme"
-        if (recordarme === 'true') {
-            req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000; // 30 días
-        }
+        return res.redirect('/usuarios/perfil');
 
-        // Fusionar reserva de guests con la del usuario logueado
-        const guestId = req.cookies?.guestId;
+    } catch (error) {
+        console.error('❌ Error login:', error.message);
 
-        if (guestId) {
-            const reservaGuest = reservaModel.getBySessionId(guestId);
-            const reservaUser = reservaModel.getByUsuarioId(usuario.id);
-
-            if (reservaGuest && reservaUser) {
-                reservaModel.mergeReservas(reservaGuest.id, reservaUser.id);
-            } else if (reservaGuest && !reservaUser) {
-                reservaModel.actualizarUsuarioId(reservaGuest.id, usuario.id);
-            }
-
-            // Limpiar cookie guestId
-            res.clearCookie('guestId');
-        }
-
-        return res.redirect('/perfil?mensaje=Bienvenido de nuevo, ' + usuario.nombre + '!');
-
-    } catch (err) {
-        console.error('❌ Error en login:', err.message);
-        console.error('❌ Stack:', err.stack);
-        res.render('layout-auth', {
+        return res.render('layout-auth', {
             title: 'Iniciar Sesión - E-E',
             body: 'pages/users/login-content',
             authScript: 'login',
             currentPage: 'login',
-            pageCss: [],
-            errores: ['Ocurrió un error al procesar el login.'],
-            formData: { email },
+            pageCss: 'login_register',
+            errores: [error.message],
+            formData: req.body,
             mensaje: null
         });
     }
@@ -437,82 +278,6 @@ function formCambiarPassword(req, res, next) {
         });
     } catch (err) {
         next(err);
-    }
-}
-/**
- * PUT /usuarios/cambiar-password - Actualizar contraseña
- */
-async function actualizarPassword(req, res, next) {
-    console.log('🔐 PUT /usuarios/cambiar-password');
-
-    const usuarioId = req.session?.usuarioId;
-
-
-    // ✅ Usar getByIdWithHash para obtener el passwordHash actual
-    const usuario = usuarioModel.getByIdWithHash(usuarioId);
-
-
-    console.log('✅ Usuario encontrado:', usuario.email);
-    console.log('✅ Tiene passwordHash:', !!usuario.passwordHash);
-
-    const { passwordActual, passwordNuevo, passwordConfirmar } = req.body;
-    const errores = validationResult(req);
-
-    if (!errores.isEmpty()) {
-        return res.render('layout', {
-            title: 'Cambiar Contraseña - E-E',
-            pageCss: ['user_profile', 'admin_form'],
-            currentPage: 'cambiar-password',
-            body: 'pages/users/change-password',
-            errores: errores.array().map(e => e.msg),
-            mensaje: null
-        });
-    }
-
-    try {
-        // Validar contraseña actual
-        const passwordValida = await bcrypt.compare(passwordActual, usuario.passwordHash);
-
-        if (!passwordValida) {
-            console.log('⚠️ Contraseña actual incorrecta');
-            errores.push('La contraseña actual es incorrecta.');
-            return res.render('layout', {
-                title: 'Cambiar Contraseña - E-E',
-                pageCss: ['user-profile', 'admin_form'],
-                currentPage: 'cambiar-password',
-                body: 'pages/users/change-password',
-                errores: errores.array().map(e => e.msg),
-                mensaje: null
-            });
-        }
-
-        // Hashear nueva contraseña
-        const hashedPassword = await bcrypt.hash(passwordNuevo, SALT_ROUNDS);
-        console.log('✅ Nueva contraseña hasheada');
-
-        // ✅ Actualizar - ahora el modelo permitirá cambiar passwordHash
-        usuarioModel.update(usuarioId, {
-            passwordHash: hashedPassword
-        });
-
-        console.log('✅ Contraseña actualizada para:', usuario.email);
-
-        // Opcional: Destruir sesión para requerir nuevo login
-        req.session.destroy((err) => {
-            if (err) console.error('Error al destruir sesión:', err);
-            res.redirect('/login?mensaje=Contraseña actualizada correctamente. Por favor, inicia sesión con tu nueva contraseña.');
-        });
-
-    } catch (err) {
-        console.error('❌ Error:', err.message);
-        res.render('layout', {
-            title: 'Cambiar Contraseña - E-E',
-            pageCss: ['user-profile', 'admin_form'],
-            currentPage: 'cambiar-password',
-            body: 'pages/users/change-password',
-            errores: ['Ocurrió un error al actualizar la contraseña.'],
-            mensaje: null
-        });
     }
 }
 
@@ -785,17 +550,15 @@ function toggleBaja(req, res, next) {
 module.exports = {
     // Registro público
     mostrarFormRegistro,
-    registrar,
     mostrarFormLogin,
-    login,
     logout,
 
     // Perfil usuario
+    login,
     verMiPerfil,
     editarMiPerfil,
     actualizarMiPerfil,
     formCambiarPassword,
-    actualizarPassword,
     misPedidos,
     detallePedido,
 

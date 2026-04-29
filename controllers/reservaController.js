@@ -2,144 +2,36 @@
 
 const ReservaModel = require('../models/reservaModel');
 const ProductoModel = require('../models/productoModel');
-const ServicioModel = require('../models/servicioModel');
 const ProfesionalesModel = require('../models/profesionalesModel');
 const createError = require('http-errors');
 
 const reservaModel = ReservaModel;
 const productoModel = ProductoModel;
-const servicioModel = ServicioModel;
 const profesionalesModel = ProfesionalesModel;
 
 const { validationResult } = require('express-validator');
-// ─────────────────────────────────────────────────────────────────────────────
-// Helpers internos
-// ─────────────────────────────────────────────────────────────────────────────
 
-function _getSessionId(req, res) {
-    // Para usuarios logueados
-    if (req.session?.usuarioId) {
-        return req.session.id;
-    }
+const CheckoutService = require('../services/checkoutService');
+const ReserveService = require('../services/reserveService');
 
-    // Para huéspedes: usar cookie persistente
-    let guestId = req.cookies?.guestId;
-    if (!guestId && res) {
-        guestId = 'guest_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
-        res.cookie('guestId', guestId, {
-            maxAge: 30 * 24 * 60 * 60 * 1000,
-            httpOnly: true,
-            secure: false
-        });
-        console.log('🍪 Nueva cookie guestId creada:', guestId);
-    }
-    return guestId;
-}
 
-async function _getOrCreateReserva(req, res) {
-    const usuarioId = req.session?.usuarioId;
-    const sessionId = _getSessionId(req, res);
-
-    if (usuarioId) {
-        return await reservaModel.getOrCreateByUsuarioId(usuarioId);
-    } else {
-        return await reservaModel.getOrCreateBySessionId(sessionId);
-    }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Controladores con manejo de errores unificado
-// ─────────────────────────────────────────────────────────────────────────────
-
-/**
- * POST /reserva/agregar - Agregar item a la reserva
- */
 async function agregarItem(req, res, next) {
-    const errores = validationResult(req);
-    if (!errores.isEmpty()) {
-        return next(createError(400, 'Datos inválidos', { errors: errores.array() }));
-    }
-    console.log('🔍 usuarioId en sesión:', req.session?.usuarioId);
-    console.log('🔍 sessionId:', req.session?.id);
 
     try {
-        const { productoId, servicioId, cantidad, tipo, profesionalId, fechaInstalacion, horarioInstalacion } = req.body;
-        console.log('🔍 Tipo recibido:', tipo);
-        console.log('🔍 servicioId recibido:', servicioId);
-        if (!cantidad || cantidad < 1) {
-            return next(createError(400, 'La cantidad debe ser mayor a 0'));
+        const errores = validationResult(req);
+
+        if (!errores.isEmpty()) {
+            return res.status(400).json({
+                errores: errores.array().map(e => e.msg)
+            });
         }
 
-        let nombre = '';
-        let precioUnitario = 0;
-
-        if (tipo === 'producto' && productoId) {
-            const producto = productoModel.getById(productoId);
-            if (!producto || !producto.activo) {
-                return next(createError(404, 'Producto no encontrado'));
-            }
-            nombre = producto.nombre;
-            precioUnitario = producto.precio;
-        } else if (tipo === 'servicio' && servicioId) {
-            const servicio = servicioModel.getById(servicioId);
-            if (!servicio || !servicio.activo) {
-                return next(createError(404, 'Servicio no encontrado'));
-            }
-            nombre = servicio.nombre;
-            let precioBase = servicio.precio || 0;
-        } else {
-            return next(createError(400, 'Debe especificar productoId o servicioId'));
-        }
-
-        const reserva = await _getOrCreateReserva(req, res);
-
-        const itemExistenteAntes = reserva.items.find(item =>
-            (productoId && item.productoId === productoId) ||
-            (servicioId && item.servicioId === servicioId)
-        );
-
-        const cantidadAnterior = itemExistenteAntes?.cantidad || 0;
-
-
-
-        //  Preparar datos adicionales para el item
-        const itemData = {
-            cantidad: parseInt(cantidad),
-            precioUnitario: precioUnitario,
-            nombre: nombre
-        };
-
-        //  Agregar profesional si viene en la petición
-        if (profesionalId) {
-            itemData.profesionalId = profesionalId;
-        }
-
-        //  Agregar fecha de instalación si viene
-        if (fechaInstalacion) {
-            itemData.fechaInstalacion = fechaInstalacion;
-        }
-
-        //  Agregar horario de instalación si viene
-        if (horarioInstalacion) {
-            itemData.horarioInstalacion = horarioInstalacion;
-        }
-
-        const resultado = reservaModel.addItem(
-            reserva.id,
-            productoId || null,
-            servicioId || null,
-            itemData
-        );
-
-        const nuevaCantidadTotal = cantidadAnterior + parseInt(cantidad);
+        const resultado = await ReserveService.agregarItem(req, res, req.body);
 
         res.json({
             success: true,
-            item: resultado,
-            cantidadAnterior: cantidadAnterior,
-            nuevaCantidad: nuevaCantidadTotal,
-            totalItems: reserva.items?.reduce((sum, item) => sum + (item.cantidad || 1), 0) || 0,
-            reservaId: reserva.id
+            item: resultado.item,
+            reservaId: resultado.reservaId
         });
 
     } catch (err) {
@@ -155,16 +47,7 @@ async function detectoProductoEnReserva(req, res, next) {
     try {
         const { itemId } = req.params;
 
-        const usuarioId = req.session?.usuarioId;
-        const sessionId = _getSessionId(req, res);
-
-        let reserva = null;
-
-        if (usuarioId) {
-            reserva = await reservaModel.getByUsuarioId(usuarioId);
-        } else {
-            reserva = await reservaModel.getBySessionId(sessionId);
-        }
+        const reserva = await ReserveService.getReserva(req);
 
         if (!reserva) {
             return res.json({ existe: false, cantidad: 0 });
@@ -187,19 +70,23 @@ async function detectoProductoEnReserva(req, res, next) {
  */
 async function verReserva(req, res, next) {
     try {
-        const usuarioId = req.session?.usuarioId;
-        const sessionId = _getSessionId(req, res);
-
-        let reserva = null;
-        // Obtener reserva según usuario o sesión
-        if (usuarioId) {
-            reserva = await reservaModel.getByUsuarioId(usuarioId);
-        } else {
-            reserva = await reservaModel.getBySessionId(sessionId);
+        const reserva = await ReserveService.getReserva(req); // Solo lectura
+        if (!reserva) {
+            return res.render('layout', {
+                title: 'Mi Reserva - E-E',
+                pageCss: 'reserve',
+                currentPage: 'reserve',
+                body: 'pages/products/reserve',
+                reserva: null,
+                items: [],
+                productosItems: [],
+                serviciosItems: [],
+                subtotal: 0,
+                totalServicios: 0,
+                total: 0
+            });
         }
-
-        const items = reserva?.items || [];
-
+        const items = reserva.items || [];
         //  ENRIQUECER ITEMS CON DATOS DEL PROFESIONAL (si tienen profesionalId)
         // Esto permite mostrar nombre, rating y trabajos completados del profesional en la vista
 
@@ -218,23 +105,12 @@ async function verReserva(req, res, next) {
             return item;
         }));
 
+
         // Separar productos y servicios
         const productosItems = itemsEnriquecidos.filter(item => item.productoId && !item.servicioId);
         const serviciosItems = itemsEnriquecidos.filter(item => item.servicioId && !item.productoId);
 
-        // Calcular totales
-        let subtotal = 0;
-        for (const item of itemsEnriquecidos) {
-            subtotal += (item.precioUnitario || 0) * (item.cantidad || 1);
-        }
-
-        // Calcular total de servicios (si tienen precio)
-        let totalServicios = 0;
-        for (const item of serviciosItems) {
-            totalServicios += (item.precioUnitario || 0);
-        }
-
-        const total = subtotal + totalServicios;
+        const { subtotal, totalServicios, total } = ReserveService.calcularTotales(reserva);
 
         res.render('layout', {
             title: 'Mi Reserva - E-E',
@@ -248,7 +124,7 @@ async function verReserva(req, res, next) {
             subtotal: subtotal,
             totalServicios: totalServicios,
             total: total,
-            esUsuario: !!usuarioId,
+            esUsuario: reserva.usuarioId,
             mensaje: req.query.mensaje || null,
             error: req.query.error || null
         });
@@ -263,60 +139,40 @@ async function verReserva(req, res, next) {
     }
 }
 
-/**
- * PUT /reserva/item/:itemId - Actualizar cantidad de un item
- */
-async function actualizarItem(req, res, next) {
-    const errores = validationResult(req);
-    if (!errores.isEmpty()) {
-        return next(createError(400, 'Datos inválidos', { errors: errores.array() }));
-    }
+async function actualizarCantidad(req, res, next) {
     try {
+        const errores = validationResult(req);
+
+        if (!errores.isEmpty()) {
+            return res.status(400).json({
+                errores: errores.array().map(e => e.msg)
+            });
+        }
+
         const { itemId } = req.params;
         const { cantidad } = req.body;
 
-        if (!cantidad || cantidad < 0) {
-            return next(createError(400, 'Cantidad inválida'));
+        console.log('🟡 actualizarCantidad:', { itemId, cantidad });
+
+        if (parseInt(cantidad) === 0) {
+            await ReserveService.eliminarItem(req, res, itemId);
+
+            return res.json({
+                success: true,
+                eliminado: true
+            });
         }
 
-        const usuarioId = req.session?.usuarioId;
-        const sessionId = _getSessionId(req, res);
-
-        let reserva = null;
-        if (usuarioId) {
-            reserva = await reservaModel.getByUsuarioId(usuarioId);
-        } else {
-            reserva = await reservaModel.getBySessionId(sessionId);
-        }
-
-        if (!reserva) {
-            return next(createError(404, 'Reserva no encontrada'));
-        }
-
-        if (cantidad === 0) {
-            reservaModel.removeItem(reserva.id, itemId);
-        } else {
-            reservaModel.updateItem(reserva.id, itemId, parseInt(cantidad));
-        }
-
-        const reservaActualizada = usuarioId ?
-            await reservaModel.getByUsuarioId(usuarioId) :
-            await reservaModel.getBySessionId(sessionId);
-
-        let subtotal = 0;
-        for (const item of reservaActualizada?.items || []) {
-            subtotal += (item.precioUnitario || 0) * item.cantidad;
-        }
+        //  actualizar cantidad
+        const resultado = await ReserveService.actualizarCantidad(req, res, itemId, cantidad);
 
         res.json({
             success: true,
-            items: reservaActualizada?.items || [],
-            subtotal: subtotal,
-            total: subtotal
+            item: resultado
         });
 
     } catch (err) {
-        console.error('❌ Error en actualizarItem:', err.message);
+        console.error('❌ Error en actualizarCantidad:', err.message);
         next(createError(500, err.message));
     }
 }
@@ -326,18 +182,10 @@ async function actualizarItem(req, res, next) {
  */
 async function contarItems(req, res, next) {
     try {
-        const usuarioId = req.session?.usuarioId;
-        const sessionId = _getSessionId(req, res);
-
-        let reserva = null;
-        if (usuarioId) {
-            reserva = await reservaModel.getByUsuarioId(usuarioId);
-        } else if (sessionId) {
-            reserva = await reservaModel.getBySessionId(sessionId);
-        }
-
+        const reserva = await ReserveService.getReserva(req);
+        console.log('🔍 contarItems - reserva encontrada:', reserva);
         const totalItems = reserva?.items?.reduce((sum, item) => sum + (item.cantidad || 1), 0) || 0;
-
+        console.log('🔍 contarItems - totalItems:', totalItems);
         res.json({ totalItems: totalItems });
 
     } catch (err) {
@@ -346,49 +194,13 @@ async function contarItems(req, res, next) {
     }
 }
 
-/**
- * DELETE /reserva/item/:itemId - Eliminar un item
- */
 async function eliminarItem(req, res, next) {
-    const errores = validationResult(req);
-    if (!errores.isEmpty()) {
-        return next(createError(400, 'Datos inválidos', { errors: errores.array() }));
-    }
-
     try {
         const { itemId } = req.params;
 
-        const usuarioId = req.session?.usuarioId;
-        const sessionId = _getSessionId(req, res);
+        await ReserveService.eliminarItem(req, res, itemId);
 
-        let reserva = null;
-        if (usuarioId) {
-            reserva = await reservaModel.getByUsuarioId(usuarioId);
-        } else {
-            reserva = await reservaModel.getBySessionId(sessionId);
-        }
-
-        if (!reserva) {
-            return next(createError(404, 'Reserva no encontrada'));
-        }
-
-        reservaModel.removeItem(reserva.id, itemId);
-
-        const reservaActualizada = usuarioId ?
-            await reservaModel.getByUsuarioId(usuarioId) :
-            await reservaModel.getBySessionId(sessionId);
-
-        let subtotal = 0;
-        for (const item of reservaActualizada?.items || []) {
-            subtotal += (item.precioUnitario || 0) * item.cantidad;
-        }
-
-        res.json({
-            success: true,
-            items: reservaActualizada?.items || [],
-            subtotal: subtotal,
-            total: subtotal
-        });
+        res.json({ success: true });
 
     } catch (err) {
         console.error('❌ Error en eliminarItem:', err.message);
@@ -425,12 +237,28 @@ async function vaciarReserva(req, res, next) {
     }
 }
 
+// nuevo metodo POST reserva/checkout - usa services/checkoutService.js
+async function confirmarCheckout(req, res, next) {
+    try {
+        const usuarioId = req.session.usuarioId; // Extrae datos de la sesión [2]
+
+        // El controlador NO sabe cómo se procesa la compra, solo llama al servicio
+        const resultado = await CheckoutService.procesarCompra(usuarioId, req.body);
+
+        res.redirect(`/confirmacion?orderId=${resultado.orderId}`);
+    } catch (err) {
+        // El servicio lanza errores de negocio, el controlador los captura [2]
+        res.redirect(`/reserva?error=${encodeURIComponent(err.message)}`);
+    }
+}
+
 module.exports = {
-    agregarItem,
     verReserva,
-    actualizarItem,
+    agregarItem,
     contarItems,
     eliminarItem,
     vaciarReserva,
-    detectoProductoEnReserva
+    confirmarCheckout,
+    detectoProductoEnReserva,
+    actualizarCantidad
 };
