@@ -1,10 +1,8 @@
 // services/authService.js
-//
 'use strict';
 
-const UsuarioModel = require('../models/usuarioModel');
+const { User, Booking, BookingItem, sequelize } = require('../database/models');
 const bcrypt = require('bcrypt');
-const ReservaModel = require('../models/reservaModel');
 const createError = require('http-errors');
 
 const SALT_ROUNDS = 10;
@@ -13,51 +11,52 @@ class AuthService {
     /**
      * Registra un nuevo usuario.
      * @param {Object} data - { nombre, email, password, telefono, direccion, aceptoTerminos }
-     * @returns {Object} usuario creado (sin passwordHash)
+     * @returns {Promise<Object>} usuario creado (sin passwordHash)
      */
     static async registrar(data) {
-        // Verificar email único
-        const existente = UsuarioModel.getByEmail(data.email);
+        const existente = await User.findOne({ where: { email: data.email } });
         if (existente) {
             throw createError(400, 'El email ya está registrado.');
         }
-        // Hashear password
         const hashedPassword = await bcrypt.hash(data.password, SALT_ROUNDS);
-        // Crear usuario
-        const nuevoUsuario = UsuarioModel.create({
-            nombre: data.nombre,
+        const nuevoUsuario = await User.create({
+            id: `usr_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+            name: data.nombre,
             email: data.email,
-            passwordHash: hashedPassword,
-            telefono: data.telefono || '',
-            direccion: data.direccion || null,
-            aceptoTerminos: data.aceptoTerminos,
-            activo: true,
+            password_hash: hashedPassword,
+            phone: data.telefono || '',
+            address: data.direccion || null,
+            terms_accepted: data.aceptoTerminos,
+            is_active: true,
+            registered_at: new Date()
         });
-        return nuevoUsuario;
+        // Devolver objeto sin hash
+        const { password_hash, ...usuarioSinHash } = nuevoUsuario.toJSON();
+        return usuarioSinHash;
     }
 
     /**
-     * Autentica un usuario y devuelve sus datos para la sesión.
+     * Autentica un usuario.
      * @param {string} email
      * @param {string} password
-     * @returns {Object} { id, nombre, email, rol }
+     * @returns {Promise<Object>} { id, nombre, email, rol }
      */
     static async login(email, password) {
-        const usuario = UsuarioModel.getByEmailConHash(email);
+        const usuario = await User.findOne({ where: { email } });
         if (!usuario) {
             throw createError(401, 'Email o contraseña incorrectos.');
         }
-        if (!usuario.activo) {
+        if (!usuario.is_active) {
             throw createError(401, 'Tu cuenta está desactivada. Contacta al administrador.');
         }
-        const passwordValida = await bcrypt.compare(password, usuario.passwordHash);
+        const passwordValida = await bcrypt.compare(password, usuario.password_hash);
         if (!passwordValida) {
             throw createError(401, 'Email o contraseña incorrectos.');
         }
         const rol = usuario.email === 'admin@ee.com' ? 'admin' : 'user';
         return {
             id: usuario.id,
-            nombre: usuario.nombre,
+            nombre: usuario.name,
             email: usuario.email,
             rol,
         };
@@ -68,19 +67,19 @@ class AuthService {
      * @param {string} usuarioId
      * @param {string} passwordActual
      * @param {string} passwordNuevo
-     * @returns {boolean}
+     * @returns {Promise<boolean>}
      */
     static async cambiarPassword(usuarioId, passwordActual, passwordNuevo) {
-        const usuario = UsuarioModel.getByIdWithHash(usuarioId);
+        const usuario = await User.findByPk(usuarioId);
         if (!usuario) {
             throw createError(404, 'Usuario no encontrado.');
         }
-        const valida = await bcrypt.compare(passwordActual, usuario.passwordHash);
+        const valida = await bcrypt.compare(passwordActual, usuario.password_hash);
         if (!valida) {
             throw createError(401, 'La contraseña actual es incorrecta.');
         }
         const hashedNew = await bcrypt.hash(passwordNuevo, SALT_ROUNDS);
-        UsuarioModel.update(usuarioId, { passwordHash: hashedNew });
+        await usuario.update({ password_hash: hashedNew });
         return true;
     }
 
@@ -88,15 +87,25 @@ class AuthService {
      * Fusiona la reserva de invitado con la del usuario después del login.
      * @param {string} guestId - cookie guestId
      * @param {string} usuarioId
+     * @returns {Promise<void>}
      */
     static async fusionarReservaGuest(guestId, usuarioId) {
         if (!guestId) return;
-        const reservaGuest = ReservaModel.getBySessionId(guestId);
-        const reservaUser = ReservaModel.getByUsuarioId(usuarioId);
+
+        const reservaGuest = await Booking.findOne({ where: { session_id: guestId } });
+        const reservaUser = await Booking.findOne({ where: { user_id: usuarioId } });
+
         if (reservaGuest && reservaUser) {
-            ReservaModel.mergeReservas(reservaGuest.id, reservaUser.id);
+            // Mover todos los items de la reserva invitado a la del usuario
+            await BookingItem.update(
+                { booking_id: reservaUser.id },
+                { where: { booking_id: reservaGuest.id } }
+            );
+            // Eliminar la reserva invitado
+            await reservaGuest.destroy();
         } else if (reservaGuest && !reservaUser) {
-            ReservaModel.actualizarUsuarioId(reservaGuest.id, usuarioId);
+            // Asignar la reserva invitado al usuario
+            await reservaGuest.update({ user_id: usuarioId, session_id: null });
         }
     }
 }

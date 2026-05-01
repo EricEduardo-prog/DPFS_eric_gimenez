@@ -50,8 +50,8 @@
                   <% if (servicios && servicios.length> 0) { %>
                     <% servicios.forEach(function(serv) { %>
                       <option value="<%= serv.id %>" <%=filtros.servicioId===serv.id ? 'selected' : '' %>>
-                        <%= serv.icono || '🔧' %>
-                          <%= serv.nombre %>
+                        <%= serv.icon || '🔧' %>
+                          <%= serv.name %>
                       </option>
                       <% }); %>
                         <% } %>
@@ -97,25 +97,25 @@
                     </thead>
                     <tbody>
                       <% profesionales.forEach(function(prof) { %>
-                        <tr class="<%= !prof.activo ? 'admin-tabla__fila--inactiva' : '' %>" data-id="<%= prof.id %>"
-                          data-nombre="<%= prof.nombre.toLowerCase() %>"
-                          data-matricula="<%= prof.matricula.toLowerCase() %>"
-                          data-servicio="<%= (prof.servicioNombre || prof.profesion || '').toLowerCase() %>"
-                          data-valoracion="<%= prof.valoracion && prof.valoracion.valor ? prof.valoracion.valor : 0 %>">
+                        <tr class="<%= !prof.is_active ? 'admin-tabla__fila--inactiva' : '' %>" data-id="<%= prof.id %>"
+                          data-nombre="<%= prof.name.toLowerCase() %>"
+                          data-matricula="<%= prof.license_number.toLowerCase() %>"
+                          data-servicio="<%= (prof.profession || prof.custom_service || '').toLowerCase() %>"
+                          data-valoracion="<%= prof.rating_value && prof.rating_count > 0 ? prof.rating_value : 0 %>">
 
                           <!-- Nombre + avatar -->
                           <td>
                             <div class="admin-tabla__celda-producto">
                               <div class="admin-tabla__avatar">
-                                <%= prof.nombre.charAt(0).toUpperCase() %>
+                                <%= prof.name.charAt(0).toUpperCase() %>
                               </div>
                               <div class="admin-tabla__producto-info">
                                 <span class="admin-tabla__nombre">
-                                  <%= prof.nombre %>
+                                  <%= prof.name %>
                                 </span>
                                 <% if (prof.trabajosCompletados> 0) { %>
                                   <span class="admin-tabla__descripcion-corta">
-                                    <%= prof.trabajosCompletados %> trabajos
+                                    <%= prof.jobs_completed %> trabajos
                                   </span>
                                   <% } %>
                               </div>
@@ -123,23 +123,23 @@
                           </td>
 
                           <!-- Matrícula -->
-                          <td><code class="admin-tabla__codigo"><%= prof.matricula %></code></td>
+                          <td><code class="admin-tabla__codigo"><%= prof.license_number %></code></td>
 
                           <!-- Servicio -->
                           <td>
                             <span class="admin-tabla__badge-mini admin-tabla__badge-mini--info">
-                              <%= prof.servicioNombre || prof.profesion || 'No especificado' %>
+                              <%= prof.profession || prof.custom_service || 'No especificado' %>
                             </span>
                           </td>
 
                           <!-- Estado del servicio -->
                           <td>
-                            <span class="estado-servicio-badge estado-<%= prof.estadoServicio || 'pendiente' %>">
-                              <% if (prof.estadoServicio==='aprobado' ) { %>
+                            <span class="estado-servicio-badge estado-<%= prof.service_status || 'pendiente' %>">
+                              <% if (prof.service_status==='aprobado' ) { %>
                                 ✅ Aprobado
-                                <% } else if (prof.estadoServicio==='pendiente' ) { %>
+                                <% } else if (prof.service_status==='pendiente' ) { %>
                                   ⏳ Pendiente
-                                  <% } else if (prof.estadoServicio==='rechazado' ) { %>
+                                  <% } else if (prof.service_status==='rechazado' ) { %>
                                     ❌ Rechazado
                                     <% } else { %>
                                       —
@@ -153,9 +153,9 @@
                               <div>
                                 <%= prof.email %>
                               </div>
-                              <% if (prof.telefono) { %>
+                              <% if (prof.phone) { %>
                                 <div class="admin-tabla__texto-suave">
-                                  <%= prof.telefono %>
+                                  <%= prof.phone %>
                                 </div>
                                 <% } %>
                             </div>
@@ -163,13 +163,13 @@
 
                           <!-- Valoración -->
                           <td class="admin-tabla__td-num">
-                            <% if (prof.valoracion && prof.valoracion.valor> 0) { %>
+                            <% if (prof.rating_value && prof.rating_count> 0) { %>
                               <div class="admin-tabla__rating">
                                 <span>★</span>
                                 <span>
-                                  <%= prof.valoracion.valor.toFixed(1) %>
+                                  <%= prof.rating_value.toFixed(1) %>
                                 </span>
-                                <span class="admin-tabla__texto-suave">(<%= prof.valoracion.cantidad %>)</span>
+                                <span class="admin-tabla__texto-suave">(<%= prof.rating_count %>)</span>
                               </div>
                               <% } else { %>
                                 <span class="admin-tabla__texto-suave">—</span>
@@ -183,8 +183,8 @@
                                 <% const diasAbr=['L', 'M' , 'Mi' , 'J' , 'V' ]; %>
                                   <% for (let i=0; i < dias.length; i++) { %>
                                     <% const dia=dias[i]; %>
-                                      <% const disponible=prof.disponibilidad && prof.disponibilidad[dia] &&
-                                        (prof.disponibilidad[dia].manana || prof.disponibilidad[dia].tarde); %>
+                                      <% const disponible=prof.availability && prof.availability[dia] &&
+                                        (prof.availability[dia].manana || prof.availability[dia].tarde); %>
                                         <span
                                           class="admin-tabla__dia-dot <%= disponible ? 'admin-tabla__dia-dot--activo' : '' %>"
                                           title="<%= diasAbr[i] %> <%= disponible ? 'disponible' : 'no disponible' %>">
@@ -196,8 +196,9 @@
 
                           <!-- Estado -->
                           <td>
-                            <span class="admin-estado-dot admin-estado-dot--<%= prof.activo ? 'activo' : 'inactivo' %>">
-                              <%= prof.activo ? 'Activo' : 'Inactivo' %>
+                            <span
+                              class="admin-estado-dot admin-estado-dot--<%= prof.is_active ? 'activo' : 'inactivo' %>">
+                              <%= prof.is_active ? 'Activo' : 'Inactivo' %>
                             </span>
                           </td>
 
@@ -214,14 +215,14 @@
                               </a>
 
                               <form action="/admin/profesionales/<%= prof.id %>/baja" method="POST"
-                                class="form-toggle-estado" data-id="<%= prof.id %>" data-nombre="<%= prof.nombre %>"
-                                data-activo="<%= prof.activo %>">
+                                class="form-toggle-estado" data-id="<%= prof.id %>" data-nombre="<%= prof.name %>"
+                                data-activo="<%= prof.is_active %>">
                                 <input type="hidden" name="_method" value="DELETE">
                                 <button type="button"
-                                  class="admin-tabla__btn-accion <%= prof.activo ? 'admin-tabla__btn-accion--baja' : 'admin-tabla__btn-accion--alta' %> btn-toggle-estado"
-                                  title="<%= prof.activo ? 'Dar de baja' : 'Reactivar' %>" data-id="<%= prof.id %>"
-                                  data-nombre="<%= prof.nombre %>" data-activo="<%= prof.activo %>">
-                                  <% if (prof.activo) { %>
+                                  class="admin-tabla__btn-accion <%= prof.is_active ? 'admin-tabla__btn-accion--baja' : 'admin-tabla__btn-accion--alta' %> btn-toggle-estado"
+                                  title="<%= prof.is_active ? 'Dar de baja' : 'Reactivar' %>" data-id="<%= prof.id %>"
+                                  data-nombre="<%= prof.name %>" data-activo="<%= prof.is_active %>">
+                                  <% if (prof.is_active) { %>
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                       stroke-width="2">
                                       <circle cx="12" cy="12" r="10" />

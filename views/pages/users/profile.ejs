@@ -8,7 +8,7 @@
             <div class="admin-formulario__titulo-bloque">
                 <h1 class="admin-formulario__titulo">Mi Perfil</h1>
                 <span class="admin-formulario__badge admin-formulario__badge--edicion">
-                    <%= usuario.activo ? 'Cuenta activa' : 'Cuenta inactiva' %>
+                    <%= usuario.is_active ? 'Cuenta activa' : 'Cuenta inactiva' %>
                 </span>
             </div>
             <p class="campo-formulario__ayuda">Administrá tus datos personales y de contacto</p>
@@ -52,7 +52,7 @@
                                         <div class="admin-detalle__clave">Nombre completo</div>
                                         <div class="admin-detalle__valor">
                                             <strong>
-                                                <%= usuario.nombre %>
+                                                <%= usuario.name %>
                                             </strong>
                                         </div>
                                     </div>
@@ -68,10 +68,10 @@
                                     <div class="admin-detalle__campo">
                                         <div class="admin-detalle__clave">Teléfono</div>
                                         <div class="admin-detalle__valor">
-                                            <% if (usuario.telefono) { %>
-                                                <a href="tel:<%= usuario.telefono.replace(/\s/g, '') %>"
+                                            <% if (usuario.phone) { %>
+                                                <a href="tel:<%= usuario.phone.replace(/\s/g, '') %>"
                                                     class="admin-detalle__link">
-                                                    <%= usuario.telefono %>
+                                                    <%= usuario.phone %>
                                                 </a>
                                                 <% } else { %>
                                                     <span class="admin-detalle__vacio">No especificado</span>
@@ -87,17 +87,16 @@
                                         Dirección de envío
                                     </h2>
 
-                                    <% if (usuario.direccion && (usuario.direccion.calle || usuario.direccion.ciudad)) {
-                                        %>
+                                    <% if (usuario.address && (usuario.address.calle || usuario.address.ciudad)) { %>
                                         <div class="admin-detalle__campo">
                                             <div class="admin-detalle__clave">Calle y número</div>
                                             <div class="admin-detalle__valor">
-                                                <%= usuario.direccion.calle || '' %>
-                                                    <%= usuario.direccion.numero || '' %>
-                                                        <% if (usuario.direccion.piso || usuario.direccion.depto) { %>
+                                                <%= usuario.address.calle || '' %>
+                                                    <%= usuario.address.numero || '' %>
+                                                        <% if (usuario.address.piso || usuario.address.depto) { %>
                                                             <br><small class="admin-detalle__nota">
-                                                                Piso: <%= usuario.direccion.piso || '-' %>
-                                                                    Depto: <%= usuario.direccion.depto || '-' %>
+                                                                Piso: <%= usuario.address.piso || '-' %>
+                                                                    Depto: <%= usuario.address.depto || '-' %>
                                                             </small>
                                                             <% } %>
                                             </div>
@@ -105,14 +104,14 @@
                                         <div class="admin-detalle__campo">
                                             <div class="admin-detalle__clave">Localidad</div>
                                             <div class="admin-detalle__valor">
-                                                <%= usuario.direccion.ciudad || '' %>, <%= usuario.direccion.provincia
-                                                        || '' %>
+                                                <%= usuario.address.ciudad || '' %>, <%= usuario.address.provincia || ''
+                                                        %>
                                             </div>
                                         </div>
                                         <div class="admin-detalle__campo">
                                             <div class="admin-detalle__clave">Código postal</div>
                                             <div class="admin-detalle__valor">
-                                                <%= usuario.direccion.codigoPostal || 'No especificado' %>
+                                                <%= usuario.address.codigoPostal || 'No especificado' %>
                                             </div>
                                         </div>
                                         <% } else { %>
@@ -138,18 +137,17 @@
                                     <div class="admin-detalle__campo">
                                         <div class="admin-detalle__clave">Fecha de registro</div>
                                         <div class="admin-detalle__valor">
-                                            <%= new Date(usuario.fechaRegistro).toLocaleDateString('es-AR', {
+                                            <%= new Date(usuario.created_at).toLocaleDateString('es-AR', {
                                                 day: 'numeric' , month: 'long' , year: 'numeric' , hour: '2-digit' ,
                                                 minute: '2-digit' }) %>
                                         </div>
                                     </div>
 
-                                    <% if (usuario.fechaModificacion && usuario.fechaModificacion
-                                        !==usuario.fechaRegistro) { %>
+                                    <% if (usuario.updated_at && usuario.updated_at !==usuario.created_at) { %>
                                         <div class="admin-detalle__campo">
                                             <div class="admin-detalle__clave">Última modificación</div>
                                             <div class="admin-detalle__valor">
-                                                <%= new Date(usuario.fechaModificacion).toLocaleDateString('es-AR', {
+                                                <%= new Date(usuario.updated_at).toLocaleDateString('es-AR', {
                                                     day: 'numeric' , month: 'long' , year: 'numeric' , hour: '2-digit' ,
                                                     minute: '2-digit' }) %>
                                             </div>
@@ -165,10 +163,10 @@
                                 <div class="admin-lateral__card">
                                     <div class="profile-avatar">
                                         <div class="profile-avatar__circle">
-                                            <%= usuario.nombre.charAt(0).toUpperCase() %>
+                                            <%= usuario.name.charAt(0).toUpperCase() %>
                                         </div>
                                         <h3 class="profile-avatar__name">
-                                            <%= usuario.nombre %>
+                                            <%= usuario.name %>
                                         </h3>
                                         <p class="profile-avatar__email">
                                             <%= usuario.email %>
@@ -202,13 +200,13 @@
                                     <h3 class="admin-lateral__card-titulo">Estado de la cuenta</h3>
                                     <div class="estado-indicator">
                                         <span
-                                            class="estado-indicator__dot estado-indicator__dot--<%= usuario.activo ? 'activo' : 'inactivo' %>"></span>
+                                            class="estado-indicator__dot estado-indicator__dot--<%= usuario.is_active ? 'activo' : 'inactivo' %>"></span>
                                         <span class="estado-indicator__texto">
-                                            <%= usuario.activo ? 'Cuenta activa' : 'Cuenta inactiva' %>
+                                            <%= usuario.is_active ? 'Cuenta activa' : 'Cuenta inactiva' %>
                                         </span>
                                     </div>
                                     <p class="campo-formulario__ayuda" style="margin-top: var(--espacio-sm);">
-                                        <%= usuario.activo ? 'Tu cuenta está activa y puedes realizar compras.'
+                                        <%= usuario.is_active ? 'Tu cuenta está activa y puedes realizar compras.'
                                             : 'Tu cuenta está desactivada. Contacta al administrador.' %>
                                     </p>
                                 </div>

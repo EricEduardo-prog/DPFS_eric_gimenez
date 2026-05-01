@@ -59,14 +59,14 @@
                                         </thead>
                                         <tbody>
                                             <% profesionales.forEach(function(prof) { %>
-                                                <tr class="<%= !prof.activo ? 'admin-tabla__fila--inactiva' : '' %>">
+                                                <tr class="<%= !prof.is_active ? 'admin-tabla__fila--inactiva' : '' %>">
                                                     <td class="admin-tabla__celda-producto">
                                                         <div class="admin-tabla__avatar">
-                                                            <%= prof.nombre.charAt(0).toUpperCase() %>
+                                                            <%= prof.name.charAt(0).toUpperCase() %>
                                                         </div>
                                                         <div class="admin-tabla__producto-info">
                                                             <span class="admin-tabla__nombre">
-                                                                <%= prof.nombre %>
+                                                                <%= prof.name %>
                                                             </span>
                                                             <span class="admin-tabla__descripcion-corta">
                                                                 <%= prof.email %>
@@ -76,16 +76,17 @@
                                                     <td>
                                                         <span
                                                             class="admin-tabla__badge-mini admin-tabla__badge-mini--info">
-                                                            <%= prof.servicioNombre %>
+                                                            <%= prof.profession %>
                                                         </span>
                                                     </td>
-                                                    <td><code class="admin-tabla__codigo"><%= prof.matricula %></code>
+                                                    <td><code
+                                                            class="admin-tabla__codigo"><%= prof.license_number %></code>
                                                     </td>
                                                     <td>
-                                                        <%= prof.experienciaAnios || 0 %> años
+                                                        <%= prof.experience_years || 0 %> años
                                                     </td>
                                                     <td>
-                                                        <% if (prof.certificacionUrl) { %>
+                                                        <% if (prof.certification_Url) { %>
                                                             <span class="admin-tabla__badge-mini"
                                                                 style="background: #d4edda; color: #155724;">
                                                                 📎 Adjuntada
@@ -98,7 +99,7 @@
                                                                 <% } %>
                                                     </td>
                                                     <td>
-                                                        <%= new Date(prof.fechaAlta).toLocaleDateString('es-AR') %>
+                                                        <%= new Date(prof.created_at).toLocaleDateString('es-AR') %>
                                                     </td>
                                                     <td>
                                                         <div class="admin-tabla__acciones">
@@ -141,11 +142,11 @@
                                                             <tr>
                                                                 <td class="admin-tabla__celda-producto">
                                                                     <div class="admin-tabla__avatar">
-                                                                        <%= prof.nombre.charAt(0).toUpperCase() %>
+                                                                        <%= prof.name.charAt(0).toUpperCase() %>
                                                                     </div>
                                                                     <div class="admin-tabla__producto-info">
                                                                         <span class="admin-tabla__nombre">
-                                                                            <%= prof.nombre %>
+                                                                            <%= prof.name %>
                                                                         </span>
                                                                         <span class="admin-tabla__descripcion-corta">
                                                                             <%= prof.email %>
@@ -153,17 +154,17 @@
                                                                     </div>
                                                                 </td>
                                                                 <td>
-                                                                    <%= prof.servicioNombre %>
+                                                                    <%= prof.profession %>
                                                                 </td>
                                                                 <td><code
-                                                                        class="admin-tabla__codigo"><%= prof.matricula %></code>
+                                                                        class="admin-tabla__codigo"><%= prof.license_number %></code>
                                                                 </td>
                                                                 <td>
-                                                                    <%= prof.observacionAdmin || '—' %>
+                                                                    <%= prof.admin_observation || '—' %>
                                                                 </td>
                                                                 <td>
-                                                                    <%= prof.fechaValidacion ? new
-                                                                        Date(prof.fechaValidacion).toLocaleDateString('es-AR')
+                                                                    <%= prof.created_at ? new
+                                                                        Date(prof.created_at).toLocaleDateString('es-AR')
                                                                         : '—' %>
                                                                 </td>
                                                                 <td>

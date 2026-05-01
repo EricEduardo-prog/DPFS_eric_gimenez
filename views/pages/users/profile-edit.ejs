@@ -18,7 +18,7 @@
                         <%= titulo %>
                     </h1>
                     <span class="admin-formulario__badge admin-formulario__badge--edicion">
-                        <%= usuario.activo ? 'Cuenta activa' : 'Cuenta inactiva' %>
+                        <%= usuario.is_active ? 'Cuenta activa' : 'Cuenta inactiva' %>
                     </span>
                 </div>
                 <p class="campo-formulario__ayuda">Actualizá tus datos personales y de contacto</p>
@@ -48,7 +48,7 @@
                                         Nombre completo <span class="campo-requerido">*</span>
                                     </label>
                                     <input type="text" id="nombre" name="nombre" class="entrada"
-                                        placeholder="Ej: María García" value="<%= datos.nombre || '' %>" maxlength="100"
+                                        placeholder="Ej: María García" value="<%= datos.name || '' %>" maxlength="100"
                                         required>
                                     <span class="mensaje-error" id="error-nombre"></span>
                                     <p class="campo-formulario__ayuda">Tu nombre como aparecerá en tu perfil y pedidos.
@@ -72,7 +72,7 @@
                                         Teléfono <span class="etiqueta-opcional">(opcional)</span>
                                     </label>
                                     <input type="tel" id="telefono" name="telefono" class="entrada"
-                                        placeholder="Ej: +54 9 223 456-7890" value="<%= datos.telefono || '' %>">
+                                        placeholder="Ej: +54 9 223 456-7890" value="<%= datos.phone || '' %>">
                                     <span class="mensaje-error" id="error-telefono"></span>
                                     <p class="campo-formulario__ayuda">Incluí el código de área. Ej: +54 9 223 456-7890
                                     </p>
@@ -94,13 +94,13 @@
                                         <label class="etiqueta-campo" for="direccion_calle">Calle</label>
                                         <input type="text" id="direccion_calle" name="direccion_calle" class="entrada"
                                             placeholder="Ej: Av. Colón"
-                                            value="<%= (datos.direccion && datos.direccion.calle) || '' %>">
+                                            value="<%= (datos.address && datos.address.calle) || '' %>">
                                     </div>
                                     <div class="campo-formulario">
                                         <label class="etiqueta-campo" for="direccion_numero">Número</label>
                                         <input type="text" id="direccion_numero" name="direccion_numero" class="entrada"
                                             placeholder="Ej: 1234"
-                                            value="<%= (datos.direccion && datos.direccion.numero) || '' %>">
+                                            value="<%= (datos.address && datos.address.numero) || '' %>">
                                     </div>
                                 </div>
 
@@ -109,13 +109,13 @@
                                         <label class="etiqueta-campo" for="direccion_piso">Piso</label>
                                         <input type="text" id="direccion_piso" name="direccion_piso" class="entrada"
                                             placeholder="Ej: 3"
-                                            value="<%= (datos.direccion && datos.direccion.piso) || '' %>">
+                                            value="<%= (datos.address && datos.address.piso) || '' %>">
                                     </div>
                                     <div class="campo-formulario">
                                         <label class="etiqueta-campo" for="direccion_depto">Departamento</label>
                                         <input type="text" id="direccion_depto" name="direccion_depto" class="entrada"
                                             placeholder="Ej: B"
-                                            value="<%= (datos.direccion && datos.direccion.depto) || '' %>">
+                                            value="<%= (datos.address && datos.address.depto) || '' %>">
                                     </div>
                                 </div>
 
@@ -124,13 +124,13 @@
                                         <label class="etiqueta-campo" for="direccion_ciudad">Ciudad</label>
                                         <input type="text" id="direccion_ciudad" name="direccion_ciudad" class="entrada"
                                             placeholder="Ej: Mar del Plata"
-                                            value="<%= (datos.direccion && datos.direccion.ciudad) || '' %>">
+                                            value="<%= (datos.address && datos.address.ciudad) || '' %>">
                                     </div>
                                     <div class="campo-formulario">
                                         <label class="etiqueta-campo" for="direccion_provincia">Provincia</label>
                                         <input type="text" id="direccion_provincia" name="direccion_provincia"
                                             class="entrada" placeholder="Ej: Buenos Aires"
-                                            value="<%= (datos.direccion && datos.direccion.provincia) || '' %>">
+                                            value="<%= (datos.address && datos.address.provincia) || '' %>">
                                     </div>
                                 </div>
 
@@ -138,7 +138,7 @@
                                     <label class="etiqueta-campo" for="direccion_codigoPostal">Código Postal</label>
                                     <input type="text" id="direccion_codigoPostal" name="direccion_codigoPostal"
                                         class="entrada" placeholder="Ej: 7600"
-                                        value="<%= (datos.direccion && datos.direccion.codigoPostal) || '' %>">
+                                        value="<%= (datos.address && datos.address.codigoPostal) || '' %>">
                                 </div>
                             </div>
                         </div>
@@ -150,10 +150,10 @@
                             <div class="admin-lateral__card">
                                 <div class="profile-avatar">
                                     <div class="profile-avatar__circle">
-                                        <%= usuario.nombre.charAt(0).toUpperCase() %>
+                                        <%= usuario.name.charAt(0).toUpperCase() %>
                                     </div>
                                     <h3 class="profile-avatar__name">
-                                        <%= usuario.nombre %>
+                                        <%= usuario.name %>
                                     </h3>
                                     <p class="profile-avatar__email">
                                         <%= usuario.email %>
@@ -180,7 +180,7 @@
                                     <li class="metadata-item">
                                         <span class="metadata-item__clave">Miembro desde</span>
                                         <span class="metadata-item__valor">
-                                            <%= new Date(usuario.fechaRegistro).toLocaleDateString('es-AR', {
+                                            <%= new Date(usuario.created_at).toLocaleDateString('es-AR', {
                                                 day: 'numeric' , month: 'long' , year: 'numeric' }) %>
                                         </span>
                                     </li>

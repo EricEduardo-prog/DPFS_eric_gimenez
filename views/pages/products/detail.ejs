@@ -1,59 +1,57 @@
-<% 
-    // Calcular descuento
-    const tieneDescuento=producto.precioOriginal && producto.precioOriginal> producto.precio;
-    const descuento = tieneDescuento ? Math.round(((producto.precioOriginal - producto.precio) /
-    producto.precioOriginal) * 100) : 0;
+<% // Calcular descuento 
+    const tieneDescuento=producto.original_price && producto.original_price> producto.price;
+    const descuento = tieneDescuento ? Math.round(((producto.original_price - producto.price) /
+    producto.original_price) * 100) : 0;
 
     // Calcular rating
-    const ratingValor = producto.rating?.valor || 0;
+    const ratingValor = producto.rating_value || 0;
     const ratingEntero = Math.floor(ratingValor);
     const tieneMedia = ratingValor - ratingEntero >= 0.5;
 
     // Normalizar arrays
-    const colores = Array.isArray(producto.colores)
-    ? producto.colores.flatMap(c => String(c).split(',').map(s => s.trim()).filter(Boolean))
+    const colores = Array.isArray(producto.colors)
+    ? producto.colors.flatMap(c => String(c).split(',').map(s => s.trim()).filter(Boolean))
     : [];
-    const talles = Array.isArray(producto.talles)
-    ? producto.talles.flatMap(t => String(t).split(',').map(s => s.trim()).filter(Boolean))
+    const talles = Array.isArray(producto.sizes)
+    ? producto.sizes.flatMap(t => String(t).split(',').map(s => s.trim()).filter(Boolean))
     : [];
-    const caracteristicas = Array.isArray(producto.caracteristicas)
-    ? producto.caracteristicas
-    : (producto.caracteristicas ? [producto.caracteristicas] : []);
+    const caracteristicas = Array.isArray(producto.characteristics)
+    ? producto.characteristics
+    : (producto.characteristics ? [producto.characteristics] : []);
 
     // Generar imágenes
-    const imagenes = [producto.imagen, ...(producto.imagenes || [])].filter(img => img && img !== '-' && img !== '.');
+    const imagenes = [producto.image, ...(producto.images || [])].filter(img => img && img !== '-' && img !== '.');
     const imagenPrincipal = imagenes[0] || '/images/placeholder.png';
 
     // Datos de instalacion
-    const instalacionDisponible = producto.instalacion?.disponible || false;
+    const instalacionDisponible = producto.installation_available || false;
     // id del servicio de instalación (si existe)
-    const servicioId = producto.instalacion?.servicioId || null;
+    const servicioId = producto.installation_service_id || null;
+
 
     // Obtener precio de instalación si el servicio existe y tiene precio base
     let precioInstalacion = 0;
     if (instalacionDisponible && servicioId) {
-        const servicio = servicios.find(s => s.id === servicioId);
-        if (servicio && servicio.precioBase) {
-            precioInstalacion = servicio.precioBase;
-        }
+    const servicio = servicios.find(s => s.id === servicioId);
+    if (servicio && servicio.base_price) {
+    precioInstalacion = servicio.base_price;
     }
-
+    }
     // Pasar datos a JavaScript mediante data attributes
     const dataProducto = {
     id: producto.id,
-    nombre: producto.nombre.replace(/'/g, "\\'"),
-    precio: producto.precio,
+    nombre: producto.name.replace(/'/g, "\\'"),
+    precio: producto.price,
     precioInstalacion: precioInstalacion,
     instalacionDisponible: instalacionDisponible
     };
-
     %>
- 
+
     <div class="contenedor">
         <!-- Carrusel de imágenes -->
         <section class="carrusel-imagenes">
             <div class="imagen-principal">
-                <img src="<%= imagenPrincipal %>" alt="<%= producto.nombre %>"
+                <img src="<%= imagenPrincipal %>" alt="<%= producto.name %>"
                     onerror="this.onerror=null;this.src='/images/placeholder.png'">
             </div>
             <% if (imagenes.length> 1) { %>
@@ -73,7 +71,7 @@
             <!-- Encabezado -->
             <div class="encabezado-producto">
                 <h1 class="nombre-producto">
-                    <%= producto.nombre %>
+                    <%= producto.name %>
                 </h1>
                 <div class="meta-producto">
                     <div class="rating-producto">
@@ -106,7 +104,7 @@
                         <span class="valor-rating">
                             <%= ratingValor %>
                         </span>
-                        <span class="cantidad-resenas">(<%= producto.rating?.cantidad || 0 %> reseñas)</span>
+                        <span class="cantidad-resenas">(<%= producto.rating_count || 0 %> reseñas)</span>
                     </div>
                     <div class="sku-producto">
                         <span class="etiqueta-sku">SKU:</span>
@@ -120,10 +118,10 @@
             <!-- Precios -->
             <div class="seccion-precios">
                 <div class="precio-actual">
-                    <span class="monto" data-precio="<%= producto.precio %>">$<%=
-                            producto.precio.toLocaleString('es-AR') %></span>
+                    <span class="monto" data-precio="<%= producto.price %>">$<%= producto.price.toLocaleString('es-AR')
+                            %></span>
                     <% if (tieneDescuento) { %>
-                        <span class="precio-anterior">$<%= producto.precioOriginal.toLocaleString('es-AR') %></span>
+                        <span class="precio-anterior">$<%= producto.original_price.toLocaleString('es-AR') %></span>
                         <span class="badge-descuento">-<%= descuento %>%</span>
                         <% } %>
                 </div>
@@ -144,7 +142,7 @@
                             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                             <polyline points="22 4 12 14.01 9 11.01"></polyline>
                         </svg>
-                        <span>Pago en efectivo: $<%= Math.round(producto.precio * 0.95).toLocaleString('es-AR') %>
+                        <span>Pago en efectivo: $<%= Math.round(producto.price * 0.95).toLocaleString('es-AR') %>
                         </span>
                     </div>
                 </div>
@@ -168,7 +166,7 @@
             </div>
 
             <!-- Servicio (solo si disponible) -->
-            <% if (instalacionDisponible && precioInstalacion > 0) { %>
+            <% if (instalacionDisponible && precioInstalacion> 0) { %>
                 <div class="integracion-servicio" id="integracionServicio">
                     <div class="encabezado-servicio">
                         <div class="icono-titulo">
@@ -185,27 +183,26 @@
                     <div class="opcion-servicio opcion-activa">
                         <div class="contenido-opcion">
                             <div class="selector-opcion">
-                                <input type="checkbox" id="checkboxInstalacion" class="checkbox-servicio" >
+                                <input type="checkbox" id="checkboxInstalacion" class="checkbox-servicio">
                                 <div class="info-opcion">
                                     <label class="etiqueta-opcion">
                                         <span class="titulo-opcion">Incluir Servicio</span>
                                     </label>
-                                    <p class="descripcion-opcion">Servicio profesional certificado</p>
+                                    <p class="descripcion-opcion">Servicio profesional</p>
                                     <div class="indicadores-calidad">
-                                        <span class="badge-calidad certificado">✅ Certificado</span>
                                         <span class="badge-calidad garantia">🔧 6 meses garantía</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="precio-opcion">
                                 <span class="precio-servicio" data-precio-instalacion="0">A cotizar según
-                                    profesional</span>
+                                    servicio requerido.</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Selector de fecha -->
-                    <div class="selector-fecha" id="selector-fecha" style="display: none;" >
+                    <div class="selector-fecha" id="selector-fecha" style="display: none;">
                         <div class="encabezado-fecha">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2">
@@ -256,10 +253,10 @@
                         <div class="desglose-total">
                             <div class="linea-desglose" id="lineaProducto">
                                 <span>Producto (1 unidad)</span>
-                                <span class="monto" id="montoProducto">$<%= producto.precio.toLocaleString('es-AR') %>
+                                <span class="monto" id="montoProducto">$<%= producto.price.toLocaleString('es-AR') %>
                                 </span>
                             </div>
-                            <% if (instalacionDisponible && precioInstalacion > 0) { %>
+                            <% if (instalacionDisponible && precioInstalacion> 0) { %>
                                 <div class="linea-desglose" id="lineaInstalacion">
                                     <span>Instalación profesional</span>
                                     <span class="monto" id="montoInstalacion">$<%=
@@ -268,9 +265,7 @@
                                 <% } %>
                                     <div class="linea-total">
                                         <span>Total a pagar</span>
-                                        <span class="monto-total" id="montoTotal">$<%= (producto.precio +
-                                                (instalacionDisponible ? precioInstalacion : 0)).toLocaleString('es-AR')
-                                                %></span>
+                                        <span class="monto-total" id="montoTotal">$<%= (producto.price + (instalacionDisponible ? precioInstalacion : 0)).toLocaleString('es-AR') %></span>
                                     </div>
                         </div>
                     </div>
@@ -279,7 +274,7 @@
                     <div class="seccion-descripcion">
                         <h3 class="titulo-seccion-desc">Descripción</h3>
                         <p class="texto-descripcion">
-                            <%= producto.descripcion %>
+                            <%= producto.description %>
                         </p>
 
                         <% if (caracteristicas.length> 0) { %>
@@ -358,8 +353,8 @@
             id: '<%= dataProducto.id %>',
             nombre: '<%= dataProducto.nombre %>',
             precio: parseInt('<%= dataProducto.precio %>'),
-            precioInstalacion: parseInt('<%= precioInstalacion %>'),
-            instalacionDisponible: '<%= instalacionDisponible %>' === 'true',
+            precioInstalacion: parseInt('<%= dataProducto.precioInstalacion %>'),
+            instalacionDisponible: '<%= dataProducto.instalacionDisponible %>' === 'true',
             servicioId: '<%= servicioId %>'
         };
     </script>

@@ -1,19 +1,15 @@
 <%# Vista: pages/admin/products/form.ejs Controller: productoController.js → mostrarFormNuevo() / mostrarFormEditar() /
   crear() / actualizar() Variables: - producto {Object|null} null=alta, objeto=edición - errores {Array} Mensajes de
   error del servidor - formData {Object|null} Datos del body cuando hay error de validación - categorias {Array} Lista
-  de categorías activas para el <select> - servicios {Array} Lista de servicios de instalación habilitados para el selector en la sección de instalación. Si existe instalacion disponible, se debe seleccionar uno de estos servicios.
+  de categorías activas para el <select> - servicios {Array} Lista de servicios de instalación habilitados para el
+  selector en la sección de instalación. Si existe instalacion disponible, se debe seleccionar uno de estos servicios.
   %>
 
-<%
-  const esEdicion = producto && producto.id;
-  const datos = formData || producto || {};
-  const titulo = esEdicion ? 'Editar Producto' : 'Nuevo Producto';
-  const formAction = esEdicion ? `/admin/productos/${producto.id}?_method=PUT` : '/admin/productos';
-  
-  // Calcular rating de forma segura (sin optional chaining)
-  const ratingValor = (datos.rating && datos.rating.valor) ? datos.rating.valor : 0;
-  const ratingCantidad = (datos.rating && datos.rating.cantidad) ? datos.rating.cantidad : 0;
-%>
+  <% const esEdicion=producto && producto.id; const datos=formData || producto || {}; const titulo=esEdicion
+    ? 'Editar Producto' : 'Nuevo Producto' ; const formAction=esEdicion ? `/admin/productos/${producto.id}?_method=PUT`
+    : '/admin/productos' ; // Calcular rating de forma segura (sin optional chaining) const ratingValor=(datos.rating &&
+    datos.rating.valor) ? datos.rating.valor : 0; const ratingCantidad=(datos.rating && datos.rating.cantidad) ?
+    datos.rating.cantidad : 0; %>
 
     <section class="admin-formulario">
       <!-- Encabezado -->
@@ -60,8 +56,8 @@
                     <div class="campo-formulario">
                       <label class="etiqueta-campo" for="nombre">Nombre <span class="campo-requerido">*</span></label>
                       <input type="text" id="nombre" name="nombre" class="entrada"
-                        placeholder="Ej: Aire acondicionado Split 3000W" value="<%= datos.nombre || '' %>"
-                        maxlength="120" required>
+                        placeholder="Ej: Aire acondicionado Split 3000W" value="<%= datos.name || '' %>" maxlength="120"
+                        required>
                       <span class="mensaje-error" id="error-nombre"></span>
                     </div>
 
@@ -84,8 +80,8 @@
                           <!-- Opciones de categoría -->
                           <% categorias.forEach(cat=> { %>
                             <option value="<%= cat.id %>" <%=(datos.categoriaId==cat.id) ? 'selected' : '' %>>
-                              <%= cat.icono ? cat.icono + ' ' : '' %>
-                                <%= cat.nombre %>
+                              <%= cat.icon ? cat.icon + ' ' : '' %>
+                                <%= cat.name %>
                             </option>
                             <% }); %>
                               <% } %>
@@ -99,7 +95,7 @@
                           class="campo-requerido">*</span></label>
                       <textarea id="descripcion" name="descripcion" class="entrada entrada--textarea"
                         placeholder="Describe detalladamente el producto..." maxlength="600" rows="4"
-                        required><%= datos.descripcion || '' %></textarea>
+                        required><%= datos.description || '' %></textarea>
                       <div class="campo-formulario__pie">
                         <span class="campo-formulario__ayuda">Aparece en la ficha del producto.</span>
                         <span class="contador-caracteres" id="contadorDesc">0 / 600</span>
@@ -159,7 +155,7 @@
                     </div>
 
                     <%- include('../../../partials/admin/_image-preview-only.ejs', { imagenUrl: datos.imagen, altText:
-                      datos.nombre || 'Vista previa del producto' }) %>
+                      datos.name || 'Vista previa del producto' }) %>
                   </div>
 
                   <!-- Sección: Variantes y opciones -->
@@ -187,7 +183,7 @@
                     <h3 class="admin-lateral__card-titulo">Estado</h3>
                     <%- include('../../../partials/admin/_toggle-switch.ejs', { id: 'activo' , name: 'activo' ,
                       label: 'Producto activo' , helpText: 'Los productos inactivos no aparecen en el sitio.' , checked:
-                      (!esEdicion || datos.activo===true) }) %>
+                      (!esEdicion || datos.is_active===true) }) %>
                   </div>
 
                   <!-- Card: Instalación -->
@@ -202,13 +198,15 @@
                         </div>
                         <label class="toggle-switch">
                           <input type="checkbox" id="instalacionDisponible" name="instalacionDisponible" value="true"
-                            <%=datos.instalacion?.disponible===true || datos.instalacion?.disponible=== 'true' ? 'checked' : '' %>>
+                            <%=datos.installation_available===true || datos.installation_available==='true' ? 'checked'
+                            : '' %>>
                           <span class="toggle-switch__slider"></span>
                         </label>
                       </div>
                     </div>
 
-                    <div class="instalacion-panel <%= datos.instalacion?.disponible===true || datos.instalacion?.disponible=== 'true' ? '' : 'oculto' %>"
+                    <div
+                      class="instalacion-panel <%= datos.installation?.available===true || datos.installation?.available=== 'true' ? '' : 'oculto' %>"
                       id="instalacionPanel">
 
                       <!-- Selector de servicio de instalación -->
@@ -217,13 +215,13 @@
                           Servicio de instalación <span class="campo-requerido">*</span>
                         </label>
                         <select id="instalacionServicioId" name="instalacionServicioId" class="entrada entrada--select"
-                          <%=!datos.instalacion?.disponible ? 'disabled' : '' %>>
+                          <%=!datos.installation?.available ? 'disabled' : '' %>>
                           <option value="">-- Seleccionar servicio --</option>
                           <% if (servicios && servicios.length> 0) { %>
                             <% servicios.forEach(function(serv) { %>
-                              <option value="<%= serv.id %>" <%=(datos.instalacion?.servicioId===serv.id) ? 'selected'
+                              <option value="<%= serv.id %>" <%=(datos.installation_service_id===serv.id) ? 'selected'
                                 : '' %>>
-                                  <%= serv.nombre %>
+                                <%= serv.name %>
                               </option>
                               <% }); %>
                                 <% } else { %>
@@ -263,19 +261,19 @@
                         <%= ratingValor %> (<%= ratingCantidad %> reseñas)
                       </span>
                     </li>
-                    <% if (producto.fechaCreacion) { %>
+                    <% if (producto.created_at) { %>
                       <li class="metadata-item">
                         <span class="metadata-item__clave">Creado</span>
                         <span class="metadata-item__valor">
-                          <%= new Date(producto.fechaCreacion).toLocaleDateString('es-AR') %>
+                          <%= new Date(producto.created_at).toLocaleDateString('es-AR') %>
                         </span>
                       </li>
                       <% } %>
-                        <% if (producto.fechaModificacion) { %>
+                        <% if (producto.updated_at) { %>
                           <li class="metadata-item">
                             <span class="metadata-item__clave">Modificado</span>
                             <span class="metadata-item__valor">
-                              <%= new Date(producto.fechaModificacion).toLocaleDateString('es-AR') %>
+                              <%= new Date(producto.updated_at).toLocaleDateString('es-AR') %>
                             </span>
                           </li>
                           <% } %>

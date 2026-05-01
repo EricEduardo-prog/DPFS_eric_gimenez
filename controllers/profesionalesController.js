@@ -1,78 +1,53 @@
 'use strict';
 
-
-const ProfesionalesModel = require('../models/profesionalesModel');
-const ServicioModel = require('../models/servicioModel');
-const SolicitudModel = require('../models/solicitudServicioModel');
-
-const profesionalesModel = ProfesionalesModel;
-const servicioModel = ServicioModel;
-const solicitudModel = SolicitudModel;
-
+const { Professional, Service } = require('../database/models');
 const { validationResult } = require('express-validator');
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Helpers internos
-// ─────────────────────────────────────────────────────────────────────────────
-
-// Obtener servicios activos para el select
-function _getServiciosActivos() {
-    try {
-        return servicioModel.getAll({ soloActivos: true });
-    } catch (err) {
-        console.error('Error cargando servicios:', err.message);
-        return [];
-    }
+async function _getServiciosActivos() {
+    return await Service.findAll({ where: { is_active: true }, order: [['name', 'ASC']] });
 }
 
-
-/**
- * Obtiene el nombre del servicio para un profesional
- */
-function _getServicioNombre(profesional, servicios) {
-    if (profesional.servicioId) {
-        const servicio = servicios.find(s => s.id === profesional.servicioId);
-        return servicio ? servicio.nombre : 'Servicio no encontrado';
-    } else if (profesional.servicioPersonalizado) {
-        return `${profesional.servicioPersonalizado} (pendiente)`;
+async function _getServicioNombre(professional, servicios) {
+    if (professional.service_id) {
+        const service = servicios.find(s => s.id === professional.service_id);
+        return service ? service.name : 'Servicio no encontrado';
+    } else if (professional.custom_service) {
+        return `${professional.custom_service} (pendiente)`;
     }
     return 'No especificado';
 }
 
-
-function _optsForm(titulo, profesional, errores, formData = null) {
+async function _optsForm(titulo, profesional, errores, formData = null) {
+    const servicios = await _getServiciosActivos();
     return {
         title: `${titulo} — E-E Admin`,
         pageCss: 'admin_form',
         currentPage: 'admin',
         body: 'pages/admin/professionals/form',
         profesional: profesional ?? null,
-        servicios: _getServiciosActivos(),
+        servicios,
         errores: errores ?? [],
         formData,
     };
 }
 
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Controladores
-// ─────────────────────────────────────────────────────────────────────────────
-
-/** GET /admin/profesionales */
-function listar(req, res, next) {
+// GET /admin/profesionales
+async function listar(req, res, next) {
     try {
-        const { servicioId, soloActivos } = req.query;
-        const profesionales = profesionalesModel.getAll({
-            soloActivos: soloActivos === 'true',
-            servicioId: servicioId || null,
+        const where = {};
+        if (req.query.soloActivos === 'true') where.is_active = true;
+        if (req.query.servicioId) where.service_id = req.query.servicioId;
+
+        const profesionales = await Professional.findAll({
+            where,
+            include: [{ model: Service, as: 'service', attributes: ['name'] }],
+            order: [['created_at', 'DESC']]
         });
+        const servicios = await _getServiciosActivos();
 
-        const servicios = _getServiciosActivos();
-
-        // Enriquecer profesionales con nombre del servicio
         const profesionalesConServicio = profesionales.map(prof => ({
-            ...prof,
-            servicioNombre: _getServicioNombre(prof, servicios)
+            ...prof.toJSON(),
+            servicioNombre: prof.service ? prof.service.name : (prof.custom_service ? `${prof.custom_service} (pendiente)` : 'No especificado')
         }));
 
         res.render('layout', {
@@ -81,8 +56,8 @@ function listar(req, res, next) {
             currentPage: 'admin',
             body: 'pages/admin/professionals/list',
             profesionales: profesionalesConServicio,
-            servicios: servicios,  // ← Para el filtro
-            filtros: { servicioId: servicioId || '', soloActivos: soloActivos || '' },
+            servicios,
+            filtros: { servicioId: req.query.servicioId || '', soloActivos: req.query.soloActivos || '' },
             mensaje: req.query.mensaje || null,
             error: req.query.error || null,
         });
@@ -91,64 +66,44 @@ function listar(req, res, next) {
     }
 }
 
-/** GET /admin/profesionales/nuevo */
-function mostrarFormNuevo(req, res, next) {
+async function mostrarFormNuevo(req, res, next) {
     try {
-        res.render('layout', {
-            title: 'Nuevo Profesional — E-E Admin',
-            pageCss: 'admin_form',
-            currentPage: 'admin',
-            body: 'pages/admin/professionals/form',
-            profesional: null,
-            servicios: _getServiciosActivos(),
-            errores: [],
-            formData: null
-        });
+        const opts = await _optsForm('Nuevo Profesional', null, []);
+        res.render('layout', opts);
     } catch (err) {
         next(err);
     }
 }
 
-
-
-/** GET /admin/profesionales/:id/editar */
-
-function mostrarFormEditar(req, res, next) {
+async function mostrarFormEditar(req, res, next) {
     try {
-        const profesional = profesionalesModel.getById(req.params.id);
-        if (!profesional) {
-            return res.redirect('/admin/profesionales?error=Profesional no encontrado.');
-        }
-
-        // Obtener servicios activos para validar IDs
-        const serviciosActivos = _getServiciosActivos();
-
-        res.render('layout', {
-            title: `Editar ${profesional.nombre} — E-E Admin`,
-            pageCss: 'admin_form',
-            currentPage: 'admin',
-            body: 'pages/admin/professionals/form',
-            profesional: profesional,
-            servicios: serviciosActivos,
-            errores: [],
-            formData: null
+        const profesional = await Professional.findByPk(req.params.id, {
+            include: [{ model: Service, as: 'service' }]
         });
+        if (!profesional) return res.redirect('/admin/profesionales?error=Profesional no encontrado.');
+        const opts = await _optsForm(`Editar ${profesional.name}`, profesional, []);
+        res.render('layout', opts);
     } catch (err) {
         next(err);
     }
 }
 
-
-/** POST /admin/profesionales/:id/baja */
-function toggleBaja(req, res) {
-    console.log('🟡 ${req.method} /admin/profesionales/:id/baja - ID:', req.params.id);
+async function toggleBaja(req, res, next) {
     try {
-        const profesional = profesionalesModel.toggleActivo(req.params.id);
-        const estado = profesional.activo ? 'dado de alta' : 'dado de baja';
+        const profesional = await Professional.findByPk(req.params.id);
+        if (!profesional) throw new Error('Profesional no encontrado');
+        const newActive = !profesional.is_active;
+        await profesional.update({ is_active: newActive });
+        const estado = newActive ? 'dado de alta' : 'dado de baja';
         res.redirect(`/admin/profesionales?mensaje=Profesional ${estado} correctamente.`);
     } catch (err) {
         res.redirect(`/admin/profesionales?error=${encodeURIComponent(err.message)}`);
     }
 }
 
-module.exports = { listar, mostrarFormNuevo, mostrarFormEditar, toggleBaja };
+module.exports = {
+    listar,
+    mostrarFormNuevo,
+    mostrarFormEditar,
+    toggleBaja
+};

@@ -1,11 +1,7 @@
-//Normalizar disponibilidad, workflow de validación (aprobar/rechazar), filtro de profesionales disponibles.
-
 // services/professionalService.js
 'use strict';
 
-const ProfesionalesModel = require('../models/profesionalesModel');
-const ServicioModel = require('../models/servicioModel');
-const SolicitudModel = require('../models/solicitudServicioModel');
+const { Professional, Service, ServiceRequest, sequelize } = require('../database/models');
 
 const DIAS = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes'];
 const TURNOS = ['manana', 'tarde'];
@@ -29,74 +25,122 @@ class ProfessionalService {
     }
 
     /**
-     * Aprueba un profesional: crea servicio personalizado si es necesario, actualiza estado y solicitud.
+     * Aprueba un profesional: crea servicio personalizado si es necesario.
      * @param {string} profesionalId
      * @param {string} adminId
-     * @param {string} observacion
-     * @returns {Object}
+     * @param {string|null} observacion
+     * @returns {Promise<Object>}
      */
     static async aprobarProfesional(profesionalId, adminId, observacion = null) {
-        const profesional = ProfesionalesModel.getById(profesionalId);
+        const profesional = await Professional.findByPk(profesionalId);
         if (!profesional) throw new Error('Profesional no encontrado.');
-        // Si tiene servicio personalizado y aún no tiene servicioId, crearlo y asignarlo
-        if (profesional.servicioPersonalizado && !profesional.servicioId) {
-            const nuevoServicio = ServicioModel.create({
-                nombre: profesional.servicioPersonalizado,
-                descripcion: profesional.descripcionServicio || `Servicio solicitado por ${profesional.nombre}`,
-                certificacionRequerida: true,
-                destacado: false,
-                activo: true,
+
+        let servicioId = profesional.service_id;
+        if (profesional.custom_service && !profesional.service_id) {
+            // Crear nuevo servicio
+            const nuevoServicio = await Service.create({
+                id: `serv_${Date.now()}`,
+                name: profesional.custom_service,
+                description: `Servicio solicitado por ${profesional.name}`,
+                certification_required: true,
+                is_featured: false,
+                is_active: true,
+                experience_levels: []
             });
-            ProfesionalesModel.update(profesionalId, { servicioId: nuevoServicio.id, servicioPersonalizado: null });
+            servicioId = nuevoServicio.id;
         }
-        // Aprobar profesional
-        const aprobado = ProfesionalesModel.aprobarServicio(profesionalId, { validadoPor: adminId, observacion });
+
+        // Actualizar profesional
+        await profesional.update({
+            service_id: servicioId,
+            service_status: 'aprobado',
+            validation_date: new Date(),
+            validated_by: adminId,
+            admin_observation: observacion,
+            custom_service: profesional.custom_service ? null : profesional.custom_service // se limpia si existía
+        });
+
         // Actualizar solicitud asociada
-        const solicitudes = SolicitudModel.getByProfesionalId(profesionalId);
-        const pendiente = solicitudes.find(s => s.estado === 'pendiente');
-        if (pendiente) {
-            SolicitudModel.actualizarEstado(pendiente.id, 'aprobado', observacion);
+        const solicitud = await ServiceRequest.findOne({
+            where: { professional_id: profesionalId, status: 'pendiente' }
+        });
+        if (solicitud) {
+            await solicitud.update({
+                status: 'aprobado',
+                response_date: new Date(),
+                response_admin: adminId
+            });
         }
-        return aprobado;
+        return profesional.toJSON();
     }
 
     /**
-     * Rechaza un profesional y registra la observación.
+     * Rechaza un profesional.
      * @param {string} profesionalId
      * @param {string} adminId
      * @param {string} observacion
-     * @returns {Object}
+     * @returns {Promise<Object>}
      */
-    static rechazarProfesional(profesionalId, adminId, observacion) {
-        const rechazado = ProfesionalesModel.rechazarServicio(profesionalId, { validadoPor: adminId, observacion });
-        const solicitudes = SolicitudModel.getByProfesionalId(profesionalId);
-        const pendiente = solicitudes.find(s => s.estado === 'pendiente');
-        if (pendiente) {
-            SolicitudModel.actualizarEstado(pendiente.id, 'rechazado', observacion);
+    static async rechazarProfesional(profesionalId, adminId, observacion) {
+        const profesional = await Professional.findByPk(profesionalId);
+        if (!profesional) throw new Error('Profesional no encontrado.');
+
+        await profesional.update({
+            service_status: 'rechazado',
+            validation_date: new Date(),
+            validated_by: adminId,
+            admin_observation: observacion
+        });
+
+        const solicitud = await ServiceRequest.findOne({
+            where: { professional_id: profesionalId, status: 'pendiente' }
+        });
+        if (solicitud) {
+            await solicitud.update({
+                status: 'rechazado',
+                response_date: new Date(),
+                response_admin: adminId
+            });
         }
-        return rechazado;
+        return profesional.toJSON();
     }
 
     /**
      * Filtra profesionales disponibles según servicio, fecha y turno.
      * @param {string} servicioId
-     * @param {string} fecha - ISO string YYYY-MM-DD
+     * @param {string} fecha - YYYY-MM-DD
      * @param {string} turno - 'manana' o 'tarde'
-     * @returns {Array} lista de profesionales enriquecida con nombre, rating, trabajos.
+     * @returns {Promise<Array>}
      */
-    static getProfesionalesDisponibles(servicioId, fecha, turno) {
+    static async getProfesionalesDisponibles(servicioId, fecha, turno) {
+        // Obtener día de la semana (sin tilde)
         const diaSemanaRaw = new Date(fecha).toLocaleDateString('es-AR', { weekday: 'long' }).toLowerCase();
         const diaSemana = diaSemanaRaw.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-        let profesionales = ProfesionalesModel.getByServicioId(servicioId);
-        profesionales = profesionales.filter(p => p.disponibilidad?.[diaSemana]?.[turno] === true);
-        const servicio = ServicioModel.getById(servicioId);
-        const precioBase = servicio?.precioBase || 0;
-        const precioHora = servicio?.precioPorHora || 0;
-        return profesionales.map(p => ({
+
+        // Obtener profesionales con ese servicio y activos
+        const profesionales = await Professional.findAll({
+            where: {
+                service_id: servicioId,
+                service_status: 'aprobado',
+                is_active: true
+            }
+        });
+
+        // Filtrar por disponibilidad en base al JSON guardado
+        const disponibles = profesionales.filter(p => {
+            const disp = p.availability || {};
+            return disp[diaSemana] && disp[diaSemana][turno] === true;
+        });
+
+        const servicio = await Service.findByPk(servicioId);
+        const precioBase = servicio?.base_price || 0;
+        const precioHora = servicio?.hourly_price || 0;
+
+        return disponibles.map(p => ({
             id: p.id,
-            nombre: p.nombre,
-            rating: p.valoracion?.valor || 0,
-            trabajos: p.trabajosCompletados || 0,
+            nombre: p.name,
+            rating: p.rating_value || 0,
+            trabajos: p.jobs_completed || 0,
             precioBase,
             precioHora,
         }));

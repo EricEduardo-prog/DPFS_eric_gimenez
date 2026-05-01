@@ -9,14 +9,11 @@
                 <% categorias.forEach(function(cat) { %>
                     <a href="/productos?categoria=<%= cat.id %>" class="tarjeta-categoria">
                         <span class="icono-categoria">
-                            <%= cat.icono || '📁' %>
+                            <%= cat.icon || '📁' %>
                         </span>
                         <h3 class="nombre-categoria">
-                            <%= cat.nombre %>
+                            <%= cat.name %>
                         </h3>
-                        <span class="cantidad-productos">
-                            <%= cat.cantidadProductos || 0 %> productos
-                        </span>
                     </a>
                     <% }); %>
                         <% } else { %>

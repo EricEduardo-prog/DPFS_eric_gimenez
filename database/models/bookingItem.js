@@ -50,9 +50,7 @@ module.exports = (sequelize, DataTypes) => {
         installation_time: {
             type: DataTypes.ENUM('manana', 'tarde'),
             allowNull: true
-        },
-        created_at: DataTypes.DATE,
-        updated_at: DataTypes.DATE
+        }
     }, {
         tableName: 'booking_items',
         timestamps: true,

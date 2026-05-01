@@ -1,76 +1,17 @@
 'use strict';
 
-const ReservaModel = require('../models/reservaModel');
-const ProductoModel = require('../models/productoModel');
-const ProfesionalesModel = require('../models/profesionalesModel');
 const createError = require('http-errors');
-
-const reservaModel = ReservaModel;
-const productoModel = ProductoModel;
-const profesionalesModel = ProfesionalesModel;
-
 const { validationResult } = require('express-validator');
-
-const CheckoutService = require('../services/checkoutService');
 const ReserveService = require('../services/reserveService');
-
-
-async function agregarItem(req, res, next) {
-
-    try {
-        const errores = validationResult(req);
-
-        if (!errores.isEmpty()) {
-            return res.status(400).json({
-                errores: errores.array().map(e => e.msg)
-            });
-        }
-
-        const resultado = await ReserveService.agregarItem(req, res, req.body);
-
-        res.json({
-            success: true,
-            item: resultado.item,
-            reservaId: resultado.reservaId
-        });
-
-    } catch (err) {
-        console.error('❌ Error en agregarItem:', err.message);
-        next(createError(500, err.message));
-    }
-}
-
-/**
- * GET /reserva/detecto/:itemId - Verificar si item está en reserva
- */
-async function detectoProductoEnReserva(req, res, next) {
-    try {
-        const { itemId } = req.params;
-
-        const reserva = await ReserveService.getReserva(req);
-
-        if (!reserva) {
-            return res.json({ existe: false, cantidad: 0 });
-        }
-
-        const item = reserva.items.find(item => item.itemId === itemId);
-
-        res.json({
-            existe: !!item,
-            cantidad: item?.cantidad || 0
-        });
-    } catch (err) {
-        console.error('Error en detectoProductoEnReserva:', err);
-        next(createError(500, err.message));
-    }
-}
+const CheckoutService = require('../services/checkoutService');
+const { Professional } = require('../database/models');
 
 /**
  * GET /reserva - Ver reserva actual
  */
 async function verReserva(req, res, next) {
     try {
-        const reserva = await ReserveService.getReserva(req); // Solo lectura
+        const reserva = await ReserveService.getReserva(req);
         if (!reserva) {
             return res.render('layout', {
                 title: 'Mi Reserva - E-E',
@@ -86,29 +27,29 @@ async function verReserva(req, res, next) {
                 total: 0
             });
         }
-        const items = reserva.items || [];
-        //  ENRIQUECER ITEMS CON DATOS DEL PROFESIONAL (si tienen profesionalId)
-        // Esto permite mostrar nombre, rating y trabajos completados del profesional en la vista
 
+        const items = reserva.items || [];
+        // Enriquecer items con datos del profesional (nombre, rating, trabajos)
         const itemsEnriquecidos = await Promise.all(items.map(async (item) => {
-            if (item.profesionalId) {
-                const profesional = profesionalesModel.getById(item.profesionalId);
+            if (item.professional_id) {
+                const profesional = await Professional.findByPk(item.professional_id, {
+                    attributes: ['name', 'rating_value', 'jobs_completed']
+                });
                 if (profesional) {
                     return {
                         ...item,
-                        profesionalNombre: profesional.nombre,
-                        profesionalRating: profesional.valoracion?.valor || 0,
-                        profesionalTrabajos: profesional.trabajosCompletados || 0
+                        profesionalNombre: profesional.name,
+                        profesionalRating: profesional.rating_value || 0,
+                        profesionalTrabajos: profesional.jobs_completed || 0
                     };
                 }
             }
             return item;
         }));
 
-
         // Separar productos y servicios
-        const productosItems = itemsEnriquecidos.filter(item => item.productoId && !item.servicioId);
-        const serviciosItems = itemsEnriquecidos.filter(item => item.servicioId && !item.productoId);
+        const productosItems = itemsEnriquecidos.filter(item => item.product_id && !item.service_id);
+        const serviciosItems = itemsEnriquecidos.filter(item => item.service_id && !item.product_id);
 
         const { subtotal, totalServicios, total } = ReserveService.calcularTotales(reserva);
 
@@ -124,53 +65,75 @@ async function verReserva(req, res, next) {
             subtotal: subtotal,
             totalServicios: totalServicios,
             total: total,
-            esUsuario: reserva.usuarioId,
+            esUsuario: !!reserva.user_id,
             mensaje: req.query.mensaje || null,
             error: req.query.error || null
         });
-
-        console.log('🔍 verReserva - usuarioId:', req.session?.usuarioId);
-        console.log('🔍 verReserva - reserva encontrada:', reserva?.id);
-        console.log('🔍 verReserva - servicios con profesional:', serviciosItems.filter(s => s.profesionalId).length);
-
     } catch (err) {
         console.error('❌ Error en verReserva:', err.message);
         next(createError(500, err.message));
     }
 }
 
+/**
+ * POST /reserva/agregar - Agregar item a la reserva (AJAX)
+ */
+async function agregarItem(req, res, next) {
+    try {
+        const errores = validationResult(req);
+        if (!errores.isEmpty()) {
+            return res.status(400).json({ errores: errores.array().map(e => e.msg) });
+        }
+        const resultado = await ReserveService.agregarItem(req, res, req.body);
+        res.json({
+            success: true,
+            item: resultado.item,
+            reservaId: resultado.reservaId
+        });
+    } catch (err) {
+        console.error('❌ Error en agregarItem:', err.message);
+        next(createError(500, err.message));
+    }
+}
+
+/**
+ * GET /reserva/detecto/:itemId - Verificar si item está en reserva (AJAX)
+ */
+async function detectoProductoEnReserva(req, res, next) {
+    try {
+        const { itemId } = req.params;
+        const reserva = await ReserveService.getReserva(req);
+        if (!reserva) {
+            return res.json({ existe: false, cantidad: 0 });
+        }
+        const item = reserva.items.find(item => item.id === itemId);
+        res.json({
+            existe: !!item,
+            cantidad: item?.quantity || 0
+        });
+    } catch (err) {
+        console.error('Error en detectoProductoEnReserva:', err);
+        next(createError(500, err.message));
+    }
+}
+
+/**
+ * PUT /reserva/actualizar/:itemId - Actualizar cantidad (AJAX)
+ */
 async function actualizarCantidad(req, res, next) {
     try {
         const errores = validationResult(req);
-
         if (!errores.isEmpty()) {
-            return res.status(400).json({
-                errores: errores.array().map(e => e.msg)
-            });
+            return res.status(400).json({ errores: errores.array().map(e => e.msg) });
         }
-
         const { itemId } = req.params;
         const { cantidad } = req.body;
-
-        console.log('🟡 actualizarCantidad:', { itemId, cantidad });
-
         if (parseInt(cantidad) === 0) {
             await ReserveService.eliminarItem(req, res, itemId);
-
-            return res.json({
-                success: true,
-                eliminado: true
-            });
+            return res.json({ success: true, eliminado: true });
         }
-
-        //  actualizar cantidad
         const resultado = await ReserveService.actualizarCantidad(req, res, itemId, cantidad);
-
-        res.json({
-            success: true,
-            item: resultado
-        });
-
+        res.json({ success: true, item: resultado });
     } catch (err) {
         console.error('❌ Error en actualizarCantidad:', err.message);
         next(createError(500, err.message));
@@ -178,30 +141,13 @@ async function actualizarCantidad(req, res, next) {
 }
 
 /**
- * GET /reserva/count - Obtener cantidad total de items
+ * DELETE /reserva/eliminar/:itemId - Eliminar item (AJAX)
  */
-async function contarItems(req, res, next) {
-    try {
-        const reserva = await ReserveService.getReserva(req);
-        console.log('🔍 contarItems - reserva encontrada:', reserva);
-        const totalItems = reserva?.items?.reduce((sum, item) => sum + (item.cantidad || 1), 0) || 0;
-        console.log('🔍 contarItems - totalItems:', totalItems);
-        res.json({ totalItems: totalItems });
-
-    } catch (err) {
-        console.error('Error en contarItems:', err);
-        next(createError(500, err.message));
-    }
-}
-
 async function eliminarItem(req, res, next) {
     try {
         const { itemId } = req.params;
-
         await ReserveService.eliminarItem(req, res, itemId);
-
         res.json({ success: true });
-
     } catch (err) {
         console.error('❌ Error en eliminarItem:', err.message);
         next(createError(500, err.message));
@@ -209,45 +155,50 @@ async function eliminarItem(req, res, next) {
 }
 
 /**
- * DELETE /reserva - Vaciar toda la reserva
+ * GET /reserva/count - Obtener cantidad total de items (AJAX)
+ */
+async function contarItems(req, res, next) {
+    try {
+        const reserva = await ReserveService.getReserva(req);
+        const totalItems = reserva?.items?.reduce((sum, item) => sum + (item.quantity || 1), 0) || 0;
+        res.json({ totalItems });
+    } catch (err) {
+        console.error('Error en contarItems:', err);
+        next(createError(500, err.message));
+    }
+}
+
+/**
+ * DELETE /reserva - Vaciar toda la reserva (AJAX)
  */
 async function vaciarReserva(req, res, next) {
     try {
-        const usuarioId = req.session?.usuarioId;
-        const sessionId = _getSessionId(req, res);
-
-        let reserva = null;
-        if (usuarioId) {
-            reserva = await reservaModel.getByUsuarioId(usuarioId);
-        } else {
-            reserva = await reservaModel.getBySessionId(sessionId);
-        }
-
+        const reserva = await ReserveService.getReserva(req);
         if (!reserva) {
             return next(createError(404, 'Reserva no encontrada'));
         }
-
-        reservaModel.clear(reserva.id);
-
+        const { BookingItem } = require('../database/models');
+        await BookingItem.destroy({ where: { booking_id: reserva.id } });
         res.json({ success: true });
-
     } catch (err) {
         console.error('❌ Error en vaciarReserva:', err.message);
         next(createError(500, err.message));
     }
 }
 
-// nuevo metodo POST reserva/checkout - usa services/checkoutService.js
+/**
+ * POST /reserva/checkout - Confirmar compra
+ */
 async function confirmarCheckout(req, res, next) {
     try {
-        const usuarioId = req.session.usuarioId; // Extrae datos de la sesión [2]
-
-        // El controlador NO sabe cómo se procesa la compra, solo llama al servicio
-        const resultado = await CheckoutService.procesarCompra(usuarioId, req.body);
-
-        res.redirect(`/confirmacion?orderId=${resultado.orderId}`);
+        const reserva = await ReserveService.getReserva(req);
+        if (!reserva) {
+            return res.redirect('/reserva?error=No hay reserva activa');
+        }
+        const resultado = await CheckoutService.procesarCheckout(reserva.id, req.body);
+        res.redirect(`/confirmacion?orderId=${resultado.id}`);
     } catch (err) {
-        // El servicio lanza errores de negocio, el controlador los captura [2]
+        console.error('❌ Error en confirmarCheckout:', err.message);
         res.redirect(`/reserva?error=${encodeURIComponent(err.message)}`);
     }
 }
@@ -255,10 +206,10 @@ async function confirmarCheckout(req, res, next) {
 module.exports = {
     verReserva,
     agregarItem,
-    contarItems,
-    eliminarItem,
-    vaciarReserva,
-    confirmarCheckout,
     detectoProductoEnReserva,
-    actualizarCantidad
+    actualizarCantidad,
+    eliminarItem,
+    contarItems,
+    vaciarReserva,
+    confirmarCheckout
 };

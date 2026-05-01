@@ -1,55 +1,56 @@
-//Resolución de identidad (guest/user), cálculos de totales, validación de items con metadatos.
 // services/reserveService.js
 'use strict';
 
-const ReservaModel = require('../models/reservaModel');
-const ProductoModel = require('../models/productoModel');
-const ServicioModel = require('../models/servicioModel');
+const { Booking, BookingItem, Product, Service, Professional } = require('../database/models');
 const createError = require('http-errors');
+const { Op } = require('sequelize');
 
 class ReserveService {
     /**
-      * Obtiene la reserva activa SIN crearla si no existe (solo lectura).
-      * @param {Object} req - request de Express
-      * @returns {Object|null} reserva o null
-      */
+     * Obtiene la reserva activa SIN crearla si no existe (solo lectura).
+     * @param {Object} req - request de Express
+     * @returns {Promise<Object|null>} reserva o null
+     */
     static async getReserva(req) {
         const usuarioId = req.session?.usuarioId;
-        const sessionId = req.session?.id;
+        let booking = null;
         if (usuarioId) {
-            return await ReservaModel.getByUsuarioId(usuarioId);
-        } else if (sessionId) {
-            return await ReservaModel.getBySessionId(sessionId);
+            booking = await Booking.findOne({
+                where: { user_id: usuarioId },
+                include: [{ model: BookingItem, as: 'items' }]
+            });
         } else {
-            // Si no hay guestId en cookie, retornar null sin crear
             const guestId = req.cookies?.guestId;
             if (guestId) {
-                return await ReservaModel.getBySessionId(guestId);
+                booking = await Booking.findOne({
+                    where: { session_id: guestId },
+                    include: [{ model: BookingItem, as: 'items' }]
+                });
             }
-            return null;
         }
+        return booking ? booking.toJSON() : null;
     }
 
-
     /**
-  * Obtiene o crea la reserva (solo para operaciones de escritura, ej. agregar item).
-  * @param {Object} req, res
-  * @returns {Object} reserva (siempre creada si no existe)
-  */
+     * Obtiene o crea la reserva (solo para operaciones de escritura, ej. agregar item).
+     * @param {Object} req, res
+     * @returns {Promise<Object>} reserva (siempre creada si no existe)
+     */
     static async getOrCreateReserva(req, res) {
-        let reserva = await this.getReserva(req);
-        if (!reserva) {
-            const usuarioId = req.session?.usuarioId;
+        let booking = null;
+        const usuarioId = req.session?.usuarioId;
 
-            let identityId;
-
-            if (usuarioId) {
-                return await ReservaModel.getOrCreateByUsuarioId(usuarioId);
+        if (usuarioId) {
+            booking = await Booking.findOne({ where: { user_id: usuarioId } });
+            if (!booking) {
+                booking = await Booking.create({
+                    id: `res_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+                    user_id: usuarioId,
+                    session_id: null
+                });
             }
-
-            // 👇 SIEMPRE usar guestId para invitados
+        } else {
             let guestId = req.cookies?.guestId;
-
             if (!guestId) {
                 guestId = `guest_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`;
                 res.cookie('guestId', guestId, {
@@ -57,13 +58,17 @@ class ReserveService {
                     httpOnly: true
                 });
             }
-
-            return await ReservaModel.getOrCreateBySessionId(guestId);
+            booking = await Booking.findOne({ where: { session_id: guestId } });
+            if (!booking) {
+                booking = await Booking.create({
+                    id: `res_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+                    user_id: null,
+                    session_id: guestId
+                });
+            }
         }
-
-        return reserva;
+        return booking.toJSON();
     }
-
 
     /**
      * Calcula el subtotal y total de una reserva.
@@ -72,20 +77,15 @@ class ReserveService {
      */
     static calcularTotales(reserva) {
         const items = reserva.items || [];
-        console.log('🔍 calcularTotales - items en reserva:', items.length);
         let subtotal = 0;
         let totalServicios = 0;
         for (const item of items) {
-            const precio = item.precioUnitario || 0;
-            const cantidad = item.cantidad || 1;
-
-            // Producto
-            if (item.productoId) {
+            const precio = item.unit_price || 0;
+            const cantidad = item.quantity || 1;
+            if (item.product_id) {
                 subtotal += precio * cantidad;
             }
-
-            // Servicio
-            if (item.servicioId) {
+            if (item.service_id) {
                 totalServicios += precio;
             }
         }
@@ -94,118 +94,125 @@ class ReserveService {
     }
 
     /**
-     * Valida que un item tenga todos los metadatos requeridos (especialmente para servicios de instalación).
+     * Valida que un item tenga todos los metadatos requeridos.
      * @param {Object} itemData
-     * @throws {Error} si falta información crítica.
+     * @throws {Error}
      */
-    static validarItem(itemData) {
-
+    static async validarItem(itemData) {
         if (itemData.tipo === 'combo') {
             if (!itemData.productoId || !itemData.servicioId) {
                 throw createError(400, 'Un combo debe tener productoId y servicioId');
             }
-            // Si es combo con instalación, debe tener profesional, fecha, horario (depende de lógica de negocio)
             if (itemData.servicioId && (!itemData.fechaInstalacion || !itemData.horarioInstalacion || !itemData.profesionalId)) {
                 throw createError(400, 'Para el servicio del combo debe seleccionar fecha, horario y profesional.');
             }
         } else if (itemData.tipo === 'servicio' && itemData.servicioId) {
-            // Si es un servicio de instalación, debe tener fecha, horario y profesional
-            const servicio = ServicioModel.getById(itemData.servicioId);
-            if (servicio && (servicio.precioBase > 0 || servicio.precioPorHora > 0)) {
+            const servicio = await Service.findByPk(itemData.servicioId);
+            if (servicio && (servicio.base_price > 0 || servicio.hourly_price > 0)) {
                 if (!itemData.fechaInstalacion || !itemData.horarioInstalacion || !itemData.profesionalId) {
                     throw createError(400, 'Para este servicio debe seleccionar fecha, horario y profesional.');
                 }
             }
         } else if (itemData.tipo === 'producto' && itemData.productoId) {
-            // Para productos, validar que la cantidad sea al menos 1
             if (!itemData.cantidad || parseInt(itemData.cantidad) < 1) {
                 throw createError(400, 'La cantidad de productos debe ser al menos 1.');
             }
         }
-        // Otras validaciones según reglas de negocio
         return true;
     }
 
     /**
-     * Agrega un item a la reserva con validaciones previas.
+     * Agrega un item a la reserva.
      * @param {Object} req, res
-     * @param {Object} itemData - { productoId, servicioId, cantidad, tipo, profesionalId, fechaInstalacion, horarioInstalacion }
-     * @returns {Object} item agregado o actualizado
+     * @param {Object} itemData
+     * @returns {Promise<Object>} { item, reservaId }
      */
     static async agregarItem(req, res, itemData) {
-        this.validarItem(itemData);
-        console.log('🟡 agregarItem - itemData tipo:', itemData.tipo);
+        await this.validarItem(itemData);
+
         let nombre = '';
         let precioUnitario = 0;
 
         if (itemData.tipo === 'producto' && itemData.productoId) {
-            const producto = ProductoModel.getById(itemData.productoId);
-            if (!producto || !producto.activo) throw createError(404, 'Producto no encontrado');
-            nombre = producto.nombre;
-            precioUnitario = producto.precio;
-        }
-        else if (itemData.tipo === 'servicio' && itemData.servicioId) {
-            const servicio = ServicioModel.getById(itemData.servicioId);
-            if (!servicio || !servicio.activo) throw createError(404, 'Servicio no encontrado');
-            nombre = servicio.nombre;
-            precioUnitario = servicio.precioBase || servicio.precioPorHora || 0;
-        }
-        else if (itemData.tipo === 'combo' && itemData.productoId && itemData.servicioId) {
-            const producto = ProductoModel.getById(itemData.productoId);
-            const servicio = ServicioModel.getById(itemData.servicioId);
-            if (!producto || !producto.activo) throw createError(404, 'Producto no encontrado');
-            if (!servicio || !servicio.activo) throw createError(404, 'Servicio no encontrado');
-            nombre = `${producto.nombre} + Servicio (${servicio.nombre})`;
-            precioUnitario = (producto.precio || 0) + (servicio.precioBase || servicio.precioPorHora || 0);
-        }
-        else {
+            const producto = await Product.findByPk(itemData.productoId);
+            if (!producto || !producto.is_active) throw createError(404, 'Producto no encontrado');
+            nombre = producto.name;
+            precioUnitario = producto.price;
+        } else if (itemData.tipo === 'servicio' && itemData.servicioId) {
+            const servicio = await Service.findByPk(itemData.servicioId);
+            if (!servicio || !servicio.is_active) throw createError(404, 'Servicio no encontrado');
+            nombre = servicio.name;
+            precioUnitario = servicio.base_price || servicio.hourly_price || 0;
+        } else if (itemData.tipo === 'combo' && itemData.productoId && itemData.servicioId) {
+            const [producto, servicio] = await Promise.all([
+                Product.findByPk(itemData.productoId),
+                Service.findByPk(itemData.servicioId)
+            ]);
+            if (!producto || !producto.is_active) throw createError(404, 'Producto no encontrado');
+            if (!servicio || !servicio.is_active) throw createError(404, 'Servicio no encontrado');
+            nombre = `${producto.name} + Servicio (${servicio.name})`;
+            precioUnitario = (producto.price || 0) + (servicio.base_price || servicio.hourly_price || 0);
+        } else {
             throw createError(400, 'Datos de ítem inválidos');
         }
 
         const reserva = await this.getOrCreateReserva(req, res);
-        console.log('🔍 agregarItem - reservaId:', reserva.id, 'usuarioId:', reserva.usuarioId);
-        const item = ReservaModel.addItem(
-            reserva.id,
-            itemData.productoId || null,
-            itemData.servicioId || null,
-            {
-                cantidad: parseInt(itemData.cantidad),
-                precioUnitario,
-                nombre,
-                tipo: itemData.tipo,
-                profesionalId: itemData.profesionalId,
-                fechaInstalacion: itemData.fechaInstalacion,
-                horarioInstalacion: itemData.horarioInstalacion,
-            }
-        );
-        console.log('🔍 agregarItem - item agregado:', item);
-        return { item, reservaId: reserva.id };
+        const booking = await Booking.findByPk(reserva.id);
+
+        // Crear el ítem
+        const newItem = await BookingItem.create({
+            id: `item_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+            booking_id: booking.id,
+            type: itemData.tipo,
+            product_id: itemData.productoId || null,
+            service_id: itemData.servicioId || null,
+            quantity: parseInt(itemData.cantidad) || 1,
+            unit_price: precioUnitario,
+            name: nombre,
+            professional_id: itemData.profesionalId || null,
+            installation_date: itemData.fechaInstalacion || null,
+            installation_time: itemData.horarioInstalacion || null
+        });
+
+        return { item: newItem.toJSON(), reservaId: reserva.id };
     }
 
-
+    /**
+     * Actualiza la cantidad de un item existente.
+     * @param {Object} req, res
+     * @param {string} itemId
+     * @param {number} cantidad
+     * @returns {Promise<Object>}
+     */
     static async actualizarCantidad(req, res, itemId, cantidad) {
         const reserva = await this.getReserva(req);
-        if (!reserva) return next(createError(404, 'No hay una reserva activa'));
-        const itemActualizado = ReservaModel.updateItem(
-            reserva.id,
-            itemId,
-            { cantidad: parseInt(cantidad) } // Solo actualizamos la cantidad, el resto de los datos del item permanecen igual
-        );
+        if (!reserva) throw createError(404, 'No hay una reserva activa');
 
-        if (!itemActualizado) {
-            throw createError(404, 'Item no encontrado en la reserva');
-        }
+        const bookingId = reserva.id;
+        const item = await BookingItem.findOne({
+            where: { id: itemId, booking_id: bookingId }
+        });
+        if (!item) throw createError(404, 'Item no encontrado en la reserva');
 
-        return itemActualizado;
+        await item.update({ quantity: parseInt(cantidad) });
+        return item.toJSON();
     }
 
     /**
      * Elimina un item de la reserva.
+     * @param {Object} req, res
+     * @param {string} itemId
+     * @returns {Promise<boolean>}
      */
     static async eliminarItem(req, res, itemId) {
         const reserva = await this.getReserva(req);
-        if (!reserva) return next(createError(404, 'No hay una reserva activa'));
-        ReservaModel.removeItem(reserva.id, itemId);
+        if (!reserva) throw createError(404, 'No hay una reserva activa');
+
+        const bookingId = reserva.id;
+        const deleted = await BookingItem.destroy({
+            where: { id: itemId, booking_id: bookingId }
+        });
+        if (deleted === 0) throw createError(404, 'Item no encontrado');
         return true;
     }
 }

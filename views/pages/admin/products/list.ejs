@@ -53,8 +53,8 @@
                                     <% categorias.forEach(function(cat) { %>
                                         <option value="<%= cat.id %>" <%=filtros.categoriaId===cat.id ? 'selected' : ''
                                             %>>
-                                            <%= cat.icono ? cat.icono + ' ' : '' %>
-                                                <%= cat.nombre %>
+                                            <%= cat.icon ? cat.icon + ' ' : '' %>
+                                                <%= cat.name %>
                                         </option>
                                         <% }); %>
                                 </select>
@@ -101,19 +101,19 @@
                                         </thead>
                                         <tbody>
                                             <% productos.forEach(function(p) { %>
-                                                <% const cat=categorias.find(function(c) { return c.id===p.categoriaId;
+                                                <% const cat=categorias.find(function(c) { return c.id===p.category.id;
                                                     }); %>
-                                                    <tr class="<%= !p.activo ? 'admin-tabla__fila--inactiva' : '' %>"
-                                                        data-nombre="<%= p.nombre.toLowerCase() %>"
+                                                    <tr class="<%= !p.is_active ? 'admin-tabla__fila--inactiva' : '' %>"
+                                                        data-nombre="<%= p.name.toLowerCase() %>"
                                                         data-sku="<%= p.sku.toLowerCase() %>"
-                                                        data-precio="<%= p.precio %>">
+                                                        data-precio="<%= p.price %>">
 
                                                         <!-- Producto (imagen + nombre) -->
                                                         <td class="admin-tabla__celda-producto">
                                                             <div class="admin-tabla__img-wrap">
-                                                                <% if (p.imagen && p.imagen !=='-' &&
-                                                                    p.imagen.startsWith('http')) { %>
-                                                                    <img src="<%= p.imagen %>" alt="<%= p.nombre %>"
+                                                                <% if (p.image && p.image !=='-' &&
+                                                                    p.image.startsWith('http')) { %>
+                                                                    <img src="<%= p.image %>" alt="<%= p.name %>"
                                                                         class="admin-tabla__img"
                                                                         onerror="this.style.display='none';this.parentElement.querySelector('.admin-tabla__img-placeholder').style.display='flex'">
                                                                     <div class="admin-tabla__img-placeholder"
@@ -125,9 +125,10 @@
                                                             </div>
                                                             <div class="admin-tabla__producto-info">
                                                                 <span class="admin-tabla__nombre">
-                                                                    <%= p.nombre %>
+                                                                    <%= p.name %>
                                                                 </span>
-                                                                <% if (p.instalacion && p.instalacion.disponible) { %>
+                                                                <% if (p.installation_available &&
+                                                                    p.installation_service_id) { %>
                                                                     <span
                                                                         class="admin-tabla__badge-mini admin-tabla__badge-mini--info">🔧
                                                                         Instalación</span>
@@ -142,10 +143,10 @@
                                                         <td class="admin-tabla__celda-categoria">
                                                             <% if (cat) { %>
                                                                 <span class="admin-tabla__icono-cat">
-                                                                    <%= cat.icono || '📁' %>
+                                                                    <%= cat.icon || '📁' %>
                                                                 </span>
                                                                 <span>
-                                                                    <%= cat.nombre %>
+                                                                    <%= cat.name %>
                                                                 </span>
                                                                 <% } else { %>
                                                                     <span class="admin-tabla__texto-suave">—</span>
@@ -154,22 +155,23 @@
 
                                                         <!-- Precio -->
                                                         <td class="admin-tabla__precio">
-                                                            $<%= p.precio.toLocaleString('es-AR') %>
-                                                                <% if (p.precioOriginal && p.precioOriginal> p.precio) {
+                                                            $<%= p.price.toLocaleString('es-AR') %>
+                                                                <% if (p.original_price && p.original_price> p.price) {
                                                                     %>
-                                                                    <% const pct=Math.round(((p.precioOriginal -
-                                                                        p.precio) / p.precioOriginal) * 100); %>
+                                                                    <% const pct=Math.round(((p.original_price -
+                                                                        p.price) / p.original_price) * 100); %>
                                                                         <span
                                                                             class="admin-tabla__badge-mini admin-tabla__badge-mini--descuento">-
-                                                                            <%= pct %>%</span>
+                                                                            <%= pct %>%
+                                                                        </span>
                                                                         <% } %>
                                                         </td>
 
                                                         <!-- Estado -->
                                                         <td>
                                                             <span
-                                                                class="admin-estado-dot admin-estado-dot--<%= p.activo ? 'activo' : 'inactivo' %>">
-                                                                <%= p.activo ? 'Activo' : 'Inactivo' %>
+                                                                class="admin-estado-dot admin-estado-dot--<%= p.is_active ? 'activo' : 'inactivo' %>">
+                                                                <%= p.is_active ? 'Activo' : 'Inactivo' %>
                                                             </span>
                                                         </td>
 
@@ -178,8 +180,8 @@
                                                             <div class="admin-tabla__acciones">
                                                                 <a href="/admin/productos/<%= p.id %>/editar"
                                                                     class="admin-tabla__btn-accion"
-                                                                    title="Editar <%= p.nombre %>"
-                                                                    aria-label="Editar <%= p.nombre %>">
+                                                                    title="Editar <%= p.name %>"
+                                                                    aria-label="Editar <%= p.name %>">
                                                                     <svg width="14" height="14" viewBox="0 0 24 24"
                                                                         fill="none" stroke="currentColor"
                                                                         stroke-width="2">
@@ -192,16 +194,16 @@
 
                                                                 <form action="/admin/productos/<%= p.id %>/baja"
                                                                     method="POST" class="form-toggle-estado"
-                                                                    data-id="<%= p.id %>" data-nombre="<%= p.nombre %>"
-                                                                    data-activo="<%= p.activo %>">
+                                                                    data-id="<%= p.id %>" data-nombre="<%= p.name %>"
+                                                                    data-activo="<%= p.is_active %>">
                                                                     <input type="hidden" name="_method" value="DELETE">
                                                                     <button type="button"
-                                                                        class="admin-tabla__btn-accion <%= p.activo ? 'admin-tabla__btn-accion--baja' : 'admin-tabla__btn-accion--alta' %> btn-toggle-estado"
-                                                                        title="<%= p.activo ? 'Dar de baja' : 'Reactivar' %>"
+                                                                        class="admin-tabla__btn-accion <%= p.is_active ? 'admin-tabla__btn-accion--baja' : 'admin-tabla__btn-accion--alta' %> btn-toggle-estado"
+                                                                        title="<%= p.is_active ? 'Dar de baja' : 'Reactivar' %>"
                                                                         data-id="<%= p.id %>"
-                                                                        data-nombre="<%= p.nombre %>"
-                                                                        data-activo="<%= p.activo %>">
-                                                                        <% if (p.activo) { %>
+                                                                        data-nombre="<%= p.name %>"
+                                                                        data-activo="<%= p.is_active %>">
+                                                                        <% if (p.is_active) { %>
                                                                             <svg width="14" height="14"
                                                                                 viewBox="0 0 24 24" fill="none"
                                                                                 stroke="currentColor" stroke-width="2">

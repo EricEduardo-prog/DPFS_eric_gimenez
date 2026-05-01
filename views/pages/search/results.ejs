@@ -13,12 +13,12 @@
                     <div class="grid-productos">
                         <% productos.forEach(function(prod) { %>
                             <div class="tarjeta-producto">
-                                <img src="<%= prod.imagen %>" alt="<%= prod.nombre %>" class="imagen-producto"
+                                <img src="<%= prod.image %>" alt="<%= prod.name %>" class="imagen-producto"
                                     onerror="this.onerror=null;this.src='/images/placeholder.png'">
                                 <h3 class="nombre-producto">
-                                    <%= prod.nombre %>
+                                    <%= prod.name %>
                                 </h3>
-                                <div class="precio-producto">$<%= prod.precio.toLocaleString('es-AR') %>
+                                <div class="precio-producto">$<%= prod.price.toLocaleString('es-AR') %>
                                 </div>
                                 <a href="/productDetail/<%= prod.id %>" class="boton-producto">Ver más</a>
                             </div>

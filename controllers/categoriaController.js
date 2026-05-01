@@ -1,28 +1,25 @@
 'use strict';
 
-const CategoriaModel = require('../models/categoriaModel');
-const categoriaModel = CategoriaModel;  // alias para mantener consistencia con otros controladores
-
+const { Category } = require('../database/models');
 const { validationResult } = require('express-validator');
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Controladores
-// ─────────────────────────────────────────────────────────────────────────────
+// Helpers
+function _buildOrder() {
+    return [['order', 'ASC'], ['name', 'ASC']];
+}
 
-/**
- * GET /admin/categorias
- * Muestra el listado completo de categorías (activas e inactivas).
- */
-function listar(req, res, next) {
+// GET /admin/categorias
+async function listar(req, res, next) {
     try {
-        const categorias = categoriaModel.getAll();
+        const categorias = await Category.findAll({
+            order: _buildOrder()
+        });
         res.render('layout', {
             title: 'Categorías — E-E Admin',
             pageCss: 'admin_list',
             currentPage: 'admin',
             body: 'pages/admin/category/list',
             categorias,
-            // Mensajes de feedback desde redirect (se setean en query params)
             mensaje: req.query.mensaje || null,
             error: req.query.error || null,
         });
@@ -31,57 +28,26 @@ function listar(req, res, next) {
     }
 }
 
-/**
- * GET /admin/categorias/nueva
- * Muestra el formulario vacío para crear una categoría.
- */
-function mostrarFormNueva(req, res, next) {
+// GET /admin/categorias/nueva
+function mostrarFormNueva(req, res) {
     res.render('layout', {
         title: 'Nueva Categoría — E-E Admin',
         pageCss: 'admin_form',
         currentPage: 'admin',
         body: 'pages/admin/category/form',
-        categoria: null,   // null indica modo "alta"
+        categoria: null,
         errores: [],
         formData: null,
     });
 }
 
-/**
- * POST /admin/categorias
- * Procesa el formulario de alta. Si hay errores vuelve al form, si no redirige.
- */
-function crear(req, res, next) { 
-    console.log('🔵 POST /admin/categorias - Body recibido:', req.body);
-    
+// POST /admin/categorias
+async function crear(req, res, next) {
     const errores = validationResult(req);
-
     if (!errores.isEmpty()) {
-        console.log('⚠️ Errores de validación:', errores.array());
         return res.render('layout', {
             title: 'Nueva Categoría — E-E Admin',
-            pageCss: [ 'admin_form' , 'admin_list' ],  // ambos estilos para mostrar errores
-            currentPage: 'admin',
-            body: 'pages/admin/category/form',
-            categoria: null,
-            errores: errores.array().map(e => e.msg),  // extraemos solo los mensajes de error
-            formData: req.body,
-        });
-    }
-
-    try {
-        console.log('📝 Intentando crear categoría...');
-        const nuevaCategoria = categoriaModel.create(req.body);
-        console.log('✅ Categoría creada:', nuevaCategoria);
-        res.redirect('/admin/categorias?mensaje=Categoría creada correctamente.');
-    } catch (err) {
-        console.error('❌ Error en crear categoría:', err.message);
-        console.error('Stack:', err.stack);
-        
-        // Renderizar el formulario con el error
-        res.render('layout', {
-            title: 'Nueva Categoría — E-E Admin',
-            pageCss: ['admin_form' , 'admin_list'],  // ambos estilos para mostrar errores
+            pageCss: ['admin_form', 'admin_list'],
             currentPage: 'admin',
             body: 'pages/admin/category/form',
             categoria: null,
@@ -89,26 +55,52 @@ function crear(req, res, next) {
             formData: req.body,
         });
     }
+
+    try {
+        // Calcular próximo orden si no se envía
+        let order = req.body.order;
+        if (!order) {
+            const lastCategory = await Category.findOne({ order: [['order', 'DESC']] });
+            order = lastCategory ? lastCategory.order + 1 : 1;
+        }
+
+        const newCategory = await Category.create({
+            id: `cat_${Date.now()}`, // o usar un generador de IDs como en los modelos originales
+            slug: req.body.slug,
+            name: req.body.name,
+            description: req.body.description,
+            icon: req.body.icon,
+            is_active: req.body.is_active === 'true' || req.body.is_active === true,
+            order: parseInt(order, 10)
+        });
+        res.redirect('/admin/categorias?mensaje=Categoría creada correctamente.');
+    } catch (err) {
+        console.error(err);
+        res.render('layout', {
+            title: 'Nueva Categoría — E-E Admin',
+            pageCss: ['admin_form', 'admin_list'],
+            currentPage: 'admin',
+            body: 'pages/admin/category/form',
+            categoria: null,
+            errores: [err.message],
+            formData: req.body,
+        });
+    }
 }
 
-/**
- * GET /admin/categorias/:id/editar
- * Muestra el formulario pre-cargado con los datos de la categoría.
- */
-function mostrarFormEditar(req, res, next) {
+// GET /admin/categorias/:id/editar
+async function mostrarFormEditar(req, res, next) {
     try {
-        const categoria = categoriaModel.getById(req.params.id);
-
+        const categoria = await Category.findByPk(req.params.id);
         if (!categoria) {
             return res.redirect('/admin/categorias?error=Categoría no encontrada.');
         }
-
         res.render('layout', {
-            title: `Editar ${categoria.nombre} — E-E Admin`,
+            title: `Editar ${categoria.name} — E-E Admin`,
             pageCss: 'admin_form',
             currentPage: 'admin',
             body: 'pages/admin/category/form',
-            categoria,    // objeto completo → la vista detecta modo "edición"
+            categoria,
             errores: [],
             formData: null,
         });
@@ -117,19 +109,16 @@ function mostrarFormEditar(req, res, next) {
     }
 }
 
-/**
- * POST /admin/categorias/:id  (con _method=PUT en el body)
- * Procesa el formulario de edición.
- */
-function actualizar(req, res, next) {
+// POST /admin/categorias/:id (actualizar)
+async function actualizar(req, res, next) {
     const errores = validationResult(req);
+    const categoria = await Category.findByPk(req.params.id);
+    if (!categoria) return res.redirect('/admin/categorias?error=Categoría no encontrada.');
 
     if (!errores.isEmpty()) {
-        // Necesitamos el objeto original para pre-cargar el form con el id correcto
-        const categoria = categoriaModel.getById(req.params.id);
         return res.render('layout', {
             title: 'Editar Categoría — E-E Admin',
-            pageCss: ['admin_form' , 'admin_list'],  // ambos estilos para mostrar errores
+            pageCss: ['admin_form', 'admin_list'],
             currentPage: 'admin',
             body: 'pages/admin/category/form',
             categoria,
@@ -139,54 +128,55 @@ function actualizar(req, res, next) {
     }
 
     try {
-        categoriaModel.update(req.params.id, req.body);
+        await categoria.update({
+            slug: req.body.slug,
+            name: req.body.name,
+            description: req.body.description,
+            icon: req.body.icon,
+            is_active: req.body.is_active === 'true' || req.body.is_active === true,
+            order: parseInt(req.body.order, 10)
+        });
         res.redirect('/admin/categorias?mensaje=Categoría actualizada correctamente.');
     } catch (err) {
-        const categoria = categoriaModel.getById(req.params.id);
         res.render('layout', {
             title: 'Editar Categoría — E-E Admin',
-            pageCss: ['admin_form' , 'admin_list'],  // ambos estilos para mostrar errores
+            pageCss: ['admin_form', 'admin_list'],
             currentPage: 'admin',
             body: 'pages/admin/category/form',
             categoria,
-            errores: errores.array().map(e => e.msg),
+            errores: [err.message],
             formData: req.body,
         });
     }
 }
 
-/**
- * POST /admin/categorias/:id/baja  (con _method=DELETE en el body)
- * Alterna el estado activo/inactivo (baja lógica). Nunca borra el registro.
- */
-function toggleBaja(req, res, next) {
+// POST /admin/categorias/:id/baja (toggle activo)
+async function toggleBaja(req, res, next) {
     try {
-        const categoria = categoriaModel.toggleActivo(req.params.id);
-        const estado = categoria.activo ? 'activada' : 'desactivada';
+        const categoria = await Category.findByPk(req.params.id);
+        if (!categoria) throw new Error('Categoría no encontrada');
+        const nuevoEstado = !categoria.is_active;
+        await categoria.update({ is_active: nuevoEstado });
+        const estado = nuevoEstado ? 'activada' : 'desactivada';
         res.redirect(`/admin/categorias?mensaje=Categoría ${estado} correctamente.`);
     } catch (err) {
         res.redirect(`/admin/categorias?error=${encodeURIComponent(err.message)}`);
     }
 }
 
-/**
- * GET /admin/categorias/api/lista
- * Devuelve JSON con las categorías activas ordenadas.
- * Usado por productoController para poblar el <select> del formulario de productos.
- * No renderiza vista — responde JSON puro.
- */
-function apiLista(req, res, next) {
+// GET /admin/categorias/api/lista
+async function apiLista(req, res) {
     try {
-        const categorias = categoriaModel.getAll({ soloActivas: true });
+        const categorias = await Category.findAll({
+            where: { is_active: true },
+            order: _buildOrder(),
+            attributes: ['id', 'name', 'slug']
+        });
         res.json({ ok: true, categorias });
     } catch (err) {
         res.status(500).json({ ok: false, error: err.message });
     }
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Exports
-// ─────────────────────────────────────────────────────────────────────────────
 
 module.exports = {
     listar,

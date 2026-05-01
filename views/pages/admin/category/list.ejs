@@ -87,31 +87,30 @@
                                         </thead>
                                         <tbody>
                                             <% categorias.forEach(function(cat) { %>
-                                                <tr class="<%= !cat.activo ? 'admin-tabla__fila--inactiva' : '' %>"
-                                                    data-orden="<%= cat.orden || 999 %>"
-                                                    data-nombre="<%= cat.nombre.toLowerCase() %>"
-                                                    data-slug="<%= (cat.slug || '').toLowerCase() %>"
-                                                    data-productos="<%= cat.cantidadProductos || 0 %>">
+                                                <tr class="<%= !cat.is_active ? 'admin-tabla__fila--inactiva' : '' %>"
+                                                    data-orden="<%= cat.order || 999 %>"
+                                                    data-nombre="<%= cat.name.toLowerCase() %>"
+                                                    data-slug="<%= (cat.slug || '').toLowerCase() %>">
 
                                                     <!-- Orden -->
                                                     <td class="admin-tabla__orden">
-                                                        <%= cat.orden || '—' %>
+                                                        <%= cat.order || '—' %>
                                                     </td>
 
                                                     <!-- Ícono + nombre + descripción -->
                                                     <td class="admin-tabla__celda-producto">
                                                         <span class="admin-tabla__icono-cat" aria-hidden="true">
-                                                            <%= cat.icono || '📁' %>
+                                                            <%= cat.icon || '📁' %>
                                                         </span>
                                                         <div class="admin-tabla__producto-info">
                                                             <span class="admin-tabla__nombre">
-                                                                <%= cat.nombre %>
+                                                                <%= cat.name %>
                                                             </span>
-                                                            <% if (cat.descripcion) { %>
+                                                            <% if (cat.description) { %>
                                                                 <span class="admin-tabla__descripcion-corta">
-                                                                    <%= cat.descripcion.length> 55 ?
-                                                                        cat.descripcion.substring(0, 55) + '…' :
-                                                                        cat.descripcion %>
+                                                                    <%= cat.description.length> 55 ?
+                                                                        cat.description.substring(0, 55) + '…' :
+                                                                        cat.description %>
                                                                 </span>
                                                                 <% } %>
                                                         </div>
@@ -121,18 +120,11 @@
                                                     <td><code class="admin-tabla__codigo"><%= cat.slug || '—' %></code>
                                                     </td>
 
-                                                    <!-- Cantidad productos -->
-                                                    <td class="admin-tabla__td-num">
-                                                        <span class="admin-tabla__conteo-badge">
-                                                            <%= cat.cantidadProductos || 0 %>
-                                                        </span>
-                                                    </td>
-
                                                     <!-- Estado -->
                                                     <td>
                                                         <span
-                                                            class="admin-estado-dot admin-estado-dot--<%= cat.activo ? 'activo' : 'inactivo' %>">
-                                                            <%= cat.activo ? 'Activa' : 'Inactiva' %>
+                                                            class="admin-estado-dot admin-estado-dot--<%= cat.is_active ? 'activo' : 'inactivo' %>">
+                                                            <%= cat.is_active ? 'Activa' : 'Inactiva' %>
                                                         </span>
                                                     </td>
 
@@ -141,8 +133,8 @@
                                                         <div class="admin-tabla__acciones">
                                                             <a href="/admin/categorias/<%= cat.id %>/editar"
                                                                 class="admin-tabla__btn-accion"
-                                                                title="Editar <%= cat.nombre %>"
-                                                                aria-label="Editar <%= cat.nombre %>">
+                                                                title="Editar <%= cat.name %>"
+                                                                aria-label="Editar <%= cat.name %>">
                                                                 <svg width="14" height="14" viewBox="0 0 24 24"
                                                                     fill="none" stroke="currentColor" stroke-width="2">
                                                                     <path
@@ -154,16 +146,16 @@
 
                                                             <form action="/admin/categorias/<%= cat.id %>/baja"
                                                                 method="POST" class="form-toggle-estado"
-                                                                data-id="<%= cat.id %>" data-nombre="<%= cat.nombre %>"
-                                                                data-activo="<%= cat.activo %>">
+                                                                data-id="<%= cat.id %>" data-nombre="<%= cat.name %>"
+                                                                data-activo="<%= cat.is_active %>">
                                                                 <input type="hidden" name="_method" value="DELETE">
                                                                 <button type="button"
-                                                                    class="admin-tabla__btn-accion <%= cat.activo ? 'admin-tabla__btn-accion--baja' : 'admin-tabla__btn-accion--alta' %> btn-toggle-estado"
-                                                                    title="<%= cat.activo ? 'Desactivar' : 'Reactivar' %>"
+                                                                    class="admin-tabla__btn-accion <%= cat.is_active ? 'admin-tabla__btn-accion--baja' : 'admin-tabla__btn-accion--alta' %> btn-toggle-estado"
+                                                                    title="<%= cat.is_active ? 'Desactivar' : 'Reactivar' %>"
                                                                     data-id="<%= cat.id %>"
-                                                                    data-nombre="<%= cat.nombre %>"
-                                                                    data-activo="<%= cat.activo %>">
-                                                                    <% if (cat.activo) { %>
+                                                                    data-nombre="<%= cat.name %>"
+                                                                    data-activo="<%= cat.is_active %>">
+                                                                    <% if (cat.is_active) { %>
                                                                         <svg width="14" height="14" viewBox="0 0 24 24"
                                                                             fill="none" stroke="currentColor"
                                                                             stroke-width="2">

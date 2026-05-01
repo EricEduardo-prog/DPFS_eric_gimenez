@@ -1,19 +1,12 @@
 'use strict';
 
-const UsuarioModel = require('../models/usuarioModel');
+const { User, Booking } = require('../database/models');
 const bcrypt = require('bcrypt');
-const ReservaModel = require('../models/reservaModel');
-//const bcrypt = require('bcryptjs'); 
-
-const usuarioModel = UsuarioModel;
-const reservaModel = ReservaModel;
-
 const { validationResult } = require('express-validator');
-const AuthService = require('../services/authService');
+const AuthService = require('../services/authService'); // Asumo que este servicio será refactorizado
 
 const SALT_ROUNDS = 10;
 
-// Las funciones auxiliares como _normalizarDireccion también deben estar definidas
 function _normalizarDireccion(body) {
     const direccion = {};
     if (body.direccion_calle) direccion.calle = body.direccion_calle.trim();
@@ -23,23 +16,12 @@ function _normalizarDireccion(body) {
     if (body.direccion_ciudad) direccion.ciudad = body.direccion_ciudad.trim();
     if (body.direccion_provincia) direccion.provincia = body.direccion_provincia.trim();
     if (body.direccion_codigoPostal) direccion.codigoPostal = body.direccion_codigoPostal.trim();
-    return Object.keys(direccion).length > 0 ? direccion : null;
+    return Object.keys(direccion).length ? direccion : null;
 }
 
-// ============================================================
-// CONTROLADORES PÚBLICOS (formularios de registro)
-// ============================================================
-/**
- * GET /register - Mostrar formulario de registro
- */
+// ========== PÚBLICOS ==========
 function mostrarFormRegistro(req, res) {
-    console.log('📝 GET /register - Mostrando formulario de registro');
-
-    // Si el usuario ya está logueado, redirigir al perfil
-    if (req.session?.usuarioId) {
-        return res.redirect('/profile');
-    }
-
+    if (req.session?.usuarioId) return res.redirect('/profile');
     res.render('layout-auth', {
         title: 'Registro - E-E',
         body: 'pages/users/register-content',
@@ -52,17 +34,8 @@ function mostrarFormRegistro(req, res) {
     });
 }
 
-/**
- * GET /login - Mostrar formulario de login
- */
 function mostrarFormLogin(req, res) {
-    console.log('📝 GET /login - Mostrando formulario de login');
-
-    // Si el usuario ya está logueado, redirigir al perfil
-    if (req.session?.usuarioId) {
-        return res.redirect('/perfil');
-    }
-
+    if (req.session?.usuarioId) return res.redirect('/perfil');
     res.render('layout-auth', {
         title: 'Iniciar Sesión - E-E',
         body: 'pages/users/login-content',
@@ -75,48 +48,35 @@ function mostrarFormLogin(req, res) {
     });
 }
 
-async function login(req, res) {
-    console.log('🔵 POST /login - Body:', req.body);
-
-    const errores = validationResult(req);
-
-    if (!errores.isEmpty()) {
+async function login(req, res, next) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
         return res.render('layout-auth', {
             title: 'Iniciar Sesión - E-E',
             body: 'pages/users/login-content',
             authScript: 'login',
             currentPage: 'login',
             pageCss: 'login_register',
-            errores: errores.array().map(e => e.msg),
+            errores: errors.array().map(e => e.msg),
             formData: req.body,
             mensaje: null
         });
     }
-
     try {
         const { email, password, recordarme } = req.body;
-        const usuario = await AuthService.login(email, password);
+        const usuario = await AuthService.login(email, password); // Servicio deberá usar User.findOne
 
         req.session.usuarioId = usuario.id;
         req.session.usuarioEmail = usuario.email;
-        req.session.usuarioNombre = usuario.nombre;
+        req.session.usuarioNombre = usuario.name;
         req.session.rol = usuario.rol;
 
-        if (recordarme) {
-            res.cookie('userEmail', usuario.email, { maxAge: 1000 * 60 * 60 * 24 * 30 }); // 30 días
-        }
-
-        // Fusionar reserva guest
+        if (recordarme) res.cookie('userEmail', usuario.email, { maxAge: 30 * 24 * 60 * 60 * 1000 });
         await AuthService.fusionarReservaGuest(req.cookies?.guestId, usuario.id);
 
-        console.log('✅ Login exitoso:', usuario.email);
-
-        return res.redirect('/usuarios/perfil');
-
+        res.redirect('/usuarios/perfil');
     } catch (error) {
-        console.error('❌ Error login:', error.message);
-
-        return res.render('layout-auth', {
+        res.render('layout-auth', {
             title: 'Iniciar Sesión - E-E',
             body: 'pages/users/login-content',
             authScript: 'login',
@@ -129,322 +89,195 @@ async function login(req, res) {
     }
 }
 
-// ============================================================
-// CONTROLADORES PÚBLICOS (perfil del usuario logueado)
-// ============================================================
+function logout(req, res) {
+    req.session.destroy(err => {
+        if (err) console.error(err);
+        res.clearCookie('connect.sid');
+        res.redirect('/login?mensaje=Sesión cerrada correctamente.');
+    });
+}
 
-/**
- * GET /usuarios/perfil - Ver mi perfil
- * Requiere: usuario autenticado (sesión)
- */
-function verMiPerfil(req, res, next) {
+// ========== PERFIL USUARIO ==========
+async function verMiPerfil(req, res, next) {
     try {
-        // Obtener usuario de la sesión (asumiendo que tienes sesión configurada)
         const usuarioId = req.session?.usuarioId;
-
-        if (!usuarioId) {
-            return res.redirect('/login?error=Debes iniciar sesión para ver tu perfil.');
-        }
-
-        const usuario = usuarioModel.getById(usuarioId);
-
-        if (!usuario) {
-            return res.redirect('/login?error=Usuario no encontrado.');
-        }
-
+        if (!usuarioId) return res.redirect('/login?error=Debes iniciar sesión.');
+        const usuario = await User.findByPk(usuarioId);
+        if (!usuario) return res.redirect('/login?error=Usuario no encontrado.');
         res.render('layout', {
             title: 'Mi Perfil - E-E',
             body: 'pages/users/profile',
             currentPage: 'profile',
             pageCss: ['admin_form', 'admin_list', 'user_profile'],
-            usuario: usuario,
+            usuario,
             mensaje: req.query.mensaje || null,
             error: req.query.error || null
         });
-    } catch (err) {
-        next(err);
-    }
+    } catch (err) { next(err); }
 }
 
-/**
- * GET /usuarios/perfil/editar - Formulario para editar mi perfil
- */
-function editarMiPerfil(req, res, next) {
+async function editarMiPerfil(req, res, next) {
     try {
         const usuarioId = req.session?.usuarioId;
-
-        if (!usuarioId) {
-            return res.redirect('/login?error=Debes iniciar sesión.');
-        }
-
-        const usuario = usuarioModel.getById(usuarioId);
-
-        if (!usuario) {
-            return res.redirect('/login?error=Usuario no encontrado.');
-        }
-
+        if (!usuarioId) return res.redirect('/login?error=Debes iniciar sesión.');
+        const usuario = await User.findByPk(usuarioId);
+        if (!usuario) return res.redirect('/login?error=Usuario no encontrado.');
         res.render('layout', {
             title: 'Editar Perfil - E-E',
             body: 'pages/users/profile-edit',
             currentPage: 'profile-edit',
             pageCss: ['user_profile', 'admin_form', 'admin_list'],
-            usuario: usuario,
+            usuario,
             errores: [],
             formData: null
         });
-    } catch (err) {
-        next(err);
-    }
+    } catch (err) { next(err); }
 }
 
-/**
- * PUT /usuarios/perfil - Actualizar mi perfil
- */
-function actualizarMiPerfil(req, res, next) {
-    console.log('🟡 PUT /usuarios/perfil - Body:', req.body);
-
+async function actualizarMiPerfil(req, res, next) {
     const usuarioId = req.session?.usuarioId;
+    if (!usuarioId) return res.redirect('/login?error=Debes iniciar sesión.');
+    const usuario = await User.findByPk(usuarioId);
+    if (!usuario) return res.redirect('/login?error=Usuario no encontrado.');
 
-    if (!usuarioId) {
-        return res.redirect('/login?error=Debes iniciar sesión.');
-    }
-
-    const usuarioExistente = usuarioModel.getById(usuarioId);
-
-    if (!usuarioExistente) {
-        return res.redirect('/login?error=Usuario no encontrado.');
-    }
-
-    // Validar solo los campos editables por el usuario
-    const errores = validationResult(req);
-
-    if (!errores.isEmpty()) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
         return res.render('layout', {
             title: 'Editar Perfil - E-E',
             body: 'pages/users/profile-edit',
             currentPage: 'profile',
             pageCss: ['admin_form', 'admin_list', 'user_profile'],
-            usuario: usuarioExistente,
-            errores: errores.array().map(e => e.msg),
+            usuario,
+            errores: errors.array().map(e => e.msg),
             formData: req.body
         });
     }
-
     try {
-        // Normalizar dirección
         const direccion = _normalizarDireccion(req.body);
-
-        const usuarioActualizado = usuarioModel.update(usuarioId, {
-            nombre: req.body.nombre,
-            telefono: req.body.telefono || '',
-            direccion: direccion
-            // No permitir cambiar email ni activo desde aquí
+        await usuario.update({
+            name: req.body.name,
+            phone: req.body.phone || '',
+            address: direccion
         });
-
-        console.log('✅ Perfil actualizado:', usuarioActualizado.id);
+        req.session.usuarioNombre = usuario.name;
         res.redirect('/usuarios/perfil?mensaje=Perfil actualizado correctamente.');
     } catch (err) {
-        console.error('❌ Error:', err.message);
         res.render('layout', {
             title: 'Editar Perfil - E-E',
             body: 'pages/users/profile-edit',
             currentPage: 'profile',
             pageCss: ['admin_form', 'admin_list', 'user_profile'],
-            usuario: usuarioExistente,
-            errores: errores.array().map(e => e.msg).concat(['Ocurrió un error al actualizar el perfil.']),
+            usuario,
+            errores: [err.message],
             formData: req.body
         });
     }
 }
 
-/**
- * GET /usuarios/cambiar-password - Formulario para cambiar contraseña
- */
-function formCambiarPassword(req, res, next) {
-    try {
-        const usuarioId = req.session?.usuarioId;
-
-        if (!usuarioId) {
-            return res.redirect('/login?error=Debes iniciar sesión.');
-        }
-
-        res.render('layout', {
-            title: 'Cambiar Contraseña - E-E',
-            pageCss: ['user_profile', 'admin_form'],
-            currentPage: 'cambiar-password',
-            body: 'pages/users/change-password',
-            errores: [],
-            mensaje: null
-        });
-    } catch (err) {
-        next(err);
-    }
-}
-
-/**
- * GET /usuarios/pedidos - Historial de pedidos del usuario
- */
-function misPedidos(req, res, next) {
-    try {
-        const usuarioId = req.session?.usuarioId;
-
-        if (!usuarioId) {
-            return res.redirect('/login?error=Debes iniciar sesión.');
-        }
-
-        // Aquí llamarías a pedidoModel.getByUsuarioId(usuarioId)
-        // Por ahora, array vacío como placeholder
-        const pedidos = [];
-
-        res.render('my-orders', {
-            title: 'Mis Pedidos - E-E',
-            pedidos: pedidos,
-            mensaje: req.query.mensaje || null
-        });
-    } catch (err) {
-        next(err);
-    }
-}
-
-/**
- * GET /usuarios/pedidos/:id - Ver detalle de un pedido
- */
-function detallePedido(req, res, next) {
-    try {
-        const usuarioId = req.session?.usuarioId;
-        const pedidoId = req.params.id;
-
-        if (!usuarioId) {
-            return res.redirect('/login?error=Debes iniciar sesión.');
-        }
-
-        // Aquí llamarías a pedidoModel.getById(pedidoId)
-        // Verificar que el pedido pertenezca al usuario
-        const pedido = null; // Placeholder
-
-        if (!pedido) {
-            return res.redirect('/usuarios/pedidos?error=Pedido no encontrado.');
-        }
-
-        res.render('order-detail', {
-            title: `Pedido #${pedidoId} - E-E`,
-            pedido: pedido
-        });
-    } catch (err) {
-        next(err);
-    }
-}
-
-/**
- * GET /logout - Cerrar sesión
- */
-function logout(req, res) {
-    console.log('🔴 GET /logout - Cerrando sesión:', req.session?.usuarioEmail);
-
-    req.session.destroy((err) => {
-        if (err) {
-            console.error('Error al cerrar sesión:', err);
-            return res.redirect('/perfil?error=Ocurrió un error al cerrar sesión. Intenta nuevamente.');
-        }
-
-        // Limpiar la cookie de sesión
-        res.clearCookie('connect.sid');
-
-        console.log('✅ Sesión cerrada correctamente');
-        res.redirect('/login?mensaje=Sesión cerrada correctamente.');
+function formCambiarPassword(req, res) {
+    if (!req.session?.usuarioId) return res.redirect('/login?error=Debes iniciar sesión.');
+    res.render('layout', {
+        title: 'Cambiar Contraseña - E-E',
+        pageCss: ['user_profile', 'admin_form'],
+        currentPage: 'cambiar-password',
+        body: 'pages/users/change-password',
+        errores: [],
+        mensaje: null
     });
 }
 
-// ============================================================
-// FUNCIONES ADMIN 
-// ============================================================
-
-/**
- * GET /admin/usuarios - Listar todos los usuarios
- */
-function listar(req, res, next) {
+async function misPedidos(req, res, next) {
     try {
-        const { soloActivos } = req.query;
-        let usuarios = usuarioModel.getAll();
+        const usuarioId = req.session?.usuarioId;
+        if (!usuarioId) return res.redirect('/login?error=Debes iniciar sesión.');
+        const pedidos = await Booking.findAll({
+            where: { user_id: usuarioId },
+            include: [{ model: BookingItem, as: 'items' }],
+            order: [['created_at', 'DESC']]
+        });
+        res.render('my-orders', {
+            title: 'Mis Pedidos - E-E',
+            pedidos,
+            mensaje: req.query.mensaje || null
+        });
+    } catch (err) { next(err); }
+}
 
-        if (soloActivos === 'true') {
-            usuarios = usuarios.filter(u => u.activo === true);
-        }
+async function detallePedido(req, res, next) {
+    try {
+        const usuarioId = req.session?.usuarioId;
+        if (!usuarioId) return res.redirect('/login?error=Debes iniciar sesión.');
+        const pedido = await Booking.findOne({
+            where: { id: req.params.id, user_id: usuarioId },
+            include: [{ model: BookingItem, as: 'items' }]
+        });
+        if (!pedido) return res.redirect('/usuarios/pedidos?error=Pedido no encontrado.');
+        res.render('order-detail', { title: `Pedido #${req.params.id}`, pedido });
+    } catch (err) { next(err); }
+}
 
+// ========== ADMIN ==========
+async function listar(req, res, next) {
+    try {
+        const where = {};
+        if (req.query.soloActivos === 'true') where.is_active = true;
+        const usuarios = await User.findAll({ where, order: [['registered_at', 'DESC']] });
         res.render('layout', {
             title: 'Usuarios — E-E Admin',
             pageCss: 'admin_list',
             currentPage: 'admin',
             body: 'pages/admin/users/list',
             usuarios,
-            filtros: { soloActivos: soloActivos || '' },
+            filtros: { soloActivos: req.query.soloActivos || '' },
             mensaje: req.query.mensaje || null,
             error: req.query.error || null,
         });
-    } catch (err) {
-        next(err);
-    }
+    } catch (err) { next(err); }
 }
 
-/**
- * GET /admin/usuarios/nuevo - Mostrar formulario nuevo usuario
- */
-function mostrarFormNuevo(req, res, next) {
-    try {
-        res.render('layout', {
-            title: 'Nuevo Usuario — E-E Admin',
-            pageCss: 'admin_form',
-            currentPage: 'admin',
-            body: 'pages/admin/users/form',
-            usuario: null,
-            errores: [],
-            formData: null
-        });
-    } catch (err) {
-        next(err);
-    }
+function mostrarFormNuevo(req, res) {
+    res.render('layout', {
+        title: 'Nuevo Usuario — E-E Admin',
+        pageCss: 'admin_form',
+        currentPage: 'admin',
+        body: 'pages/admin/users/form',
+        usuario: null,
+        errores: [],
+        formData: null
+    });
 }
 
-/**
- * POST /admin/usuarios - Crear usuario desde admin
- */
 async function crear(req, res, next) {
-    console.log('🔵 POST /admin/usuarios - Body:', req.body);
-
-    const errores = validationResult(req);
-
-
-    if (!errores.isEmpty()) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
         return res.render('layout', {
             title: 'Nuevo Usuario — E-E Admin',
             pageCss: 'admin_form',
             currentPage: 'admin',
             body: 'pages/admin/users/form',
             usuario: null,
-            errores: errores.array().map(e => e.msg),
+            errores: errors.array().map(e => e.msg),
             formData: req.body
         });
     }
-
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, SALT_ROUNDS);
         const direccion = _normalizarDireccion(req.body);
-
-        const nuevoUsuario = usuarioModel.create({
-            nombre: req.body.nombre.trim(),
+        const newUser = await User.create({
+            id: `usr_${Date.now()}`,
+            name: req.body.name.trim(),
             email: req.body.email.trim().toLowerCase(),
-            passwordHash: hashedPassword,
-            telefono: req.body.telefono || '',
-            direccion: direccion,
-            aceptoTerminos: true,
-            activo: req.body.activo === 'true' || req.body.activo === true
+            password_hash: hashedPassword,
+            phone: req.body.phone || '',
+            address: direccion,
+            terms_accepted: true,
+            is_active: req.body.is_active === 'true'
         });
-
         res.redirect('/admin/usuarios?mensaje=Usuario creado correctamente.');
     } catch (err) {
         res.render('layout', {
             title: 'Nuevo Usuario — E-E Admin',
-            pageCss: 'admin_forms_list',
+            pageCss: 'admin_form',
             currentPage: 'admin',
             body: 'pages/admin/users/form',
             usuario: null,
@@ -454,68 +287,48 @@ async function crear(req, res, next) {
     }
 }
 
-/**
- * GET /admin/usuarios/:id/editar - Editar usuario
- */
-function mostrarFormEditar(req, res, next) {
+async function mostrarFormEditar(req, res, next) {
     try {
-        const usuario = usuarioModel.getById(req.params.id);
-        if (!usuario) {
-            return res.redirect('/admin/usuarios?error=Usuario no encontrado.');
-        }
+        const usuario = await User.findByPk(req.params.id);
+        if (!usuario) return res.redirect('/admin/usuarios?error=Usuario no encontrado.');
         res.render('layout', {
-            title: `Editar ${usuario.nombre} — E-E Admin`,
+            title: `Editar ${usuario.name} — E-E Admin`,
             pageCss: 'admin_form',
             currentPage: 'admin',
             body: 'pages/admin/users/form',
-            usuario: usuario,
+            usuario,
             errores: [],
             formData: null
         });
-    } catch (err) {
-        next(err);
-    }
+    } catch (err) { next(err); }
 }
 
-/**
- * POST /admin/usuarios/:id - Actualizar usuario
- */
 async function actualizar(req, res, next) {
-    console.log('🟡 POST /admin/usuarios/:id - ID:', req.params.id);
-
-    const usuarioExistente = usuarioModel.getById(req.params.id);
-    if (!usuarioExistente) {
-        return res.redirect('/admin/usuarios?error=Usuario no encontrado.');
-    }
-
-    const errores = validationResult(req);
-
-
-    if (!errores.isEmpty()) {
+    const usuario = await User.findByPk(req.params.id);
+    if (!usuario) return res.redirect('/admin/usuarios?error=Usuario no encontrado.');
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
         return res.render('layout', {
             title: 'Editar Usuario — E-E Admin',
             pageCss: 'admin_form',
             currentPage: 'admin',
             body: 'pages/admin/users/form',
-            usuario: usuarioExistente,
-            errores: errores,
+            usuario,
+            errores: errors.array().map(e => e.msg),
             formData: req.body
         });
     }
-
     try {
-        const datosActualizar = {
-            nombre: req.body.nombre,
-            telefono: req.body.telefono || '',
-            direccion: _normalizarDireccion(req.body),
-            activo: req.body.activo === 'true' || req.body.activo === true
+        const updateData = {
+            name: req.body.name,
+            phone: req.body.phone || '',
+            address: _normalizarDireccion(req.body),
+            is_active: req.body.is_active === 'true'
         };
-
         if (req.body.password?.trim()) {
-            datosActualizar.passwordHash = await bcrypt.hash(req.body.password, SALT_ROUNDS);
+            updateData.password_hash = await bcrypt.hash(req.body.password, SALT_ROUNDS);
         }
-
-        usuarioModel.update(req.params.id, datosActualizar);
+        await usuario.update(updateData);
         res.redirect('/admin/usuarios?mensaje=Usuario actualizado correctamente.');
     } catch (err) {
         res.render('layout', {
@@ -523,45 +336,39 @@ async function actualizar(req, res, next) {
             pageCss: 'admin_form',
             currentPage: 'admin',
             body: 'pages/admin/users/form',
-            usuario: usuarioExistente,
+            usuario,
             errores: [err.message],
             formData: req.body
         });
     }
 }
 
-/**
- * POST /admin/usuarios/:id/baja - Toggle activo/inactivo
- */
-function toggleBaja(req, res, next) {
+async function toggleBaja(req, res, next) {
     try {
-        const usuario = usuarioModel.toggleActivo(req.params.id);
-        const estado = usuario.activo ? 'activado' : 'desactivado';
+        const usuario = await User.findByPk(req.params.id);
+        if (!usuario) throw new Error('Usuario no encontrado');
+        const newActive = !usuario.is_active;
+        await usuario.update({ is_active: newActive });
+        const estado = newActive ? 'activado' : 'desactivado';
         res.redirect(`/admin/usuarios?mensaje=Usuario ${estado} correctamente.`);
     } catch (err) {
         res.redirect(`/admin/usuarios?error=${encodeURIComponent(err.message)}`);
     }
 }
 
-// ============================================================
-// EXPORTS - AGREGAR AL FINAL DEL ARCHIVO
-// ============================================================
-
 module.exports = {
-    // Registro público
+    // Públicos
     mostrarFormRegistro,
     mostrarFormLogin,
-    logout,
-
-    // Perfil usuario
     login,
+    logout,
+    // Perfil
     verMiPerfil,
     editarMiPerfil,
     actualizarMiPerfil,
     formCambiarPassword,
     misPedidos,
     detallePedido,
-
     // Admin
     listar,
     mostrarFormNuevo,

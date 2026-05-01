@@ -1,25 +1,23 @@
-<%
-  let subtotal = 0;
-  let totalServicios = 0;
-  let totalDescuento = 0;
-
-  //  Separar items en productos y servicios para mostrar en secciones distintas
-  const productosItems = (items || []).filter(item => item.productoId && !item.servicioId);
-  const serviciosItems = (items || []).filter(item => item.servicioId && item.productoId);
-
-  //  Calcular subtotal de productos
+<% 
+  let subtotal=0; let totalServicios=0; let totalDescuento=0;
+  // Separar items en productos y servicios para mostrar ensecciones distintas 
+  const productosItems = (items || []).filter(item=> item.product_id && !item.service_id);
+  const serviciosItems = (items || []).filter(item => item.service_id && item.product_id);
+  //Mostrar por consola todos lo que viene del back
+  console.log('Items en reserva:', items);
+  // Calcular subtotal de productos
   for (const item of items || []) {
-      subtotal += (item.precioUnitario || 0) * item.cantidad;
+  subtotal += (item.unit_price || 0) * item.quantity;
   }
 
-   //  Calcular total de servicios
+  // Calcular total de servicios
   for (const item of serviciosItems) {
-      totalServicios += (item.precioUnitario || 0);
+  totalServicios += (item.unit_price || 0) * item.quantity;
   }
-  
+
   // Calcular total de descuentos (si hay descuentos)
   const total = subtotal + totalServicios - totalDescuento;
-%>
+  %>
 
   <div class="reserva-container">
     <div class="reserva-header">
@@ -69,14 +67,14 @@
                         </div>
                         <div class="item-info">
                           <h3 class="item-nombre">
-                            <%= item.nombre || 'Producto' %>
+                            <%= item.name || 'Producto' %>
                           </h3>
-                          <p class="item-sku">ID: <%= item.productoId %>
+                          <p class="item-sku">ID: <%= item.id %>
                           </p>
                           <div class="item-acciones">
                             <div class="selector-cantidad">
                               <button class="btn-cantidad btn-disminuir" data-item-id="<%= item.id %>">−</button>
-                              <input type="number" class="input-cantidad" value="<%= item.cantidad %>" min="1" readonly
+                              <input type="number" class="input-cantidad" value="<%= item.count %>" min="1" readonly
                                 data-item-id="<%= item.id %>">
                               <button class="btn-cantidad btn-aumentar" data-item-id="<%= item.id %>">+</button>
                             </div>
@@ -84,10 +82,10 @@
                           </div>
                         </div>
                         <div class="item-precio">
-                          <span class="precio-unitario">$<%= (item.precioUnitario || 0).toLocaleString('es-AR') %>
+                          <span class="precio-unitario">$<%= (item.unit_price || 0).toLocaleString('es-AR') %>
+                          </span>
+                          <span class="precio-total">$<%= ((item.unit_price || 0) * item.quantity).toLocaleString('es-AR') %>
                               </span>
-                          <span class="precio-total">$<%= ((item.precioUnitario || 0) *
-                              item.cantidad).toLocaleString('es-AR') %></span>
                         </div>
                       </article>
                       <% }); %>
@@ -121,38 +119,38 @@
                         </div>
                         <div class="item-info">
                           <h3 class="item-nombre">
-                            <%= item.nombre || 'Servicio' %>
+                            <%= item.name || 'Servicio' %>
                           </h3>
-                          <p class="item-sku">ID: <%= item.servicioId %>
+                          <p class="item-sku">ID: <%= item.id %>
                           </p>
 
                           <!-- ✅ MOSTRAR PROFESIONAL ASIGNADO (si existe) -->
-                          <% if (item.profesionalId && item.profesionalNombre) { %>
+                          <% if (item.professional_id && item.profesionalNombre) { %>
                             <div class="profesional-asignado">
                               <span class="profesional-icono">👨‍🔧</span>
                               <span class="profesional-nombre">
                                 <%= item.profesionalNombre %>
                               </span>
                               <% if (item.profesionalRating) { %>
-                                <span class="profesional-rating">★ <%= item.profesionalRating.toFixed(1) %></span>
+                                <span class="profesional-rating">★ <%= item.profesionalRating %></span>
                                 <% } %>
                             </div>
-                            <% } else if (item.profesionalId) { %>
+                            <% } else if (item.profesional_id) { %>
                               <div class="profesional-asignado">
                                 <span class="profesional-icono">👨‍🔧</span>
-                                <span class="profesional-nombre">Profesional ID: <%= item.profesionalId %></span>
+                                <span class="profesional-nombre">Profesional ID: <%= item.profesional_id %></span>
                               </div>
                               <% } %>
 
                                 <!-- ✅ MOSTRAR FECHA Y HORARIO DE INSTALACIÓN (si existe) -->
-                                <% if (item.fechaInstalacion) { %>
+                                <% if (item.instalation_date) { %>
                                   <div class="fecha-instalacion-info">
                                     <span class="fecha-icono">📅</span>
                                     <span class="fecha-texto">
-                                      <%= new Date(item.fechaInstalacion).toLocaleDateString('es-AR') %>
+                                      <%= new Date(item.instalation_date).toLocaleDateString('es-AR') %>
                                     </span>
-                                    <% if (item.horarioInstalacion) { %>
-                                      <span class="horario-texto"> - <%= item.horarioInstalacion==='manana'
+                                    <% if (item.instalation_time) { %>
+                                      <span class="horario-texto"> - <%= item.instalation_time==='manana'
                                           ? 'Mañana (08:00-13:00)' : 'Tarde (13:00-18:00)' %></span>
                                       <% } %>
                                   </div>
@@ -163,9 +161,9 @@
                                     </div>
                         </div>
                         <div class="item-precio">
-                          <% if (item.precioUnitario && item.precioUnitario> 0) { %>
-                            <span class="precio-unitario">$<%= item.precioUnitario.toLocaleString('es-AR') %></span>
-                            <span class="precio-total">$<%= (item.precioUnitario * (item.cantidad ||
+                          <% if (item.unit_price && item.unit_price> 0) { %>
+                            <span class="precio-unitario">$<%= item.unit_price.toLocaleString('es-AR') %></span>
+                            <span class="precio-total">$<%= (item.unit_price * (item.quantity ||
                                 1)).toLocaleString('es-AR') %></span>
                             <% } else { %>
                               <span class="precio-unitario">A cotizar</span>

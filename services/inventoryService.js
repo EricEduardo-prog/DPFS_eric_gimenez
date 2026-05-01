@@ -1,55 +1,83 @@
 // services/inventoryService.js
-//Sincronizar contadores de productos por categoría, armar home, búsqueda avanzada.
 'use strict';
 
-const ProductoModel = require('../models/productoModel');
-const CategoriaModel = require('../models/categoriaModel');
+const { Product, Category } = require('../database/models');
+const { Op } = require('sequelize');
 
 class InventoryService {
   /**
    * Recalcula la cantidad de productos para todas las categorías.
    * Debe llamarse después de crear/actualizar/eliminar un producto.
+   * @returns {Promise<void>}
    */
-  static sincronizarCantidadProductos() {
-    const productos = ProductoModel.getAll();
-    const categorias = CategoriaModel.getAll();
+  static async sincronizarCantidadProductos() {
+    const [productos, categorias] = await Promise.all([
+      Product.findAll({ attributes: ['category_id'] }),
+      Category.findAll({ attributes: ['id'] })
+    ]);
+
+    // Agrupar por categoría
+    const countMap = new Map();
+    productos.forEach(p => {
+      const catId = p.category_id;
+      countMap.set(catId, (countMap.get(catId) || 0) + 1);
+    });
+
+    // Actualizar cada categoría (products_count no existe en el modelo original, pero si se desea agregar)
+    // Nota: En el modelo Category no se definió el campo "products_count" porque se dijo que es calculado.
+    // Si se requiere persistir, habría que agregarlo al modelo. Por ahora se omite.
+    // Mantenemos la lógica de la función original como placeholder.
     for (const cat of categorias) {
-      const cantidad = productos.filter(p => p.categoriaId === cat.id).length;
-      CategoriaModel.setCantidadProductos(cat.id, cantidad);
+      const cantidad = countMap.get(cat.id) || 0;
+      // Si existiera el campo, se actualizaría: await cat.update({ products_count: cantidad });
+      console.log(`Categoría ${cat.id} -> ${cantidad} productos`);
     }
   }
 
   /**
    * Obtiene datos para el home: 6 productos destacados y 6 categorías principales.
-   * @returns {Object} { productos, categorias }
+   * @returns {Promise<Object>} { productos, categorias }
    */
-  static getHomeData() {
-    const productos = ProductoModel.getAll({ soloActivos: true });
-    const categorias = CategoriaModel.getAll({ soloActivas: true });
-    return {
-      productos: productos.slice(0, 6),
-      categorias: categorias.slice(0, 6),
-    };
+  static async getHomeData() {
+    const [productos, categorias] = await Promise.all([
+      Product.findAll({
+        where: { is_active: true },
+        limit: 6,
+        order: [['created_at', 'DESC']],
+        attributes: ['id', 'name', 'slug', 'price', 'image', 'category_id']
+      }),
+      Category.findAll({
+        where: { is_active: true },
+        limit: 6,
+        order: [['order', 'ASC']],
+        attributes: ['id', 'name', 'slug', 'icon']
+      })
+    ]);
+    return { productos, categorias };
   }
 
   /**
    * Búsqueda avanzada de productos: por texto y/o categoría.
    * @param {Object} filtros - { q: string, categoriaId: string }
-   * @returns {Array}
+   * @returns {Promise<Array>}
    */
-  static buscarProductos(filtros) {
-    let productos = ProductoModel.getAll({ soloActivos: true });
+  static async buscarProductos(filtros) {
+    const where = { is_active: true };
     if (filtros.categoriaId) {
-      productos = productos.filter(p => p.categoriaId === filtros.categoriaId);
+      where.category_id = filtros.categoriaId;
     }
     if (filtros.q && filtros.q.trim()) {
       const term = filtros.q.toLowerCase().trim();
-      productos = productos.filter(p =>
-        p.nombre.toLowerCase().includes(term) ||
-        p.sku.toLowerCase().includes(term) ||
-        (p.descripcion && p.descripcion.toLowerCase().includes(term))
-      );
+      where[Op.or] = [
+        { name: { [Op.like]: `%${term}%` } },
+        { sku: { [Op.like]: `%${term}%` } },
+        { description: { [Op.like]: `%${term}%` } }
+      ];
     }
+    const productos = await Product.findAll({
+      where,
+      attributes: ['id', 'name', 'sku', 'price', 'image', 'category_id']
+    });
     return productos;
   }
 }

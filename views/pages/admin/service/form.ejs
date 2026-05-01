@@ -1,9 +1,6 @@
-<%
-  const esEdicion = servicio && servicio.id;
-  const datos = formData || servicio || {};
-  const titulo = esEdicion ? 'Editar Servicio' : 'Nuevo Servicio';
-  const formAction = esEdicion ? `/admin/servicios/${servicio.id}?_method=PUT` : '/admin/servicios';
-%>
+<% const esEdicion=servicio && servicio.id; const datos=formData || servicio || {}; const titulo=esEdicion
+  ? 'Editar Servicio' : 'Nuevo Servicio' ; const formAction=esEdicion ? `/admin/servicios/${servicio.id}?_method=PUT`
+  : '/admin/servicios' ; %>
 
   <section class="admin-formulario">
     <div class="admin-formulario__encabezado">
@@ -35,7 +32,7 @@
                   <!-- Nombre -->
                   <div class="campo-formulario">
                     <label class="etiqueta-campo" for="nombre">Nombre <span class="campo-requerido">*</span></label>
-                    <input type="text" id="nombre" name="nombre" class="entrada" value="<%= datos.nombre || '' %>"
+                    <input type="text" id="nombre" name="nombre" class="entrada" value="<%= datos.name || '' %>"
                       maxlength="80" required>
                     <span class="mensaje-error" id="error-nombre"></span>
                   </div>
@@ -50,11 +47,11 @@
                   <div class="campo-formulario">
                     <label class="etiqueta-campo" for="descripcion">Descripción</label>
                     <textarea id="descripcion" name="descripcion" class="entrada entrada--textarea" rows="4"
-                      maxlength="500"><%= datos.descripcion || '' %></textarea>
+                      maxlength="500"><%= datos.description || '' %></textarea>
                     <span class="mensaje-error" id="error-descripcion"></span>
                   </div>
                 </div>
-  
+
                 <!-- Sección de precios -->
                 <div class="admin-formulario__seccion">
                   <h2 class="admin-formulario__seccion-titulo">
@@ -70,7 +67,7 @@
                     <div class="precio-input">
                       <span class="precio-input__simbolo">$</span>
                       <input type="number" id="precioBase" name="precioBase" class="entrada" placeholder="200000"
-                        min="0" value="<%= datos.precioBase || '' %>" required>
+                        min="0" value="<%= datos.base_price || '' %>" required>
                     </div>
                     <p class="campo-formulario__ayuda">Precio base del servicio (incluye materiales básicos y primera
                       hora).</p>
@@ -85,24 +82,10 @@
                     <div class="precio-input">
                       <span class="precio-input__simbolo">$</span>
                       <input type="number" id="precioPorHora" name="precioPorHora" class="entrada precio-input__campo"
-                        placeholder="0.00" min="0" step="0.01" value="<%= datos.precioPorHora || '' %>">
+                        placeholder="0.00" min="0" step="0.01" value="<%= datos.hourly_price || '' %>">
                     </div>
                     <p class="campo-formulario__ayuda">Costo por cada hora adicional después de la primera.</p>
                     <span class="mensaje-error" id="error-precioPorHora"></span>
-                  </div>
-
-                  <!-- Precio por Domicilio (opcional) -->
-                  <div class="campo-formulario">
-                    <label class="etiqueta-campo" for="precioDomicilio">
-                      Cargo por domicilio <span class="etiqueta-opcional">(opcional)</span>
-                    </label>
-                    <div class="precio-input">
-                      <span class="precio-input__simbolo">$</span>
-                      <input type="number" id="precioDomicilio" name="precioDomicilio"
-                        class="entrada precio-input__campo" placeholder="0.00" min="0" step="0.01"
-                        value="<%= datos.precioDomicilio || '' %>">
-                    </div>
-                    <p class="campo-formulario__ayuda">Cargo adicional por desplazamiento al domicilio.</p>
                   </div>
 
                   <!-- Moneda (solo lectura, informativo) -->
@@ -131,7 +114,7 @@
                       </div>
                       <label class="toggle-switch">
                         <input type="checkbox" name="certificacionRequerida" value="true"
-                          <%=datos.certificacionRequerida ? 'checked' : '' %>>
+                          <%=datos.certification_required ? 'checked' : '' %>>
                         <span class="toggle-switch__slider"></span>
                       </label>
                     </label>
@@ -144,7 +127,7 @@
                         <p class="campo-formulario__ayuda">Mostrar en la página principal</p>
                       </div>
                       <label class="toggle-switch">
-                        <input type="checkbox" name="destacado" value="true" <%=datos.destacado ? 'checked' : '' %>>
+                        <input type="checkbox" name="destacado" value="true" <%=datos.is_featured ? 'checked' : '' %>>
                         <span class="toggle-switch__slider"></span>
                       </label>
                     </label>
@@ -161,11 +144,11 @@
                         </span></li>
                       <li class="metadata-item"><span class="metadata-item__clave">Creado</span><span
                           class="metadata-item__valor">
-                          <%= new Date(servicio.fechaCreacion).toLocaleDateString('es-AR') %>
+                          <%= new Date(servicio.created_at).toLocaleDateString('es-AR') %>
                         </span></li>
                       <li class="metadata-item"><span class="metadata-item__clave">Modificado</span><span
                           class="metadata-item__valor">
-                          <%= new Date(servicio.fechaModificacion).toLocaleDateString('es-AR') %>
+                          <%= new Date(servicio.updated_at).toLocaleDateString('es-AR') %>
                         </span></li>
                     </ul>
                   </div>

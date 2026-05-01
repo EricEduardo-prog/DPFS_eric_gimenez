@@ -1,61 +1,65 @@
 // services/checkoutService.js
-//Validar reserva, verificar stock (simulado) y cerrar el pedido.
 'use strict';
 
-const ReservaModel = require('../models/reservaModel');
-const ProductoModel = require('../models/productoModel');
+const { Booking, BookingItem, Product, sequelize } = require('../database/models');
 const createError = require('http-errors');
 
 class CheckoutService {
     /**
-     * Procesa el checkout de una reserva: valida items, verifica stock (placeholder) y cierra el pedido.
+     * Procesa el checkout de una reserva.
      * @param {string} reservaId
-     * @param {Object} datosCliente - datos adicionales (dirección de envío, etc.)
-     * @returns {Object} pedido creado
+     * @param {Object} datosCliente
+     * @returns {Promise<Object>} pedido creado
      */
     static async procesarCheckout(reservaId, datosCliente = {}) {
-        // Obtener reserva
-        const reserva = await ReservaModel.getById(reservaId);
-        if (!reserva || !reserva.items.length) {
+        const reserva = await Booking.findByPk(reservaId, {
+            include: [{ model: BookingItem, as: 'items' }]
+        });
+        if (!reserva || reserva.items.length === 0) {
             throw createError(400, 'La reserva está vacía o no existe.');
         }
 
-        // Validar stock (simulación - aquí podrías integrar un modelo de stock real)
+        // Validar stock (simulación) y disponibilidad de productos/servicios activos
         for (const item of reserva.items) {
-            if (item.productoId) {
-                const producto = ProductoModel.getById(item.productoId);
-                if (!producto || !producto.activo) {
-                    throw createError(400, `El producto ${item.nombre} ya no está disponible.`);
+            if (item.product_id) {
+                const producto = await Product.findByPk(item.product_id);
+                if (!producto || !producto.is_active) {
+                    throw createError(400, `El producto ${item.name} ya no está disponible.`);
                 }
-                // Ejemplo: stock mínimo 1, podrías tener un campo producto.stock
-                // if (producto.stock < item.cantidad) throw ...
+                // Si se tuviera campo stock: if (producto.stock < item.quantity) throw...
+            } else if (item.service_id) {
+                const Service = require('../database/models').Service;
+                const servicio = await Service.findByPk(item.service_id);
+                if (!servicio || !servicio.is_active) {
+                    throw createError(400, `El servicio ${item.name} ya no está disponible.`);
+                }
             }
         }
 
-        // Crear objeto pedido (persistir en pedidos.json - modelo a crear)
+        // Crear pedido (simulación – como no existe modelo Pedido, devolvemos objeto)
         const pedido = {
             id: `ped_${Date.now()}`,
             reservaId: reserva.id,
-            usuarioId: reserva.usuarioId,
-            sessionId: reserva.sessionId,
-            items: reserva.items,
+            usuarioId: reserva.user_id,
+            sessionId: reserva.session_id,
+            items: reserva.items.map(i => i.toJSON()),
             total: this._calcularTotal(reserva.items),
             estado: 'pendiente',
             datosCliente,
             fechaCreacion: new Date().toISOString(),
         };
-        // Aquí guardarías en un modelo `PedidoModel.create(pedido)`
-        // Por ahora simulamos:
+
+        // Limpiar reserva (eliminar items y luego la reserva, o dejarla como histórico)
+        // Por coherencia con la versión original: se limpia la reserva
+        await BookingItem.destroy({ where: { booking_id: reserva.id } });
+        await reserva.destroy();
+
         console.log('✅ Checkout completado:', pedido.id);
-
-        // Limpiar reserva
-        await ReservaModel.clear(reservaId);
-
         return pedido;
     }
 
     static _calcularTotal(items) {
-        return items.reduce((sum, item) => sum + (item.precioUnitario || 0) * (item.cantidad || 1), 0);
+        return items.reduce((sum, item) => sum + (item.unit_price || 0) * (item.quantity || 1), 0);
     }
 }
 

@@ -85,18 +85,18 @@
                                         </thead>
                                         <tbody>
                                             <% usuarios.forEach(function(usr) { %>
-                                                <tr class="<%= !usr.activo ? 'admin-tabla__fila--inactiva' : '' %>"
-                                                    data-nombre="<%= usr.nombre.toLowerCase() %>"
+                                                <tr class="<%= !usr.is_active ? 'admin-tabla__fila--inactiva' : '' %>"
+                                                    data-nombre="<%= usr.name.toLowerCase() %>"
                                                     data-email="<%= usr.email.toLowerCase() %>">
 
                                                     <!-- Usuario (avatar + nombre) -->
                                                     <td class="admin-tabla__celda-producto">
                                                         <div class="admin-tabla__avatar">
-                                                            <%= usr.nombre.charAt(0).toUpperCase() %>
+                                                            <%= usr.name.charAt(0).toUpperCase() %>
                                                         </div>
                                                         <div class="admin-tabla__producto-info">
                                                             <span class="admin-tabla__nombre">
-                                                                <%= usr.nombre %>
+                                                                <%= usr.name %>
                                                             </span>
                                                             <span class="admin-tabla__descripcion-corta">ID: <%= usr.id
                                                                     %></span>
@@ -113,10 +113,10 @@
 
                                                     <!-- Teléfono -->
                                                     <td>
-                                                        <% if (usr.telefono) { %>
-                                                            <a href="tel:<%= usr.telefono.replace(/\s/g, '') %>"
+                                                        <% if (usr.phone) { %>
+                                                            <a href="tel:<%= usr.phone.replace(/\s/g, '') %>"
                                                                 class="admin-tabla__texto-suave">
-                                                                <%= usr.telefono %>
+                                                                <%= usr.phone %>
                                                             </a>
                                                             <% } else { %>
                                                                 <span class="admin-tabla__texto-suave">—</span>
@@ -125,15 +125,15 @@
 
                                                     <!-- Dirección (resumida) -->
                                                     <td class="admin-tabla__celda-categoria">
-                                                        <% if (usr.direccion && usr.direccion.calle) { %>
+                                                        <% if (usr.address && usr.address.calle) { %>
                                                             <div class="admin-tabla__producto-info">
                                                                 <span class="admin-tabla__nombre">
-                                                                    <%= usr.direccion.calle %>
-                                                                        <%= usr.direccion.numero || '' %>
+                                                                    <%= usr.address.calle %>
+                                                                        <%= usr.address.numero || '' %>
                                                                 </span>
                                                                 <span class="admin-tabla__descripcion-corta">
-                                                                    <%= usr.direccion.ciudad || '' %>, <%=
-                                                                            usr.direccion.provincia || '' %>
+                                                                    <%= usr.address.ciudad || '' %>, <%=
+                                                                            usr.address.provincia || '' %>
                                                                 </span>
                                                             </div>
                                                             <% } else { %>
@@ -144,8 +144,8 @@
                                                     <!-- Estado -->
                                                     <td>
                                                         <span
-                                                            class="admin-estado-dot admin-estado-dot--<%= usr.activo ? 'activo' : 'inactivo' %>">
-                                                            <%= usr.activo ? 'Activo' : 'Inactivo' %>
+                                                            class="admin-estado-dot admin-estado-dot--<%= usr.is_active ? 'activo' : 'inactivo' %>">
+                                                            <%= usr.is_active ? 'Activo' : 'Inactivo' %>
                                                         </span>
                                                     </td>
 
@@ -154,8 +154,8 @@
                                                         <div class="admin-tabla__acciones">
                                                             <a href="/admin/usuarios/<%= usr.id %>/editar"
                                                                 class="admin-tabla__btn-accion"
-                                                                title="Editar <%= usr.nombre %>"
-                                                                aria-label="Editar <%= usr.nombre %>">
+                                                                title="Editar <%= usr.name %>"
+                                                                aria-label="Editar <%= usr.name %>">
                                                                 <svg width="14" height="14" viewBox="0 0 24 24"
                                                                     fill="none" stroke="currentColor" stroke-width="2">
                                                                     <path
@@ -167,16 +167,16 @@
 
                                                             <form action="/admin/usuarios/<%= usr.id %>/baja"
                                                                 method="POST" class="form-toggle-estado"
-                                                                data-id="<%= usr.id %>" data-nombre="<%= usr.nombre %>"
-                                                                data-activo="<%= usr.activo %>">
+                                                                data-id="<%= usr.id %>" data-nombre="<%= usr.name %>"
+                                                                data-activo="<%= usr.is_active %>">
                                                                 <input type="hidden" name="_method" value="DELETE">
                                                                 <button type="button"
-                                                                    class="admin-tabla__btn-accion <%= usr.activo ? 'admin-tabla__btn-accion--baja' : 'admin-tabla__btn-accion--alta' %> btn-toggle-estado"
-                                                                    title="<%= usr.activo ? 'Desactivar' : 'Reactivar' %>"
+                                                                    class="admin-tabla__btn-accion <%= usr.is_active ? 'admin-tabla__btn-accion--baja' : 'admin-tabla__btn-accion--alta' %> btn-toggle-estado"
+                                                                    title="<%= usr.is_active ? 'Desactivar' : 'Reactivar' %>"
                                                                     data-id="<%= usr.id %>"
-                                                                    data-nombre="<%= usr.nombre %>"
-                                                                    data-activo="<%= usr.activo %>">
-                                                                    <% if (usr.activo) { %>
+                                                                    data-nombre="<%= usr.name %>"
+                                                                    data-activo="<%= usr.is_active %>">
+                                                                    <% if (usr.is_active) { %>
                                                                         <svg width="14" height="14" viewBox="0 0 24 24"
                                                                             fill="none" stroke="currentColor"
                                                                             stroke-width="2">
