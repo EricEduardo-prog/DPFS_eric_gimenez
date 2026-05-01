@@ -19,7 +19,7 @@ var servicioRouter = require('./routes/servicioRoutes');
 var validacionesRouter = require('./routes/validacionRoutes');
 var disponibilidadRouter = require('./routes/disponibilidadRoutes');
 var reservaRouter = require('./routes/reservaRoutes');
-
+var apiRouter = require('./routes/apiRoutes'); // Nuevo router para API
 // Middlewares Basicos
 app.use(express.urlencoded({ extended: true })); // Asegurar que parsea bien el body
 app.use(express.json());
@@ -91,6 +91,7 @@ app.use((req, res, next) => {
     next();
 });
 
+
 // Ignorar solicitudes de Chrome DevTools
 app.use((req, res, next) => {
     if (req.url.includes('.well-known/appspecific')) {
@@ -98,6 +99,9 @@ app.use((req, res, next) => {
     }
     next();
 });
+
+// Rutas API
+app.use('/api', apiRouter); // Rutas API públicas (solo lectura)
 
 // Ruta principal publicas
 app.use('/', usuarioRouter.publicRouter); // POST /register
