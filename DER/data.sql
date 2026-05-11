@@ -1067,7 +1067,7 @@ VALUES -- res_001: ítem de producto
     (
         'item_1776781180643_ojvy',
         'res_001',
-        'product',
+        'producto',
         'prod_004',
         NULL,
         1,
@@ -1083,7 +1083,7 @@ VALUES -- res_001: ítem de producto
     (
         'item_1777304072011_aema',
         'res_002',
-        'service',
+        'servicio',
         NULL,
         'serv_002',
         3,

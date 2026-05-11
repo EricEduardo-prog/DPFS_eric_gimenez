@@ -84,7 +84,11 @@ async function agregarItem(req, res, next) {
         if (!errores.isEmpty()) {
             return res.status(400).json({ errores: errores.array().map(e => e.msg) });
         }
-        const resultado = await ReserveService.agregarItem(req, res, req.body);
+        //Muestro que le envio a mi service
+        console.log('Datos recibidos en agregarItem:', req.body);
+        const resultado = await ReserveService.agregarItem(req, res);
+        //muestro lo que me devuelve el service 
+        console.log('Resultado de agregarItem:', resultado);
         res.json({
             success: true,
             item: resultado.item,

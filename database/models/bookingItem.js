@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
             references: { model: 'bookings', key: 'id' }
         },
         type: {
-            type: DataTypes.ENUM('product', 'service', 'combo'),
+            type: DataTypes.ENUM('producto', 'servicio', 'combo'),
             allowNull: false
         },
         product_id: {
@@ -58,10 +58,10 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
             // Validación custom para asegurar que el tipo coincida con las referencias
             validTypeAndRefs() {
-                if (this.type === 'product' && (!this.product_id || this.service_id)) {
+                if (this.type === 'producto' && (!this.product_id || this.service_id)) {
                     throw new Error('Para tipo "product" debe especificar product_id y service_id nulo');
                 }
-                if (this.type === 'service' && (!this.service_id || this.product_id)) {
+                if (this.type === 'servicio' && (!this.service_id || this.product_id)) {
                     throw new Error('Para tipo "service" debe especificar service_id y product_id nulo');
                 }
                 if (this.type === 'combo' && (!this.product_id || !this.service_id)) {

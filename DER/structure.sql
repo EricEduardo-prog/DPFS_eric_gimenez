@@ -107,7 +107,7 @@ CREATE TABLE bookings (
 CREATE TABLE booking_items (
     id VARCHAR(50) PRIMARY KEY,
     booking_id VARCHAR(50) NOT NULL,
-    type ENUM('product', 'service', 'combo') NOT NULL,
+    type ENUM('producto', 'servicio', 'combo') NOT NULL,
     product_id VARCHAR(50),
     service_id VARCHAR(50),
     quantity INT NOT NULL DEFAULT 1,

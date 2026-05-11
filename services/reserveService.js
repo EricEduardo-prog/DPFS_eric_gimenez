@@ -127,22 +127,28 @@ class ReserveService {
      * @param {Object} itemData
      * @returns {Promise<Object>} { item, reservaId }
      */
-    static async agregarItem(req, res, itemData) {
+    static async agregarItem(req, res) {
+        //Muestro producto
+        const itemData = req.body;
+        console.log('Agregando item a reserva:', itemData);
         await this.validarItem(itemData);
 
         let nombre = '';
         let precioUnitario = 0;
+        let tipo = '';
 
         if (itemData.tipo === 'producto' && itemData.productoId) {
             const producto = await Product.findByPk(itemData.productoId);
             if (!producto || !producto.is_active) throw createError(404, 'Producto no encontrado');
             nombre = producto.name;
             precioUnitario = producto.price;
+            tipo = 'producto';
         } else if (itemData.tipo === 'servicio' && itemData.servicioId) {
             const servicio = await Service.findByPk(itemData.servicioId);
             if (!servicio || !servicio.is_active) throw createError(404, 'Servicio no encontrado');
             nombre = servicio.name;
             precioUnitario = servicio.base_price || servicio.hourly_price || 0;
+            tipo = 'servicio';
         } else if (itemData.tipo === 'combo' && itemData.productoId && itemData.servicioId) {
             const [producto, servicio] = await Promise.all([
                 Product.findByPk(itemData.productoId),
@@ -151,19 +157,23 @@ class ReserveService {
             if (!producto || !producto.is_active) throw createError(404, 'Producto no encontrado');
             if (!servicio || !servicio.is_active) throw createError(404, 'Servicio no encontrado');
             nombre = `${producto.name} + Servicio (${servicio.name})`;
-            precioUnitario = (producto.price || 0) + (servicio.base_price || servicio.hourly_price || 0);
+            precioUnitario = parseInt(producto.price || 0) + parseInt(servicio.base_price || servicio.hourly_price || 0);
+            tipo = 'combo';
         } else {
             throw createError(400, 'Datos de ítem inválidos');
         }
 
         const reserva = await this.getOrCreateReserva(req, res);
         const booking = await Booking.findByPk(reserva.id);
-
+        //Muestro la reserva a la que se va a agregar el item
+        console.log('Reserva encontrada para agregar item:', reserva);
+        console.log('Booking encontrado para agregar item:', booking.toJSON());
         // Crear el ítem
-        const newItem = await BookingItem.create({
+
+        const newItem = {
             id: `item_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
             booking_id: booking.id,
-            type: itemData.tipo,
+            type: tipo,
             product_id: itemData.productoId || null,
             service_id: itemData.servicioId || null,
             quantity: parseInt(itemData.cantidad) || 1,
@@ -172,9 +182,11 @@ class ReserveService {
             professional_id: itemData.profesionalId || null,
             installation_date: itemData.fechaInstalacion || null,
             installation_time: itemData.horarioInstalacion || null
-        });
-
-        return { item: newItem.toJSON(), reservaId: reserva.id };
+        };
+        console.log('Nuevo item creado:', newItem);
+        const createdItem = await BookingItem.create(newItem);
+        console.log('Item guardado en DB:', createdItem.toJSON());
+        return { item: createdItem.toJSON(), reservaId: reserva.id };
     }
 
     /**

@@ -4,11 +4,11 @@ var indexController = require('../controllers/indexController');
 const InventoryService = require('../services/InventoryService');
 
 console.log('index.js loaded');
-
+/*
 router.use((req, res, next) => {
   console.log('indexRouter request:', req.method, req.path);
   next();
-});
+});*/
 
 
 

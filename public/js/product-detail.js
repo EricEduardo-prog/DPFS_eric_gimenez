@@ -120,7 +120,7 @@
     function actualizarPresupuesto() {
         const cantidad = parseInt(cantidadInput?.value) || 1;
         const subtotalProducto = precioUnitario * cantidad;
-
+        console.log('Calculando presupuesto con:', { precioUnitario, cantidad, subtotalProducto, instalacionDisponible, profesionalSeleccionado });
         let costoInstalacion = 0;
         const incluirInstalacion = instalacionCheckbox?.checked && instalacionDisponible;
 
@@ -129,7 +129,8 @@
             costoInstalacion = profesional ? (profesional.precioBase || 0) : 0;
         }
 
-        const total = subtotalProducto + costoInstalacion;
+        const total = parseInt(subtotalProducto) + parseInt(costoInstalacion);
+        console.log('Presupuesto calculado:', { subtotalProducto, costoInstalacion, total });
 
         // Actualizar línea de producto
         if (montoProducto) montoProducto.textContent = '$' + subtotalProducto.toLocaleString('es-AR');
@@ -152,7 +153,8 @@
     async function cargarProfesionalesDisponibles() {
         const fecha = getFechaActual();
         const horario = getHorarioActual();
-
+        //Muestro que estoy por cargar profesionales
+        console.log('Cargando profesionales disponibles con:', { instalacionDisponible ,servicioId, fecha, horario });
         if (!instalacionDisponible || !servicioId) {
             ocultarSelectorProfesional();
             return;
@@ -167,11 +169,11 @@
             mostrarCargandoProfesionales();
             console.log(`Cargando profesionales para servicioId=${servicioId}, fecha=${fecha}, horario=${horario}`);
             const response = await fetch(`/disponibilidad/profesionales?servicioId=${servicioId}&fecha=${fecha}&turno=${horario}`);
-
+            console.log('Respuesta del servidor para profesionales disponibles:', response.profesionales);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
             const data = await response.json();
-
+            console.log('Profesionales disponibles recibidos:', data.profesionales);
             if (data.success && data.profesionales?.length) {
                 profesionalesDisponibles = data.profesionales;
                 renderizarProfesionales(profesionalesDisponibles);
@@ -232,7 +234,7 @@
                 <div class="nombre-profesional">${escapeHtml(prof.nombre)}</div>
                 <div class="rating-profesional">
                     <span class="estrellas">${generarEstrellas(prof.rating || 0)}</span>
-                    <span class="rating-numero">${(prof.rating || 0).toFixed(1)}</span>
+                    <span class="rating-numero">${(prof.rating || 0)}</span>
                     <span class="trabajos">(${prof.trabajos || 0} trabajos)</span>
                 </div>
                 <div class="precio-profesional">$${(prof.precioBase || 0).toLocaleString('es-AR')}</div>
@@ -274,6 +276,7 @@
     }
     // Fetch limpio
     async function postReserva(body) {
+        console.log('BODY POSRT RESERVA:', body);
         const response = await fetch('/reserva/agregar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -305,9 +308,10 @@
     // Builder del request
     function buildRequestBody() {
         const cantidad = parseInt(cantidadInput?.value) || 1;
-        const incluirInstalacion = instalacionCheckbox?.checked && instalacionDisponible;
-
-        if (incluirInstalacion) {
+        const esCombo = instalacionCheckbox?.checked && instalacionDisponible;
+        //Muestro el body construido antes de enviarlo
+        console.log('Construyendo request body con:', { productoId, servicioId, cantidad, esCombo, profesionalSeleccionado, fechaInstalacion: getFechaActual(), horarioInstalacion: getHorarioActual() });
+        if (esCombo) {
             return {
                 tipo: 'combo',
                 productoId,
@@ -322,7 +326,9 @@
         return {
             tipo: 'producto',
             productoId,
-            cantidad
+            cantidad,
+            precioUnitario
+
         };
     }
 
@@ -367,7 +373,6 @@
 
         const fecha = getFechaActual();
         const horario = getHorarioActual();
-
         if (servicioId && fecha && horario) {
             cargarProfesionalesDisponibles();
         } else {

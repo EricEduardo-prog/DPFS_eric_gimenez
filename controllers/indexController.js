@@ -13,7 +13,7 @@ async function home(req, res, next) {
             include: [{ model: Category, as: 'category' }]
         });
         //Mostrar 1 producto completo 
-        console.log('Producto destacado:', productos[0] ? productos[0].toJSON() : 'No hay productos');
+        //console.log('Producto destacado:', productos[0] ? productos[0].toJSON() : 'No hay productos');
         const categorias = await Category.findAll({
             where: { is_active: true },
             limit: 6,

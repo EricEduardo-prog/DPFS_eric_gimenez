@@ -3,7 +3,7 @@
 const { User, Booking } = require('../database/models');
 const bcrypt = require('bcrypt');
 const { validationResult } = require('express-validator');
-const AuthService = require('../services/authService'); // Asumo que este servicio será refactorizado
+const AuthService = require('../services/authService');
 
 const SALT_ROUNDS = 10;
 

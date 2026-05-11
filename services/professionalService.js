@@ -131,19 +131,18 @@ class ProfessionalService {
             const disp = p.availability || {};
             return disp[diaSemana] && disp[diaSemana][turno] === true;
         });
-
         const servicio = await Service.findByPk(servicioId);
         const precioBase = servicio?.base_price || 0;
         const precioHora = servicio?.hourly_price || 0;
-
-        return disponibles.map(p => ({
+        const resultados = disponibles.map(p => ({
             id: p.id,
             nombre: p.name,
             rating: p.rating_value || 0,
             trabajos: p.jobs_completed || 0,
             precioBase,
-            precioHora,
+            precioHora
         }));
+        return resultados;
     }
 }
 
