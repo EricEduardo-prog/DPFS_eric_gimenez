@@ -2,6 +2,7 @@
 
 const { Professional, Service } = require('../database/models');
 const { validationResult } = require('express-validator');
+const ProfesionalService = require('../services/professionalService');
 
 async function _getServiciosActivos() {
     return await Service.findAll({ where: { is_active: true }, order: [['name', 'ASC']] });
@@ -88,6 +89,63 @@ async function mostrarFormEditar(req, res, next) {
     }
 }
 
+async function crear(req, res, next) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const opts = await _optsForm('Nuevo Profesional', null, errors.array().map(e => e.msg), req.body);
+        return res.render('layout', opts);
+    }
+    try {
+        const disponibilidad = ProfesionalService.normalizarDisponibilidad(req.body);
+        const newProf = await Professional.create({
+            id: `prof_${Date.now()}`,
+            name: req.body.name,
+            email: req.body.email,
+            phone: req.body.phone || '',
+            service_id: req.body.service_id || null,
+            custom_service: req.body.custom_service || null,
+            service_status: req.body.service_id ? 'aprobado' : 'pendiente',
+            license_number: req.body.license_number,
+            years_experience: parseInt(req.body.years_experience) || 0,
+            availability: disponibilidad,
+            is_active: req.body.is_active === 'true'
+        });
+        res.redirect('/admin/profesionales?mensaje=Profesional creado correctamente.');
+    } catch (err) {
+        const opts = await _optsForm('Nuevo Profesional', null, [err.message], req.body);
+        res.render('layout', opts);
+    }
+}
+
+async function actualizar(req, res, next) {
+    const profesional = await Professional.findByPk(req.params.id);
+    if (!profesional) return res.redirect('/admin/profesionales?error=Profesional no encontrado.');
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const opts = await _optsForm(`Editar ${profesional.name}`, profesional, errors.array().map(e => e.msg), req.body);
+        return res.render('layout', opts);
+    }
+    try {
+        const disponibilidad = ProfesionalService.normalizarDisponibilidad(req.body);
+        await profesional.update({
+            name: req.body.name,
+            email: req.body.email,
+            phone: req.body.phone || '',
+            service_id: req.body.service_id || null,
+            custom_service: req.body.custom_service || profesional.custom_service,
+            license_number: req.body.license_number,
+            years_experience: parseInt(req.body.years_experience) || 0,
+            availability: disponibilidad,
+            is_active: req.body.is_active === 'true'
+        });
+        res.redirect('/admin/profesionales?mensaje=Profesional actualizado correctamente.');
+    } catch (err) {
+        const opts = await _optsForm(`Editar ${profesional.name}`, profesional, [err.message], req.body);
+        res.render('layout', opts);
+    }
+}
+
 async function toggleBaja(req, res, next) {
     try {
         const profesional = await Professional.findByPk(req.params.id);
@@ -104,6 +162,8 @@ async function toggleBaja(req, res, next) {
 module.exports = {
     listar,
     mostrarFormNuevo,
+    crear,
     mostrarFormEditar,
+    actualizar,
     toggleBaja
 };

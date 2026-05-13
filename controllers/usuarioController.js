@@ -434,6 +434,7 @@ module.exports = {
     // Públicos
     mostrarFormRegistro,
     mostrarFormLogin,
+    registrar,
     login,
     logout,
     // Perfil
@@ -441,6 +442,7 @@ module.exports = {
     editarMiPerfil,
     actualizarMiPerfil,
     formCambiarPassword,
+    cambiarPassword,
     misPedidos,
     detallePedido,
     // Admin

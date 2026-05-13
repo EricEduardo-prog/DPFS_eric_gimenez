@@ -4,28 +4,28 @@
 const express = require('express');
 const router = express.Router();
 const apiController = require('../controllers/apiController');
-const { isUser, isAdmin } = require('../middlewares/authMiddleware'); // opcional, para proteger endpoints
+const { isAdmin } = require('../middlewares/authMiddleware');
 
 // Endpoints públicos o con autenticación según necesidad (puedes quitar middleware si quieres abierto)
 // Por defecto los dejamos públicos (solo lectura)
 
-// Categories
+// Categories (público)
 router.get('/categories', apiController.listCategories);
 router.get('/categories/:id', apiController.getCategoryById);
 
-// Users
-router.get('/users', apiController.listUsers);
-router.get('/users/:id', apiController.getUserById);
+// Users (solo admin — expone datos personales)
+router.get('/users', isAdmin, apiController.listUsers);
+router.get('/users/:id', isAdmin, apiController.getUserById);
 
-// Services
+// Services (público)
 router.get('/services', apiController.listServices);
 router.get('/services/:id', apiController.getServiceById);
 
-// Professionals
+// Professionals (público)
 router.get('/professionals', apiController.listProfessionals);
 router.get('/professionals/:id', apiController.getProfessionalById);
 
-// Products (opcional)
+// Products (público)
 router.get('/products', apiController.listProducts);
 router.get('/products/:id', apiController.getProductById);
 

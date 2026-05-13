@@ -1,7 +1,7 @@
 // controllers/apiController.js
 'use strict';
 
-const { Category, Product, Service, Professional, User, sequelize } = require('../database/models');
+const { Category, Product, Service, Professional, User } = require('../database/models');
 const { Op } = require('sequelize');
 
 // Helper para construir URLs de paginación
