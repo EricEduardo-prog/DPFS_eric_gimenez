@@ -2,7 +2,7 @@
   let subtotal=0; let totalServicios=0; let totalDescuento=0;
   // Separar items en productos y servicios para mostrar ensecciones distintas 
   const productosItems = (items || []).filter(item=> item.product_id && !item.service_id);
-  const serviciosItems = (items || []).filter(item => item.service_id && item.product_id);
+  const serviciosItems = (items || []).filter(item => item.service_id && !item.product_id);
   //Mostrar por consola todos lo que viene del back
   console.log('Items en reserva:', items);
   // Calcular subtotal de productos
@@ -74,7 +74,7 @@
                           <div class="item-acciones">
                             <div class="selector-cantidad">
                               <button class="btn-cantidad btn-disminuir" data-item-id="<%= item.id %>">−</button>
-                              <input type="number" class="input-cantidad" value="<%= item.count %>" min="1" readonly
+                              <input type="number" class="input-cantidad" value="<%= item.quantity %>" min="1" readonly
                                 data-item-id="<%= item.id %>">
                               <button class="btn-cantidad btn-aumentar" data-item-id="<%= item.id %>">+</button>
                             </div>
@@ -143,14 +143,14 @@
                               <% } %>
 
                                 <!-- ✅ MOSTRAR FECHA Y HORARIO DE INSTALACIÓN (si existe) -->
-                                <% if (item.instalation_date) { %>
+                                <% if (item.installation_date) { %>
                                   <div class="fecha-instalacion-info">
                                     <span class="fecha-icono">📅</span>
                                     <span class="fecha-texto">
-                                      <%= new Date(item.instalation_date).toLocaleDateString('es-AR') %>
+                                      <%= new Date(item.installation_date).toLocaleDateString('es-AR') %>
                                     </span>
-                                    <% if (item.instalation_time) { %>
-                                      <span class="horario-texto"> - <%= item.instalation_time==='manana'
+                                    <% if (item.installation_time) { %>
+                                      <span class="horario-texto"> - <%= item.installation_time==='manana'
                                           ? 'Mañana (08:00-13:00)' : 'Tarde (13:00-18:00)' %></span>
                                       <% } %>
                                   </div>

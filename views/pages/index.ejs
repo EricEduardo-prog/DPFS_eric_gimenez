@@ -75,7 +75,7 @@
       <% if (productos && productos.length> 0) { %>
         <% productos.forEach(function(prod) { %>
           <div class="tarjeta-producto">
-            <img src="<%= prod.imagen %>" alt="<%= prod.name %>" class="imagen-producto"
+            <img src="<%= prod.image %>" alt="<%= prod.name %>" class="imagen-producto"
               onerror="this.src='/images/placeholder.png'">
             <h3 class="nombre-producto">
               <%= prod.name %>
