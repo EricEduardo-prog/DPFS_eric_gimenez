@@ -47,7 +47,7 @@
                                     <label class="etiqueta-campo" for="nombre">
                                         Nombre completo <span class="campo-requerido">*</span>
                                     </label>
-                                    <input type="text" id="nombre" name="nombre" class="entrada"
+                                    <input type="text" id="nombre" name="name" class="entrada"
                                         placeholder="Ej: María García" value="<%= datos.name || '' %>" maxlength="100"
                                         required>
                                     <span class="mensaje-error" id="error-nombre"></span>
@@ -71,7 +71,7 @@
                                     <label class="etiqueta-campo" for="telefono">
                                         Teléfono <span class="etiqueta-opcional">(opcional)</span>
                                     </label>
-                                    <input type="tel" id="telefono" name="telefono" class="entrada"
+                                    <input type="tel" id="telefono" name="phone" class="entrada"
                                         placeholder="Ej: +54 9 223 456-7890" value="<%= datos.phone || '' %>">
                                     <span class="mensaje-error" id="error-telefono"></span>
                                     <p class="campo-formulario__ayuda">Incluí el código de área. Ej: +54 9 223 456-7890

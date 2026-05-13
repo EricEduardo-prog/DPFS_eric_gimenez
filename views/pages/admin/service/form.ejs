@@ -32,7 +32,7 @@
                   <!-- Nombre -->
                   <div class="campo-formulario">
                     <label class="etiqueta-campo" for="nombre">Nombre <span class="campo-requerido">*</span></label>
-                    <input type="text" id="nombre" name="nombre" class="entrada" value="<%= datos.name || '' %>"
+                    <input type="text" id="nombre" name="name" class="entrada" value="<%= datos.name || '' %>"
                       maxlength="80" required>
                     <span class="mensaje-error" id="error-nombre"></span>
                   </div>
@@ -46,7 +46,7 @@
                   <!-- Descripción -->
                   <div class="campo-formulario">
                     <label class="etiqueta-campo" for="descripcion">Descripción</label>
-                    <textarea id="descripcion" name="descripcion" class="entrada entrada--textarea" rows="4"
+                    <textarea id="descripcion" name="description" class="entrada entrada--textarea" rows="4"
                       maxlength="500"><%= datos.description || '' %></textarea>
                     <span class="mensaje-error" id="error-descripcion"></span>
                   </div>
@@ -66,7 +66,7 @@
                     </label>
                     <div class="precio-input">
                       <span class="precio-input__simbolo">$</span>
-                      <input type="number" id="precioBase" name="precioBase" class="entrada" placeholder="200000"
+                      <input type="number" id="precioBase" name="base_price" class="entrada" placeholder="200000"
                         min="0" value="<%= datos.base_price || '' %>" required>
                     </div>
                     <p class="campo-formulario__ayuda">Precio base del servicio (incluye materiales básicos y primera
@@ -81,7 +81,7 @@
                     </label>
                     <div class="precio-input">
                       <span class="precio-input__simbolo">$</span>
-                      <input type="number" id="precioPorHora" name="precioPorHora" class="entrada precio-input__campo"
+                      <input type="number" id="precioPorHora" name="hourly_price" class="entrada precio-input__campo"
                         placeholder="0.00" min="0" step="0.01" value="<%= datos.hourly_price || '' %>">
                     </div>
                     <p class="campo-formulario__ayuda">Costo por cada hora adicional después de la primera.</p>
@@ -113,7 +113,7 @@
                         <p class="campo-formulario__ayuda">¿El profesional necesita matrícula habilitante?</p>
                       </div>
                       <label class="toggle-switch">
-                        <input type="checkbox" name="certificacionRequerida" value="true"
+                        <input type="checkbox" name="certification_required" value="true"
                           <%=datos.certification_required ? 'checked' : '' %>>
                         <span class="toggle-switch__slider"></span>
                       </label>
@@ -127,7 +127,7 @@
                         <p class="campo-formulario__ayuda">Mostrar en la página principal</p>
                       </div>
                       <label class="toggle-switch">
-                        <input type="checkbox" name="destacado" value="true" <%=datos.is_featured ? 'checked' : '' %>>
+                        <input type="checkbox" name="is_featured" value="true" <%=datos.is_featured ? 'checked' : '' %>>
                         <span class="toggle-switch__slider"></span>
                       </label>
                     </label>

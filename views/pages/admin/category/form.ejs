@@ -51,7 +51,7 @@
                       <label class="etiqueta-campo" for="nombre">
                         Nombre <span class="campo-requerido">*</span>
                       </label>
-                      <input type="text" id="nombre" name="nombre" class="entrada" placeholder="Ej: Climatización"
+                      <input type="text" id="nombre" name="name" class="entrada" placeholder="Ej: Climatización"
                         value="<%= datos.name || '' %>" maxlength="80" required>
                       <span class="mensaje-error" id="error-nombre"></span>
                     </div>
@@ -61,7 +61,7 @@
                       <label class="etiqueta-campo" for="descripcion">
                         Descripción <span class="etiqueta-opcional">(opcional)</span>
                       </label>
-                      <textarea id="descripcion" name="descripcion" class="entrada entrada--textarea"
+                      <textarea id="descripcion" name="description" class="entrada entrada--textarea"
                         placeholder="Describí brevemente esta categoría…" maxlength="200"
                         rows="3"><%= datos.description || '' %></textarea>
                       <div class="campo-formulario__pie">
@@ -76,7 +76,7 @@
                       <div class="campo-formulario">
                         <label class="etiqueta-campo" for="icono">Ícono <span
                             class="etiqueta-opcional">(emoji)</span></label>
-                        <input type="text" id="icono" name="icono" class="entrada" placeholder="Ej: ❄️"
+                        <input type="text" id="icono" name="icon" class="entrada" placeholder="Ej: ❄️"
                           value="<%= datos.icon || '' %>" maxlength="8">
                         <p class="campo-formulario__ayuda">Pegá un emoji que represente la categoría.</p>
                         <span class="mensaje-error" id="error-icono"></span>
@@ -84,7 +84,7 @@
                       <div class="campo-formulario">
                         <label class="etiqueta-campo" for="orden">Orden <span
                             class="etiqueta-opcional">(opcional)</span></label>
-                        <input type="number" id="orden" name="orden" class="entrada entrada--numero" placeholder="Ej: 1"
+                        <input type="number" id="orden" name="order" class="entrada entrada--numero" placeholder="Ej: 1"
                           min="1" value="<%= datos.order || '' %>">
                         <p class="campo-formulario__ayuda">Posición en el listado público.</p>
                         <span class="mensaje-error" id="error-orden"></span>
@@ -98,9 +98,9 @@
                   <!-- Card: Estado -->
                   <div class="admin-lateral__card">
                     <h3 class="admin-lateral__card-titulo">Estado</h3>
-                    <%- include('../../../partials/admin/_toggle-switch.ejs', { id: 'activo' , name: 'activo' ,
+                    <%- include('../../../partials/admin/_toggle-switch.ejs', { id: 'is_active' , name: 'is_active' ,
                       label: 'Categoría activa' , helpText: 'Las categorías inactivas no aparecen en el sitio.' ,
-                      checked: (!esEdicion || datos.activo===true) }) %>
+                      checked: (!esEdicion || datos.is_active===true) }) %>
                   </div>
 
                   <!-- Card: Metadata (solo edición) -->

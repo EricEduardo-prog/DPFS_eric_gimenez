@@ -61,7 +61,7 @@
                     <div class="campo-formulario">
                       <label class="etiqueta-campo" for="nombre">Nombre completo <span
                           class="campo-requerido">*</span></label>
-                      <input type="text" id="nombre" name="nombre" class="entrada"
+                      <input type="text" id="nombre" name="name" class="entrada"
                         placeholder="Ej: Juan Carlos Rodríguez" value="<%= datos.name || '' %>" required>
                       <span class="mensaje-error" id="error-nombre"></span>
                     </div>
@@ -71,7 +71,7 @@
                       <div class="campo-formulario">
                         <label class="etiqueta-campo" for="matricula">Matrícula certificada <span
                             class="campo-requerido">*</span></label>
-                        <input type="text" id="matricula" name="matricula" class="entrada entrada--codigo"
+                        <input type="text" id="matricula" name="license_number" class="entrada entrada--codigo"
                           placeholder="Ej: MP-04578 / MN-12345" value="<%= datos.license_number || '' %>" required>
                         <span class="mensaje-error" id="error-matricula"></span>
                         <p class="campo-formulario__ayuda">Matrícula Provincial (MP) o Nacional (MN).</p>
@@ -91,12 +91,12 @@
                           <label class="etiqueta-campo">Tipo de servicio <span class="campo-requerido">*</span></label>
                           <div class="radio-group">
                             <label class="radio-label">
-                              <input type="radio" name="tipoServicio" value="existente" <%=(!esEdicion || (datos.id &&
+                              <input type="radio" name="service_type" value="existente" <%=(!esEdicion || (datos.id &&
                                 !datos.custom_service)) ? 'checked' : '' %>>
                               <span>Seleccionar servicio existente</span>
                             </label>
                             <label class="radio-label">
-                              <input type="radio" name="tipoServicio" value="otro" <%=(datos.custom_service) ? 'checked'
+                              <input type="radio" name="service_type" value="otro" <%=(datos.custom_service) ? 'checked'
                                 : '' %>>
                               <span>Solicitar nuevo servicio</span>
                             </label>
@@ -136,7 +136,7 @@
                             <div class="campo-formulario">
                               <label class="etiqueta-campo" for="nuevoServicio">Nuevo servicio <span
                                   class="campo-requerido">*</span></label>
-                              <input type="text" id="nuevoServicio" name="nuevoServicio" class="entrada"
+                              <input type="text" id="nuevoServicio" name="custom_service" class="entrada"
                                 placeholder="Ej: Instalador de paneles solares"
                                 value="<%= datos.custom_service || '' %>" maxlength="80">
                               <p class="campo-formulario__ayuda">Este servicio será revisado por un administrador antes
@@ -152,7 +152,7 @@
                             <!-- Años de experiencia -->
                             <div class="campo-formulario">
                               <label class="etiqueta-campo" for="experienciaAnios">Años de experiencia</label>
-                              <select id="experienciaAnios" name="experienciaAnios" class="entrada entrada--select">
+                              <select id="experienciaAnios" name="years_experience" class="entrada entrada--select">
                                 <option value="0" <%=datos.experience_years==0 ? 'selected' : '' %>>Sin experiencia
                                 </option>
                                 <option value="1" <%=datos.experience_years==1 ? 'selected' : '' %>>1 año</option>
@@ -197,7 +197,7 @@
                       <div class="campo-formulario">
                         <label class="etiqueta-campo" for="telefono">Teléfono / WhatsApp <span
                             class="etiqueta-opcional">(opcional)</span></label>
-                        <input type="tel" id="telefono" name="telefono" class="entrada"
+                        <input type="tel" id="telefono" name="phone" class="entrada"
                           placeholder="Ej: +54 9 223 456-7890" value="<%= datos.phone || '' %>">
                       </div>
                     </div>
@@ -232,7 +232,7 @@
                     <!-- Card: Estado -->
                     <div class="admin-lateral__card">
                       <h3 class="admin-lateral__card-titulo">Estado del registro</h3>
-                      <%- include('../../../partials/admin/_toggle-switch.ejs', { id: 'activo' , name: 'activo' ,
+                      <%- include('../../../partials/admin/_toggle-switch.ejs', { id: 'is_active' , name: 'is_active' ,
                         label: 'Profesional activo' ,
                         helpText: 'Baja lógica: el registro se conserva pero no aparece en el sistema.' , checked:
                         (!esEdicion || datos.is_active===true) }) %>

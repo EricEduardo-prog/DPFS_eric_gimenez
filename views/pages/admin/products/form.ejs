@@ -55,7 +55,7 @@
                     <!-- Nombre -->
                     <div class="campo-formulario">
                       <label class="etiqueta-campo" for="nombre">Nombre <span class="campo-requerido">*</span></label>
-                      <input type="text" id="nombre" name="nombre" class="entrada"
+                      <input type="text" id="nombre" name="name" class="entrada"
                         placeholder="Ej: Aire acondicionado Split 3000W" value="<%= datos.name || '' %>" maxlength="120"
                         required>
                       <span class="mensaje-error" id="error-nombre"></span>
@@ -93,7 +93,7 @@
                     <div class="campo-formulario">
                       <label class="etiqueta-campo" for="descripcion">Descripción <span
                           class="campo-requerido">*</span></label>
-                      <textarea id="descripcion" name="descripcion" class="entrada entrada--textarea"
+                      <textarea id="descripcion" name="description" class="entrada entrada--textarea"
                         placeholder="Describe detalladamente el producto..." maxlength="600" rows="4"
                         required><%= datos.description || '' %></textarea>
                       <div class="campo-formulario__pie">
@@ -117,8 +117,8 @@
                             class="campo-requerido">*</span></label>
                         <div class="precio-input">
                           <span class="precio-input__simbolo">$</span>
-                          <input type="number" id="precio" name="precio" class="entrada precio-input__campo"
-                            placeholder="0.00" min="0.01" step="0.01" value="<%= datos.precio || '' %>" required>
+                          <input type="number" id="precio" name="price" class="entrada precio-input__campo"
+                            placeholder="0.00" min="0.01" step="0.01" value="<%= datos.price || '' %>" required>
                         </div>
                         <span class="mensaje-error" id="error-precio"></span>
                       </div>
@@ -128,9 +128,9 @@
                             class="etiqueta-opcional">(opcional)</span></label>
                         <div class="precio-input">
                           <span class="precio-input__simbolo">$</span>
-                          <input type="number" id="precioOriginal" name="precioOriginal"
+                          <input type="number" id="precioOriginal" name="original_price"
                             class="entrada precio-input__campo" placeholder="0.00" min="0.01" step="0.01"
-                            value="<%= datos.precioOriginal || '' %>">
+                            value="<%= datos.original_price || '' %>">
                         </div>
                         <p class="campo-formulario__ayuda">Precio tachado (oferta).</p>
                         <span class="mensaje-error" id="error-precioOriginal"></span>
@@ -148,8 +148,8 @@
                     <div class="campo-formulario">
                       <label class="etiqueta-campo" for="imagen">URL de imagen <span
                           class="campo-requerido">*</span></label>
-                      <input type="url" id="imagen" name="imagen" class="entrada"
-                        placeholder="https://ejemplo.com/imagen.jpg" value="<%= datos.imagen || '' %>" required>
+                      <input type="url" id="imagen" name="image" class="entrada"
+                        placeholder="https://ejemplo.com/imagen.jpg" value="<%= datos.image || '' %>" required>
                       <p class="campo-formulario__ayuda">URL completa de la imagen principal del producto.</p>
                       <span class="mensaje-error" id="error-imagen"></span>
                     </div>
@@ -181,7 +181,7 @@
                   <!-- ✅ Card: Estado (usando partial _toggle-switch) -->
                   <div class="admin-lateral__card">
                     <h3 class="admin-lateral__card-titulo">Estado</h3>
-                    <%- include('../../../partials/admin/_toggle-switch.ejs', { id: 'activo' , name: 'activo' ,
+                    <%- include('../../../partials/admin/_toggle-switch.ejs', { id: 'is_active' , name: 'is_active' ,
                       label: 'Producto activo' , helpText: 'Los productos inactivos no aparecen en el sitio.' , checked:
                       (!esEdicion || datos.is_active===true) }) %>
                   </div>
