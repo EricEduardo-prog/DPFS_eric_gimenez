@@ -48,6 +48,43 @@ function mostrarFormLogin(req, res) {
     });
 }
 
+async function registrar(req, res, next) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.render('layout-auth', {
+            title: 'Registro - E-E',
+            body: 'pages/users/register-content',
+            authScript: 'register',
+            currentPage: 'register',
+            pageCss: [],
+            errores: errors.array().map(e => e.msg),
+            formData: req.body,
+            mensaje: null
+        });
+    }
+    try {
+        const usuario = await AuthService.registrar(req.body);
+
+        req.session.usuarioId = usuario.id;
+        req.session.usuarioEmail = usuario.email;
+        req.session.usuarioNombre = usuario.name;
+        req.session.rol = 'user';
+
+        res.redirect('/usuarios/perfil?mensaje=Registro completado correctamente.');
+    } catch (error) {
+        res.render('layout-auth', {
+            title: 'Registro - E-E',
+            body: 'pages/users/register-content',
+            authScript: 'register',
+            currentPage: 'register',
+            pageCss: [],
+            errores: [error.message],
+            formData: req.body,
+            mensaje: null
+        });
+    }
+}
+
 async function login(req, res, next) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -64,7 +101,7 @@ async function login(req, res, next) {
     }
     try {
         const { email, password, recordarme } = req.body;
-        const usuario = await AuthService.login(email, password); // Servicio deberá usar User.findOne
+        const usuario = await AuthService.login(email, password);
 
         req.session.usuarioId = usuario.id;
         req.session.usuarioEmail = usuario.email;
@@ -74,7 +111,11 @@ async function login(req, res, next) {
         if (recordarme) res.cookie('userEmail', usuario.email, { maxAge: 30 * 24 * 60 * 60 * 1000 });
         await AuthService.fusionarReservaGuest(req.cookies?.guestId, usuario.id);
 
-        res.redirect('/usuarios/perfil');
+        if (usuario.rol === 'admin') {
+            res.redirect('/admin/productos');
+        } else {
+            res.redirect('/usuarios/perfil');
+        }
     } catch (error) {
         res.render('layout-auth', {
             title: 'Iniciar Sesión - E-E',
@@ -184,6 +225,39 @@ function formCambiarPassword(req, res) {
         errores: [],
         mensaje: null
     });
+}
+
+async function cambiarPassword(req, res, next) {
+    if (!req.session?.usuarioId) return res.redirect('/login?error=Debes iniciar sesión.');
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.render('layout', {
+            title: 'Cambiar Contraseña - E-E',
+            pageCss: ['user_profile', 'admin_form'],
+            currentPage: 'cambiar-password',
+            body: 'pages/users/change-password',
+            errores: errors.array().map(e => e.msg),
+            mensaje: null
+        });
+    }
+    try {
+        await AuthService.cambiarPassword(
+            req.session.usuarioId,
+            req.body.current_password,
+            req.body.new_password
+        );
+        res.redirect('/usuarios/perfil?mensaje=Contraseña actualizada correctamente.');
+    } catch (error) {
+        res.render('layout', {
+            title: 'Cambiar Contraseña - E-E',
+            pageCss: ['user_profile', 'admin_form'],
+            currentPage: 'cambiar-password',
+            body: 'pages/users/change-password',
+            errores: [error.message],
+            mensaje: null
+        });
+    }
 }
 
 async function misPedidos(req, res, next) {
