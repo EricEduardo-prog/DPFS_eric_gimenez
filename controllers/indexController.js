@@ -3,6 +3,7 @@
 const { Product, Category, Service } = require('../database/models');
 const { validationResult } = require('express-validator');
 const InventoryService = require('../services/InventoryService'); 
+const Op = require('sequelize').Op;
 
 async function home(req, res, next) {
     try {

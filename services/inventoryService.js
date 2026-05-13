@@ -29,6 +29,9 @@ class InventoryService {
     // Mantenemos la lógica de la función original como placeholder.
     for (const cat of categorias) {
       const cantidad = countMap.get(cat.id) || 0;
+      if (cantidad){
+        await cat.update({ products_count: cantidad }); // Si se agregara el campo al modelo, se actualizaría aquí
+      }
       // Si existiera el campo, se actualizaría: await cat.update({ products_count: cantidad });
       console.log(`Categoría ${cat.id} -> ${cantidad} productos`);
     }

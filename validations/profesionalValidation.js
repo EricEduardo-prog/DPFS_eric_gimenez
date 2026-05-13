@@ -4,34 +4,34 @@
 const { body } = require('express-validator');
 
 const validarProfesional = [
-    body('nombre')
+    body('name')
         .trim()
         .notEmpty().withMessage('El nombre completo es obligatorio.')
         .isLength({ max: 100 }).withMessage('El nombre no puede superar los 100 caracteres.')
         .matches(/^[a-zA-ZáéíóúñÁÉÍÓÚÑ\s]+$/).withMessage('El nombre solo puede contener letras y espacios.'),
 
-    body('matricula')
+    body('license_number')
         .trim()
         .notEmpty().withMessage('La matrícula es obligatoria.')
         .toUpperCase()
         .matches(/^(MP|MN)-\d{4,6}$/).withMessage('La matrícula debe tener el formato MP-12345 o MN-12345 (4-6 dígitos).'),
 
-    body('tipoServicio')
+    body('service_type')
         .notEmpty().withMessage('Debe seleccionar un servicio o solicitar uno nuevo.')
         .isIn(['existente', 'otro']).withMessage('Tipo de servicio inválido.'),
 
-    body('servicioId')
-        .if(body('tipoServicio').equals('existente'))
+    body('service_id')
+        .if(body('service_type').equals('existente'))
         .notEmpty().withMessage('Debe seleccionar un servicio.')
         .isString(),
 
-    body('nuevoServicio')
-        .if(body('tipoServicio').equals('otro'))
+    body('custom_service')
+        .if(body('service_type').equals('otro'))
         .trim()
         .notEmpty().withMessage('Debe especificar el nombre del nuevo servicio.')
         .isLength({ min: 3, max: 80 }).withMessage('El nombre del servicio debe tener entre 3 y 80 caracteres.'),
 
-    body('experienciaAnios')
+    body('years_experience')
         .optional()
         .isInt({ min: 0, max: 50 }).withMessage('La experiencia debe ser un número entre 0 y 50 años.')
         .toInt(),
@@ -43,12 +43,12 @@ const validarProfesional = [
         .normalizeEmail()
         .isLength({ max: 100 }).withMessage('El email no puede superar los 100 caracteres.'),
 
-    body('telefono')
+    body('phone')
         .optional()
         .trim()
         .matches(/^[\+\d\s\-\(\)]{8,20}$/).withMessage('El teléfono no tiene un formato válido. Ej: +54 9 223 456-7890'),
 
-    body('activo')
+    body('is_active')
         .optional()
         .isBoolean().toBoolean(),
 ];

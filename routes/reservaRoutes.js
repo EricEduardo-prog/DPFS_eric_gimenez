@@ -5,7 +5,6 @@ const router = express.Router();
 const controller = require('../controllers/reservaController');
 const { isUser } = require('../middlewares/authMiddleware');
 const { validarAgregarItem, validarActualizarItem, validarEliminarItem } = require('../validations/reservaValidation');
-const ReserveService = require('../services/reserveService');
 
 
 // GET /reserva/detecto/:itemId - Verificar si item está en reserva
@@ -21,10 +20,10 @@ router.get('/', controller.verReserva);
 router.post('/agregar', validarAgregarItem, controller.agregarItem);
 
 // PUT /reserva/item/:itemId - Actualizar cantidad (público, requiere sesión)
-router.put('/item/:itemId', validarActualizarItem, controller.actualizarCantidad, ReserveService.actualizarCantidad);
+router.put('/item/:itemId', validarActualizarItem, controller.actualizarCantidad);
 
 // DELETE /reserva/item/:itemId - Eliminar item (público, requiere sesión)
-router.delete('/item/:itemId', validarEliminarItem, controller.eliminarItem, ReserveService.eliminarItem);
+router.delete('/item/:itemId', validarEliminarItem, controller.eliminarItem);
 
 // DELETE /reserva - Vaciar reserva (público, requiere sesión)
 router.delete('/', validarEliminarItem, controller.vaciarReserva);

@@ -5,7 +5,7 @@ const { body } = require('express-validator');
 
 // Validación para registro público
 const validarRegistro = [
-    body('nombre')
+    body('name')
         .trim()
         .notEmpty().withMessage('El nombre es obligatorio.')
         .isLength({ max: 100 }).withMessage('El nombre no puede superar los 100 caracteres.'),
@@ -29,7 +29,7 @@ const validarRegistro = [
             return true;
         }),
 
-    body('aceptoTerminos')
+    body('terms_accepted')
         .custom(value => {
             if (value !== 'true' && value !== true) {
                 throw new Error('Debes aceptar los términos y condiciones.');
@@ -37,7 +37,7 @@ const validarRegistro = [
             return true;
         }),
 
-    body('telefono')
+    body('phone')
         .optional()
         .trim()
         .matches(/^[\+\d\s\-\(\)]{8,20}$/).withMessage('El teléfono no tiene un formato válido.'),
@@ -58,12 +58,12 @@ const validarLogin = [
 
 // Validación para perfil (edición)
 const validarPerfil = [
-    body('nombre')
+    body('name')
         .trim()
         .notEmpty().withMessage('El nombre es obligatorio.')
         .isLength({ max: 100 }).withMessage('El nombre no puede superar los 100 caracteres.'),
 
-    body('telefono')
+    body('phone')
         .optional()
         .trim()
         .matches(/^[\+\d\s\-\(\)]{8,20}$/).withMessage('El teléfono no tiene un formato válido.'),
@@ -79,18 +79,18 @@ const validarPerfil = [
 
 // Validación para cambio de contraseña
 const validarCambioPassword = [
-    body('passwordActual')
+    body('current_password')
         .trim()
         .notEmpty().withMessage('La contraseña actual es obligatoria.'),
 
-    body('passwordNuevo')
+    body('new_password')
         .trim()
         .notEmpty().withMessage('La nueva contraseña es obligatoria.')
         .isLength({ min: 6 }).withMessage('La nueva contraseña debe tener al menos 6 caracteres.'),
 
-    body('passwordConfirmar')
+    body('confirm_password')
         .custom((value, { req }) => {
-            if (value !== req.body.passwordNuevo) {
+            if (value !== req.body.new_password) {
                 throw new Error('Las contraseñas no coinciden.');
             }
             return true;
@@ -99,7 +99,7 @@ const validarCambioPassword = [
 
 // Validación para admin crear/editar usuario
 const validarUsuarioAdmin = [
-    body('nombre')
+    body('name')
         .trim()
         .notEmpty().withMessage('El nombre es obligatorio.')
         .isLength({ max: 100 }),
@@ -114,12 +114,12 @@ const validarUsuarioAdmin = [
         .optional()
         .isLength({ min: 6 }).withMessage('La contraseña debe tener al menos 6 caracteres.'),
 
-    body('telefono')
+    body('phone')
         .optional()
         .trim()
         .matches(/^[\+\d\s\-\(\)]{8,20}$/).withMessage('Teléfono inválido.'),
 
-    body('activo')
+    body('is_active')
         .optional()
         .isBoolean().toBoolean(),
 ];

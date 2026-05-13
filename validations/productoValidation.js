@@ -4,7 +4,7 @@
 const { body } = require('express-validator');
 
 const validarProducto = [
-    body('nombre')
+    body('name')
         .trim()
         .notEmpty().withMessage('El nombre es obligatorio.')
         .isLength({ max: 120 }).withMessage('El nombre no puede superar los 120 caracteres.'),
@@ -14,43 +14,43 @@ const validarProducto = [
         .notEmpty().withMessage('El SKU es obligatorio.')
         .toUpperCase(),
 
-    body('categoriaId')
+    body('category_id')
         .notEmpty().withMessage('La categoría es obligatoria.'),
 
-    body('descripcion')
+    body('description')
         .trim()
         .notEmpty().withMessage('La descripción es obligatoria.')
         .isLength({ max: 600 }).withMessage('La descripción no puede superar los 600 caracteres.'),
 
-    body('imagen')
+    body('image')
         .trim()
         .notEmpty().withMessage('La URL de imagen es obligatoria.')
         .isURL().withMessage('La imagen debe ser una URL válida.'),
 
-    body('precio')
+    body('price')
         .notEmpty().withMessage('El precio es obligatorio.')
         .isFloat({ min: 0.01 }).withMessage('El precio debe ser un número mayor a 0.')
         .toFloat(),
 
-    body('precioOriginal')
+    body('original_price')
         .optional()
         .isFloat({ min: 0 }).withMessage('El precio original debe ser un número válido.')
         .toFloat()
         .custom((value, { req }) => {
-            if (value && value <= req.body.precio) {
+            if (value && value <= req.body.price) {
                 throw new Error('El precio original debe ser mayor al precio de venta.');
             }
             return true;
         }),
 
-    body('instalacion.disponible')
+    body('installation_available')
         .optional()
         .isBoolean().toBoolean(),
 
-    body('instalacion.servicioId')
+    body('installation_service_id')
         .optional()
         .custom((value, { req }) => {
-            const disponible = req.body.instalacion?.disponible === true || req.body.instalacionDisponible === 'true';
+            const disponible = req.body.installation_available === true || req.body.installation_available === 'true';
             if (disponible && !value) {
                 throw new Error('Si la instalación está disponible, debés seleccionar un servicio de instalación.');
             }
@@ -60,28 +60,28 @@ const validarProducto = [
             return true;
         }),
 
-    body('caracteristicas')
+    body('characteristics')
         .optional()
         .customSanitizer(value => {
             if (!value) return [];
             return Array.isArray(value) ? value : [value];
         }),
 
-    body('colores')
+    body('colors')
         .optional()
         .customSanitizer(value => {
             if (!value) return [];
             return Array.isArray(value) ? value : [value];
         }),
 
-    body('talles')
+    body('sizes')
         .optional()
         .customSanitizer(value => {
             if (!value) return [];
             return Array.isArray(value) ? value : [value];
         }),
 
-    body('activo')
+    body('is_active')
         .optional()
         .isBoolean().toBoolean(),
 ];

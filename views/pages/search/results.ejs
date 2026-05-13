@@ -18,9 +18,9 @@
                                 <h3 class="nombre-producto">
                                     <%= prod.name %>
                                 </h3>
-                                <div class="precio-producto">$<%= prod.price.toLocaleString('es-AR') %>
+                                <div class="precio-producto"><%= prod.price.toLocaleString('es-AR') %>
                                 </div>
-                                <a href="/productDetail/<%= prod.id %>" class="boton-producto">Ver más</a>
+                                <a href="/detail/<%= prod.id %>" class="boton-producto">Ver más</a>
                             </div>
                             <% }); %>
                     </div>

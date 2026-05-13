@@ -4,26 +4,26 @@
 const { body } = require('express-validator');
 
 const validarCategoria = [
-    body('nombre')
+    body('name')
         .trim()
         .notEmpty().withMessage('El nombre es obligatorio.')
         .isLength({ max: 80 }).withMessage('El nombre no puede superar los 80 caracteres.'),
 
-    body('descripcion')
+    body('description')
         .optional()
         .trim()
         .isLength({ max: 200 }).withMessage('La descripción no puede superar los 200 caracteres.'),
 
-    body('icono')
+    body('icon')
         .optional()
         .trim(),
 
-    body('orden')
+    body('order')
         .optional()
         .isInt({ min: 1 }).withMessage('El orden debe ser un número mayor a 0.')
         .toInt(),
 
-    body('activo')
+    body('is_active')
         .optional()
         .isBoolean().withMessage('El campo activo debe ser verdadero o falso.')
         .toBoolean(),

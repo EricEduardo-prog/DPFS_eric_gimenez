@@ -21,12 +21,12 @@ class AuthService {
         const hashedPassword = await bcrypt.hash(data.password, SALT_ROUNDS);
         const nuevoUsuario = await User.create({
             id: `usr_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
-            name: data.nombre,
+            name: data.name,
             email: data.email,
             password_hash: hashedPassword,
-            phone: data.telefono || '',
-            address: data.direccion || null,
-            terms_accepted: data.aceptoTerminos,
+            phone: data.phone || '',
+            address: data.address || null,
+            terms_accepted: data.terms_accepted,
             is_active: true,
             registered_at: new Date()
         });
@@ -56,7 +56,7 @@ class AuthService {
         const rol = usuario.email === 'admin@ee.com' ? 'admin' : 'user';
         return {
             id: usuario.id,
-            nombre: usuario.name,
+            name: usuario.name,
             email: usuario.email,
             rol,
         };
