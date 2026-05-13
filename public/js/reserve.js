@@ -116,7 +116,11 @@
         const btnFinalizar = document.getElementById('btnFinalizarCompra');
         if (btnFinalizar) {
             btnFinalizar.addEventListener('click', () => {
-                window.location.href = '/checkout';
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/reserva/checkout';
+                document.body.appendChild(form);
+                form.submit();
             });
         }
     }

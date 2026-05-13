@@ -78,7 +78,7 @@
     }
 
     function actualizarUIExito(data) {
-        cantidadEnReserva = data?.item?.cantidad || cantidadEnReserva + 1;
+        cantidadEnReserva = data?.item?.quantity || cantidadEnReserva + 1;
 
         if (btnTexto) {
             btnTexto.textContent =
@@ -169,7 +169,6 @@
             mostrarCargandoProfesionales();
             console.log(`Cargando profesionales para servicioId=${servicioId}, fecha=${fecha}, horario=${horario}`);
             const response = await fetch(`/disponibilidad/profesionales?servicioId=${servicioId}&fecha=${fecha}&turno=${horario}`);
-            console.log('Respuesta del servidor para profesionales disponibles:', response.profesionales);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
             const data = await response.json();
