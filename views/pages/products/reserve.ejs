@@ -1,23 +1,4 @@
-<% 
-  let subtotal=0; let totalServicios=0; let totalDescuento=0;
-  // Separar items en productos y servicios para mostrar ensecciones distintas 
-  const productosItems = (items || []).filter(item=> item.product_id && !item.service_id);
-  const serviciosItems = (items || []).filter(item => item.service_id && !item.product_id);
-  //Mostrar por consola todos lo que viene del back
-  console.log('Items en reserva:', items);
-  // Calcular subtotal de productos
-  for (const item of items || []) {
-  subtotal += (item.unit_price || 0) * item.quantity;
-  }
 
-  // Calcular total de servicios
-  for (const item of serviciosItems) {
-  totalServicios += (item.unit_price || 0) * item.quantity;
-  }
-
-  // Calcular total de descuentos (si hay descuentos)
-  const total = subtotal + totalServicios - totalDescuento;
-  %>
 
   <div class="reserva-container">
     <div class="reserva-header">
