@@ -7,14 +7,16 @@
                 title="Volver a la página anterior">
                 <span class="icono-cabecera">←</span>
             </button>
+            <% if (typeof usuario !== 'undefined' && usuario && usuario.address) { %>
             <button class="selector-ubicacion" aria-label="Cambiar ubicación de entrega">
                 <span class="icono-ubicacion">📍</span>
                 <div class="info-ubicacion">
                     <span class="etiqueta-ubicacion">Enviar a</span>
-                    <span class="direccion-ubicacion">Av. Colón 1234, Mar del Plata</span>
+                    <span class="direccion-ubicacion"><%= usuario.address.calle || '' %> <%= usuario.address.numero || '' %>, <%= usuario.address.ciudad || '' %></span>
                 </div>
                 <span class="icono-desplegable">▼</span>
             </button>
+            <% } %>
 
 
             <!-- Logo cuando no hay título específico -->
