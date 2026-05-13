@@ -90,7 +90,7 @@
     // Inicializar todo cuando el DOM esté listo
     document.addEventListener('DOMContentLoaded', () => {
         initCharCounter('descripcion', 'contadorDesc', 200);
-        initEstadoToggle('activo', 'estadoDot_activo', 'estadoTexto_activo', 'Visible en el sitio', 'Oculta del sitio');
+        initEstadoToggle('is_active', 'estadoDot_is_active', 'estadoTexto_is_active', 'Visible en el sitio', 'Oculta del sitio');
         initFormValidation();
     });
 })();

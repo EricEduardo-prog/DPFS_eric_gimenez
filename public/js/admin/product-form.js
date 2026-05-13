@@ -122,7 +122,7 @@
 
     // Calcular descuento
     function initDescuentoPreview() {
-        const precio = document.getElementById('precioInstalacion');
+        const precio = document.getElementById('precio');
         const original = document.getElementById('precioOriginal');
         const preview = document.getElementById('descuentoPreview');
         const badge = document.getElementById('descuentoBadge');
@@ -146,7 +146,7 @@
 
     // Estado activo
     function initEstadoToggle() {
-        const toggle = document.getElementById('activo');
+        const toggle = document.getElementById('is_active');
         const dot = document.querySelector('.estado-indicator__dot');
         const text = document.getElementById('estadoTexto');
         if (!toggle || !dot || !text) return;

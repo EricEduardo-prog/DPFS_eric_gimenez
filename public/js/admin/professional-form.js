@@ -5,8 +5,8 @@
     // Manejo de selección de servicio (existente vs nuevo)
     // ============================================================
     function initServicioToggle() {
-        const radioExistente = document.querySelector('input[name="tipoServicio"][value="existente"]');
-        const radioOtro = document.querySelector('input[name="tipoServicio"][value="otro"]');
+        const radioExistente = document.querySelector('input[name="service_type"][value="existente"]');
+        const radioOtro = document.querySelector('input[name="service_type"][value="otro"]');
         const panelExistente = document.getElementById('servicioExistentePanel');
         const panelOtro = document.getElementById('nuevoServicioPanel');
         const servicioSelect = document.getElementById('servicioId');
@@ -75,9 +75,9 @@
     // Toggle estado activo (actualiza el indicador visual)
     // ============================================================
     function initEstadoToggle() {
-        const toggle = document.getElementById('activo');
-        const dot = document.querySelector('#estadoIndicator_activo .estado-indicator__dot');
-        const text = document.querySelector('#estadoIndicator_activo .estado-indicator__texto');
+        const toggle = document.getElementById('is_active');
+        const dot = document.querySelector('#estadoIndicator_is_active .estado-indicator__dot');
+        const text = document.querySelector('#estadoIndicator_is_active .estado-indicator__texto');
 
         if (toggle && dot && text) {
             function update() {
@@ -162,7 +162,7 @@
             }
 
             // ✅ Validar servicio según tipo seleccionado
-            const tipoServicio = document.querySelector('input[name="tipoServicio"]:checked');
+            const tipoServicio = document.querySelector('input[name="service_type"]:checked');
             if (!tipoServicio) {
                 showError('error-servicioId', 'Debe seleccionar un tipo de servicio.');
             } else if (tipoServicio.value === 'existente') {

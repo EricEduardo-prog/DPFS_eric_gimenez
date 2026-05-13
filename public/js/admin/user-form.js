@@ -54,7 +54,7 @@
             }
 
             // Validar términos (solo en creación)
-            const aceptoTerminos = document.querySelector('input[name="aceptoTerminos"]');
+            const aceptoTerminos = document.querySelector('input[name="terms_accepted"]');
             if (!esEdicion && aceptoTerminos && !aceptoTerminos.checked) {
                 showError('error-terminos', 'Debe aceptar los términos y condiciones.');
             }
